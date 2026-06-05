@@ -1,0 +1,13 @@
+@use 'tokens' as *;
+
+@mixin card {
+  background: $color-surface;
+  border-radius: $radius-card;
+  box-shadow: $shadow-card;
+}
+
+@mixin sheet-base {
+  background: $color-surface;
+  border-radius: $radius-sheet $radius-sheet 0 0;
+  padding: 20px;
+}

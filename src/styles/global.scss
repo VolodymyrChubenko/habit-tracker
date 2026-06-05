@@ -1,0 +1,35 @@
+@use 'tokens' as *;
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background: $color-bg;
+  color: $color-text;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+}
+
+input {
+  font: inherit;
+}
+
+[data-theme="dark"] {
+  background: $color-bg-dark;
+  color: $color-text-dark;
+}
