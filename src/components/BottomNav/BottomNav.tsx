@@ -1,0 +1,1 @@
+export const BottomNav = () => <nav />;
