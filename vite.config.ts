@@ -1,8 +1,30 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      manifest: {
+        name: 'Habit Tracker',
+        short_name: 'Habits',
+        description: 'Відслідковуй щоденні звички',
+        display: 'standalone',
+        orientation: 'portrait',
+        background_color: '#FAF7F0',
+        theme_color: '#7CB9A8',
+        icons: [
+          { src: 'icon-192.png', sizes: '192x192', type: 'image/png' },
+          { src: 'icon-512.png', sizes: '512x512', type: 'image/png' },
+        ],
+      },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+      },
+    }),
+  ],
   css: {
     modules: {
       generateScopedName: '[local]',
