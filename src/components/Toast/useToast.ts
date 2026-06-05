@@ -8,7 +8,7 @@ interface ToastState {
 
 export const useToast = () => {
   const [toast, setToast] = useState<ToastState | null>(null);
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const show = useCallback((state: ToastState, durationMs = 4000) => {
     clearTimeout(timerRef.current);

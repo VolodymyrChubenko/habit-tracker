@@ -12,19 +12,23 @@ interface Props {
   onDayClick: (date: DateString) => void;
 }
 
+type Cell =
+  | { key: string; empty: true }
+  | { key: string; empty: false; day: number; dateStr: DateString };
+
 export const ProgressCalendar = ({ year, month, progressByDate, onDayClick }: Props) => {
   const daysInMonth = getDaysInMonth(year, month);
   const startOffset = getMonthStart(year, month);
   const todayStr = today();
 
-  const cells = Array.from({ length: startOffset }, (_, i) => ({ key: `e${i}`, empty: true }))
-    .concat(
-      Array.from({ length: daysInMonth }, (_, i) => {
-        const day = i + 1;
-        const dateStr = toDateString(new Date(year, month, day));
-        return { key: dateStr, empty: false, day, dateStr };
-      }),
-    );
+  const cells: Cell[] = [
+    ...Array.from({ length: startOffset }, (_, i): Cell => ({ key: `e${i}`, empty: true })),
+    ...Array.from({ length: daysInMonth }, (_, i): Cell => {
+      const day = i + 1;
+      const dateStr = toDateString(new Date(year, month, day));
+      return { key: dateStr, empty: false, day, dateStr };
+    }),
+  ];
 
   return (
     <div className={styles.calendar}>
@@ -41,15 +45,15 @@ export const ProgressCalendar = ({ year, month, progressByDate, onDayClick }: Pr
               className={[
                 styles.dayCell,
                 cell.dateStr === todayStr ? styles.today : '',
-                cell.dateStr! > todayStr ? styles.future : '',
+                cell.dateStr > todayStr ? styles.future : '',
               ].join(' ')}
-              onClick={() => cell.dateStr! <= todayStr && onDayClick(cell.dateStr!)}
+              onClick={() => cell.dateStr <= todayStr && onDayClick(cell.dateStr)}
             >
               <CircularProgress
-                day={cell.day!}
-                progress={progressByDate.get(cell.dateStr!) ?? 0}
+                day={cell.day}
+                progress={progressByDate.get(cell.dateStr) ?? 0}
                 isToday={cell.dateStr === todayStr}
-                isFuture={cell.dateStr! > todayStr}
+                isFuture={cell.dateStr > todayStr}
               />
             </div>
           ),
