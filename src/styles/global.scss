@@ -30,6 +30,11 @@ input {
 }
 
 [data-theme="dark"] {
+  --bg: #{$color-bg-dark};
+  --surface: #{$color-surface-dark};
+  --text: #{$color-text-dark};
+  --border: #{$color-border-dark};
+
   background: $color-bg-dark;
   color: $color-text-dark;
 }
