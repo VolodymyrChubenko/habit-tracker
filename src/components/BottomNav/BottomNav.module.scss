@@ -1,0 +1,38 @@
+@use '../../styles/tokens' as *;
+
+.nav {
+  background: $color-surface;
+  border-radius: 20px;
+  margin: 0 12px 12px;
+  padding: 6px 8px;
+  display: flex;
+  justify-content: space-around;
+  box-shadow: $shadow-nav;
+  flex-shrink: 0;
+}
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 8px 12px;
+  border-radius: $radius-pill;
+  text-decoration: none;
+  color: $color-text-muted;
+  transition: background 0.15s;
+
+  svg { stroke: $color-text-muted; }
+
+  span {
+    font-size: 10px;
+    font-weight: 500;
+  }
+
+  &.active {
+    background: $color-accent-bg;
+    color: $color-accent;
+    svg { stroke: $color-accent; }
+    span { font-weight: 600; }
+  }
+}
