@@ -1,3 +1,80 @@
+import { useState } from 'react';
+import { format } from 'date-fns';
+import { uk } from 'date-fns/locale';
+import { useTodayProgress } from '../../hooks/useTodayProgress';
+import { useHabitsStore } from '../../store/habitsStore';
+import { HabitList } from './HabitList';
+import { DoneList } from './DoneList';
+import { AddHabitSheet } from './AddHabitSheet';
+import { Toast } from '../../components/Toast/Toast';
+import { useToast } from '../../components/Toast/useToast';
+import styles from './Today.module.scss';
+
 export default function TodayPage() {
-  return <div>Today</div>;
+  const [showAdd, setShowAdd] = useState(false);
+  const { todoHabits, doneHabits, total } = useTodayProgress();
+  const { archiveHabit, addHabit } = useHabitsStore();
+  const { toast, show: showToast, dismiss } = useToast();
+
+  const handleArchive = (id: string, name: string) => {
+    archiveHabit(id);
+    showToast({
+      message: `«${name}» архівовано`,
+      actionLabel: 'Відмінити',
+      onAction: () => {
+        useHabitsStore.setState(s => ({
+          habits: s.habits.map(h => h.id === id ? { ...h, archivedAt: undefined } : h),
+        }));
+        dismiss();
+      },
+    });
+  };
+
+  const completed = doneHabits.length;
+  const progressPct = total === 0 ? 0 : (completed / total) * 100;
+
+  return (
+    <>
+      <div className={styles.header}>
+        <div className={styles.titles}>
+          <h1 className={styles.title}>Сьогодні</h1>
+          <p className={styles.subtitle}>
+            {format(new Date(), 'EEEE, d MMMM', { locale: uk })}
+          </p>
+        </div>
+        <button className={styles.addBtn} onClick={() => setShowAdd(true)} aria-label="Додати звичку">
+          +
+        </button>
+      </div>
+
+      {total > 0 && (
+        <div className={styles.progressWrap}>
+          <div className={styles.progressMeta}>
+            <span>Прогрес</span>
+            <span>{completed} / {total}</span>
+          </div>
+          <div className={styles.progressTrack}>
+            <div className={styles.progressFill} style={{ width: `${progressPct}%` }} />
+          </div>
+        </div>
+      )}
+
+      <div className={styles.list}>
+        <HabitList habits={todoHabits} onArchive={handleArchive} />
+      </div>
+
+      <DoneList habits={doneHabits} />
+
+      {showAdd && (
+        <AddHabitSheet
+          onClose={() => setShowAdd(false)}
+          onAdd={(name, color) => { addHabit(name, color); setShowAdd(false); }}
+        />
+      )}
+
+      {toast && (
+        <Toast message={toast.message} actionLabel={toast.actionLabel} onAction={toast.onAction} />
+      )}
+    </>
+  );
 }
