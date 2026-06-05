@@ -1,0 +1,40 @@
+@use '../../styles/tokens' as *;
+
+.wrap {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.swatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  cursor: pointer;
+  transition: border-color 0.1s;
+
+  &.selected {
+    border-color: $color-text;
+  }
+}
+
+.custom {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px dashed $color-border;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+
+  input[type='color'] {
+    position: absolute;
+    inset: -4px;
+    opacity: 0;
+    cursor: pointer;
+    width: 140%;
+    height: 140%;
+  }
+}
