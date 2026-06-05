@@ -1,0 +1,57 @@
+@use '../../styles/tokens' as *;
+
+.title { font-size: 24px; font-weight: 700; color: $color-text; margin-bottom: 16px; }
+
+.monthNav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.monthLabel { font-size: 15px; font-weight: 600; color: $color-text; }
+
+.navBtn {
+  font-size: 18px;
+  color: $color-text-secondary;
+  padding: 4px 10px;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.calendar {
+  background: $color-surface;
+  border-radius: 16px;
+  padding: 12px;
+  box-shadow: $shadow-card;
+}
+
+.dayHeaders {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 6px;
+
+  span {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: $color-text-secondary;
+    padding: 2px 0;
+  }
+}
+
+.daysGrid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+
+.dayCell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  border-radius: 8px;
+
+  &.today { background: rgba(124, 185, 168, 0.12); }
+  &.future { cursor: default; }
+}
