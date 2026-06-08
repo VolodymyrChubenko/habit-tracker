@@ -57,6 +57,46 @@ describe('archiveHabit', () => {
   });
 });
 
+describe('updateHabit', () => {
+  it('updates name and color of the habit', () => {
+    useHabitsStore.getState().addHabit('Медитація', '#7CB9A8');
+    const { habits } = useHabitsStore.getState();
+    useHabitsStore.getState().updateHabit(habits[0].id, { name: 'Йога', color: '#E8A87C' });
+    const updated = useHabitsStore.getState().habits[0];
+    expect(updated.name).toBe('Йога');
+    expect(updated.color).toBe('#E8A87C');
+  });
+
+  it('does not change other habits', () => {
+    useHabitsStore.getState().addHabit('A', '#7CB9A8');
+    useHabitsStore.getState().addHabit('B', '#E8A87C');
+    const { habits } = useHabitsStore.getState();
+    useHabitsStore.getState().updateHabit(habits[0].id, { name: 'A2' });
+    expect(useHabitsStore.getState().habits[1].name).toBe('B');
+  });
+});
+
+describe('deleteHabit', () => {
+  it('removes the habit from habits list', () => {
+    useHabitsStore.getState().addHabit('Читання', '#7CB9A8');
+    const { habits } = useHabitsStore.getState();
+    useHabitsStore.getState().deleteHabit(habits[0].id);
+    expect(useHabitsStore.getState().habits).toHaveLength(0);
+  });
+
+  it('removes all logs for the deleted habit', () => {
+    useHabitsStore.getState().addHabit('Читання', '#7CB9A8');
+    useHabitsStore.getState().addHabit('Спорт', '#E8A87C');
+    const { habits } = useHabitsStore.getState();
+    useHabitsStore.getState().completeHabit(habits[0].id, '2026-06-01');
+    useHabitsStore.getState().completeHabit(habits[1].id, '2026-06-01');
+    useHabitsStore.getState().deleteHabit(habits[0].id);
+    const logs = useHabitsStore.getState().logs;
+    expect(logs).toHaveLength(1);
+    expect(logs[0].habitId).toBe(habits[1].id);
+  });
+});
+
 describe('saveLogsForDate', () => {
   it('replaces all logs for a date with the given habitIds', () => {
     useHabitsStore.getState().addHabit('A', '#7CB9A8');

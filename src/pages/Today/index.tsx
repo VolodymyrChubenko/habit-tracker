@@ -6,29 +6,15 @@ import { useHabitsStore } from '../../store/habitsStore';
 import { HabitList } from './HabitList';
 import { DoneList } from './DoneList';
 import { AddHabitSheet } from './AddHabitSheet';
-import { Toast } from '../../components/Toast/Toast';
-import { useToast } from '../../components/Toast/useToast';
+import { EditHabitSheet } from './EditHabitSheet';
+import type { Habit } from '../../types';
 import styles from './Today.module.scss';
 
 export default function TodayPage() {
   const [showAdd, setShowAdd] = useState(false);
+  const [editingHabit, setEditingHabit] = useState<Habit | null>(null);
   const { todoHabits, doneHabits, total } = useTodayProgress();
-  const { archiveHabit, addHabit } = useHabitsStore();
-  const { toast, show: showToast, dismiss } = useToast();
-
-  const handleArchive = (id: string, name: string) => {
-    archiveHabit(id);
-    showToast({
-      message: `«${name}» архівовано`,
-      actionLabel: 'Відмінити',
-      onAction: () => {
-        useHabitsStore.setState(s => ({
-          habits: s.habits.map(h => h.id === id ? { ...h, archivedAt: undefined } : h),
-        }));
-        dismiss();
-      },
-    });
-  };
+  const { addHabit } = useHabitsStore();
 
   const completed = doneHabits.length;
   const progressPct = total === 0 ? 0 : (completed / total) * 100;
@@ -60,10 +46,10 @@ export default function TodayPage() {
       )}
 
       <div className={styles.list}>
-        <HabitList habits={todoHabits} onArchive={handleArchive} />
+        <HabitList habits={todoHabits} onEdit={setEditingHabit} />
       </div>
 
-      <DoneList habits={doneHabits} />
+      <DoneList habits={doneHabits} onEdit={setEditingHabit} />
 
       {showAdd && (
         <AddHabitSheet
@@ -72,8 +58,11 @@ export default function TodayPage() {
         />
       )}
 
-      {toast && (
-        <Toast message={toast.message} actionLabel={toast.actionLabel} onAction={toast.onAction} />
+      {editingHabit && (
+        <EditHabitSheet
+          habit={editingHabit}
+          onClose={() => setEditingHabit(null)}
+        />
       )}
     </>
   );

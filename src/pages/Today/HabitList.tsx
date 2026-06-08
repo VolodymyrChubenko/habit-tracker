@@ -5,10 +5,10 @@ import type { Habit } from '../../types';
 
 interface Props {
   habits: Habit[];
-  onArchive: (id: string, name: string) => void;
+  onEdit: (habit: Habit) => void;
 }
 
-export const HabitList = ({ habits, onArchive }: Props) => {
+export const HabitList = ({ habits, onEdit }: Props) => {
   const { completeHabit } = useHabitsStore();
   const date = today();
 
@@ -20,7 +20,7 @@ export const HabitList = ({ habits, onArchive }: Props) => {
           habit={habit}
           done={false}
           onToggle={() => completeHabit(habit.id, date)}
-          onArchive={() => onArchive(habit.id, habit.name)}
+          onEdit={() => onEdit(habit)}
         />
       ))}
     </>

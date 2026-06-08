@@ -5,25 +5,12 @@ interface Props {
   habit: Habit;
   done: boolean;
   onToggle: () => void;
-  onArchive: () => void;
+  onEdit: () => void;
 }
 
-export const HabitItem = ({ habit, done, onToggle, onArchive }: Props) => {
-  let pressTimer: ReturnType<typeof setTimeout>;
-
-  const handlePressStart = () => {
-    pressTimer = setTimeout(onArchive, 600);
-  };
-  const handlePressEnd = () => clearTimeout(pressTimer);
-
+export const HabitItem = ({ habit, done, onToggle, onEdit }: Props) => {
   return (
-    <div
-      className={[styles.card, done ? styles.done : ''].join(' ')}
-      onMouseDown={handlePressStart}
-      onMouseUp={handlePressEnd}
-      onTouchStart={handlePressStart}
-      onTouchEnd={handlePressEnd}
-    >
+    <div className={[styles.card, done ? styles.done : ''].join(' ')} onClick={onEdit}>
       <div className={styles.dot} style={{ background: habit.color }} />
       <span
         className={styles.name}
@@ -38,7 +25,7 @@ export const HabitItem = ({ habit, done, onToggle, onArchive }: Props) => {
           borderColor: habit.color,
           background: done ? habit.color : 'transparent',
         }}
-        onClick={onToggle}
+        onClick={e => { e.stopPropagation(); onToggle(); }}
       >
         {done ? '✓' : ''}
       </button>

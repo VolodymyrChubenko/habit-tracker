@@ -1,5 +1,28 @@
 @use 'tokens' as *;
 
+// CSS custom properties — define light defaults, override for dark theme
+:root {
+  --color-bg:             #{$color-bg-raw};
+  --color-surface:        #{$color-surface-raw};
+  --color-text:           #{$color-text-raw};
+  --color-text-secondary: #{$color-text-secondary-raw};
+  --color-text-muted:     #{$color-text-muted-raw};
+  --color-border:         #{$color-border-raw};
+  --color-border-light:   #{$color-border-light-raw};
+  --color-accent-bg:      #{$color-accent-bg-raw};
+}
+
+[data-theme="dark"] {
+  --color-bg:             #{$color-bg-dark};
+  --color-surface:        #{$color-surface-dark};
+  --color-text:           #{$color-text-dark};
+  --color-text-secondary: #aaaaaa;
+  --color-text-muted:     #666666;
+  --color-border:         #{$color-border-dark};
+  --color-border-light:   #333333;
+  --color-accent-bg:      #1e3330;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -27,14 +50,4 @@ button {
 
 input {
   font: inherit;
-}
-
-[data-theme="dark"] {
-  --bg: #{$color-bg-dark};
-  --surface: #{$color-surface-dark};
-  --text: #{$color-text-dark};
-  --border: #{$color-border-dark};
-
-  background: $color-bg-dark;
-  color: $color-text-dark;
 }

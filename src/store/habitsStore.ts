@@ -8,6 +8,8 @@ interface HabitsState {
   habits: Habit[];
   logs: HabitLog[];
   addHabit: (name: string, color: string) => void;
+  updateHabit: (habitId: HabitId, patch: Partial<Pick<Habit, 'name' | 'color'>>) => void;
+  deleteHabit: (habitId: HabitId) => void;
   completeHabit: (habitId: HabitId, date: DateString) => void;
   uncompleteHabit: (habitId: HabitId, date: DateString) => void;
   archiveHabit: (habitId: HabitId) => void;
@@ -26,6 +28,19 @@ export const useHabitsStore = create<HabitsState>()(
             ...state.habits,
             { id: nanoid(), name, color, createdAt: format(new Date(), 'yyyy-MM-dd') },
           ],
+        })),
+
+      updateHabit: (habitId, patch) =>
+        set(state => ({
+          habits: state.habits.map(h =>
+            h.id === habitId ? { ...h, ...patch } : h,
+          ),
+        })),
+
+      deleteHabit: (habitId) =>
+        set(state => ({
+          habits: state.habits.filter(h => h.id !== habitId),
+          logs: state.logs.filter(l => l.habitId !== habitId),
         })),
 
       completeHabit: (habitId, date) => {

@@ -7,9 +7,10 @@ import styles from './Today.module.scss';
 
 interface Props {
   habits: Habit[];
+  onEdit: (habit: Habit) => void;
 }
 
-export const DoneList = ({ habits }: Props) => {
+export const DoneList = ({ habits, onEdit }: Props) => {
   const [open, setOpen] = useState(true);
   const { uncompleteHabit } = useHabitsStore();
   const date = today();
@@ -37,7 +38,7 @@ export const DoneList = ({ habits }: Props) => {
               habit={habit}
               done={true}
               onToggle={() => uncompleteHabit(habit.id, date)}
-              onArchive={() => {}}
+              onEdit={() => onEdit(habit)}
             />
           ))}
         </div>

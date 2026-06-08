@@ -1,0 +1,95 @@
+@use '../../styles/tokens' as *;
+
+.title { font-size: 17px; font-weight: 700; color: $color-text; margin-bottom: 18px; }
+
+.field { margin-bottom: 14px; }
+
+.label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: $color-text-secondary;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.input {
+  width: 100%;
+  background: $color-bg;
+  border: 1.5px solid $color-border;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 15px;
+  color: $color-text;
+  outline: none;
+
+  &:focus { border-color: $color-accent; }
+}
+
+.btnSave {
+  width: 100%;
+  background: $color-accent;
+  color: #fff;
+  border-radius: $radius-card;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 20px;
+  cursor: pointer;
+  border: none;
+
+  &:disabled { opacity: 0.5; cursor: default; }
+}
+
+.danger {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid $color-border;
+}
+
+.dangerLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: $color-text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+
+.btnStop {
+  width: 100%;
+  background: $color-accent-bg;
+  color: $color-text-secondary;
+  border-radius: $radius-card;
+  padding: 13px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  cursor: pointer;
+  border: none;
+}
+
+.btnDelete {
+  width: 100%;
+  background: none;
+  color: #e05c5c;
+  border: 1.5px solid #e05c5c;
+  border-radius: $radius-card;
+  padding: 13px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btnDeleteConfirm {
+  width: 100%;
+  background: #e05c5c;
+  color: #fff;
+  border: none;
+  border-radius: $radius-card;
+  padding: 13px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}

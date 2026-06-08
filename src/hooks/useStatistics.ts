@@ -16,10 +16,17 @@ export const useStatistics = (filterIds?: HabitId[]) => {
       logsByDate.get(log.date)!.add(log.habitId);
     }
 
+    // Include dates where all logs were removed (saveLogsForDate(date, [])):
+    // any date in the full logs array (unfiltered) that isn't in logsByDate yet
+    // gets an empty set so progress calculates to 0 instead of being absent.
+    for (const log of logs) {
+      if (!logsByDate.has(log.date)) logsByDate.set(log.date, new Set());
+    }
+
     for (const [date, completedIds] of logsByDate) {
       const activeOnDate = habits.filter(h => {
         if (h.archivedAt && h.archivedAt < date) return false;
-        if (h.createdAt > date) return false;
+        if (h.createdAt > date && !completedIds.has(h.id)) return false;
         return true;
       });
       const total = filterIds
