@@ -28,7 +28,7 @@ export default defineConfig({
   ],
   css: {
     modules: {
-      generateScopedName: '[local]',
+      generateScopedName: '[local]_[hash:5]',
     },
   },
   test: {
