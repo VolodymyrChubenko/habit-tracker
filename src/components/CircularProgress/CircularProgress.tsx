@@ -23,27 +23,31 @@ export const CircularProgress = ({
   const textColor = isToday ? color : isFuture ? '#cccccc' : '#919191';
 
   return (
-    <div style={{ position: 'relative', width: size, height: size, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <svg width={size} height={size} viewBox="0 0 34 34">
-        {/* Track */}
-        <circle cx="17" cy="17" r={RADIUS} fill="none" stroke="#F0EDE6" strokeWidth="2.5" />
-        {/* Progress arc */}
-        {progress > 0 && (
-          <circle
-            cx="17" cy="17" r={RADIUS}
-            fill="none"
-            stroke={color}
-            strokeWidth="2.5"
-            strokeDasharray={CIRCUMFERENCE}
-            strokeDashoffset={offset}
-            strokeLinecap="round"
-            transform="rotate(-90 17 17)"
-          />
-        )}
-      </svg>
-      <span style={{ position: 'absolute', fontSize: 10, fontWeight: isToday ? 700 : 500, color: textColor }}>
+    <svg width={size} height={size} viewBox="0 0 34 34">
+      <circle cx="17" cy="17" r={RADIUS} fill="none" stroke="#F0EDE6" strokeWidth="2.5" />
+      {progress > 0 && (
+        <circle
+          cx="17" cy="17" r={RADIUS}
+          fill="none"
+          stroke={color}
+          strokeWidth="2.5"
+          strokeDasharray={CIRCUMFERENCE}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
+          transform="rotate(-90 17 17)"
+        />
+      )}
+      <text
+        x="17" y="17"
+        dominantBaseline="middle"
+        textAnchor="middle"
+        fontSize="10"
+        fontWeight={isToday ? 700 : 500}
+        fill={textColor}
+        fontFamily="inherit"
+      >
         {day}
-      </span>
-    </div>
+      </text>
+    </svg>
   );
 };
