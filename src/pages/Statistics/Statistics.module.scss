@@ -49,6 +49,21 @@
   border: none;
 }
 
+.calendarViewport { overflow: hidden; }
+
+@keyframes slideFromRight {
+  from { transform: translateX(105%); }
+  to   { transform: translateX(0); }
+}
+
+@keyframes slideFromLeft {
+  from { transform: translateX(-105%); }
+  to   { transform: translateX(0); }
+}
+
+.slideNext { animation: slideFromRight 0.3s cubic-bezier(.4, 0, .2, 1); }
+.slidePrev { animation: slideFromLeft  0.3s cubic-bezier(.4, 0, .2, 1); }
+
 .calendar {
   background: $color-surface;
   border-radius: 16px;

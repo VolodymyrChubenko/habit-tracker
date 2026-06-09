@@ -20,14 +20,20 @@ export const StatBoard = ({ scope, habits, onDayClick }: Props) => {
   const [year, setYear] = useState(now.getFullYear());
   const [month, setMonth] = useState(now.getMonth());
   const [filterIds, setFilterIds] = useState<HabitId[] | null>(null);
+  const [slideDir, setSlideDir] = useState<'next' | 'prev' | null>(null);
+  const [animKey, setAnimKey] = useState(0);
 
   const { progressByDate } = useStatistics(scope, filterIds ?? undefined);
 
   const prevMonth = () => {
+    setSlideDir('prev');
+    setAnimKey(k => k + 1);
     if (month === 0) { setYear(y => y - 1); setMonth(11); }
     else setMonth(m => m - 1);
   };
   const nextMonth = () => {
+    setSlideDir('next');
+    setAnimKey(k => k + 1);
     if (month === 11) { setYear(y => y + 1); setMonth(0); }
     else setMonth(m => m + 1);
   };
@@ -46,13 +52,18 @@ export const StatBoard = ({ scope, habits, onDayClick }: Props) => {
         <button className={styles.navBtn} onClick={nextMonth}>›</button>
       </div>
 
-      <div {...swipe}>
-        <ProgressCalendar
-          year={year}
-          month={month}
-          progressByDate={progressByDate}
-          onDayClick={onDayClick}
-        />
+      <div {...swipe} className={styles.calendarViewport}>
+        <div
+          key={animKey}
+          className={slideDir === 'next' ? styles.slideNext : slideDir === 'prev' ? styles.slidePrev : undefined}
+        >
+          <ProgressCalendar
+            year={year}
+            month={month}
+            progressByDate={progressByDate}
+            onDayClick={onDayClick}
+          />
+        </div>
       </div>
 
       <StreakTiles scope={scope} habits={habits} filterIds={filterIds} />
