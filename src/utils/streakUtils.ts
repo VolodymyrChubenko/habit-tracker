@@ -11,7 +11,7 @@ const toStr = (d: Date): DateString => format(d, 'yyyy-MM-dd');
  * - ретроактивні дні до createdAt рахуються, якщо відмічені
  */
 export const calcStreak = (
-  habit: Habit,
+  _habit: Habit,
   completedDates: Set<DateString>,
   todayStr: DateString,
 ): number => {
