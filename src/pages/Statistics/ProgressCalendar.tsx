@@ -9,7 +9,7 @@ interface Props {
   year: number;
   month: number; // 0-indexed
   progressByDate: Map<DateString, number>;
-  onDayClick: (date: DateString) => void;
+  onDayClick?: (date: DateString) => void;
 }
 
 type Cell =
@@ -20,6 +20,7 @@ export const ProgressCalendar = ({ year, month, progressByDate, onDayClick }: Pr
   const daysInMonth = getDaysInMonth(year, month);
   const startOffset = getMonthStart(year, month);
   const todayStr = today();
+  const interactive = !!onDayClick;
 
   const cells: Cell[] = [
     ...Array.from({ length: startOffset }, (_, i): Cell => ({ key: `e${i}`, empty: true })),
@@ -45,9 +46,9 @@ export const ProgressCalendar = ({ year, month, progressByDate, onDayClick }: Pr
               className={[
                 styles.dayCell,
                 cell.dateStr === todayStr ? styles.today : '',
-                cell.dateStr > todayStr ? styles.future : '',
+                cell.dateStr > todayStr || !interactive ? styles.future : '',
               ].join(' ')}
-              onClick={() => cell.dateStr <= todayStr && onDayClick(cell.dateStr)}
+              onClick={() => interactive && cell.dateStr <= todayStr && onDayClick!(cell.dateStr)}
             >
               <CircularProgress
                 day={cell.day}

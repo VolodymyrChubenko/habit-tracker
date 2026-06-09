@@ -13,7 +13,7 @@ interface HabitsState {
   completeHabit: (habitId: HabitId, date: DateString) => void;
   uncompleteHabit: (habitId: HabitId, date: DateString) => void;
   archiveHabit: (habitId: HabitId) => void;
-  saveLogsForDate: (date: DateString, habitIds: HabitId[]) => void;
+  saveLogsForDate: (date: DateString, completedHabitIds: HabitId[], scopeHabitIds: HabitId[]) => void;
 }
 
 export const useHabitsStore = create<HabitsState>()(
@@ -63,17 +63,20 @@ export const useHabitsStore = create<HabitsState>()(
           ),
         })),
 
-      saveLogsForDate: (date, habitIds) =>
-        set(state => ({
-          logs: [
-            ...state.logs.filter(l => l.date !== date),
-            ...habitIds.map(habitId => ({
-              habitId,
-              date,
-              completedAt: new Date().toISOString(),
-            })),
-          ],
-        })),
+      saveLogsForDate: (date, completedHabitIds, scopeHabitIds) =>
+        set(state => {
+          const scope = new Set(scopeHabitIds);
+          return {
+            logs: [
+              ...state.logs.filter(l => l.date !== date || !scope.has(l.habitId)),
+              ...completedHabitIds.map(habitId => ({
+                habitId,
+                date,
+                completedAt: new Date().toISOString(),
+              })),
+            ],
+          };
+        }),
     }),
     { name: 'habit-tracker-storage' },
   ),

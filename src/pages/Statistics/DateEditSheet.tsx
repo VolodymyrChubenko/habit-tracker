@@ -15,8 +15,9 @@ export const DateEditSheet = ({ date, onClose }: Props) => {
   const logs = useHabitsStore(s => s.logs);
   const { saveLogsForDate } = useHabitsStore();
 
+  const activeIds = new Set(activeHabits.map(h => h.id));
   const initial = new Set<HabitId>(
-    logs.filter(l => l.date === date).map(l => l.habitId),
+    logs.filter(l => l.date === date && activeIds.has(l.habitId)).map(l => l.habitId),
   );
   const [checked, setChecked] = useState<Set<HabitId>>(initial);
 
@@ -29,7 +30,7 @@ export const DateEditSheet = ({ date, onClose }: Props) => {
   };
 
   const handleSave = () => {
-    saveLogsForDate(date, [...checked]);
+    saveLogsForDate(date, [...checked], activeHabits.map(h => h.id));
     onClose();
   };
 

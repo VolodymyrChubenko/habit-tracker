@@ -16,5 +16,6 @@ export interface HabitLog {
 }
 
 export type Theme = 'light' | 'dark' | 'system';
+export type StatScope = 'active' | 'archived';
 
 export type ActiveTab = 'today' | 'statistics' | 'settings';

@@ -98,14 +98,27 @@ describe('deleteHabit', () => {
 });
 
 describe('saveLogsForDate', () => {
-  it('replaces all logs for a date with the given habitIds', () => {
+  it('replaces scoped logs for a date with the given habitIds', () => {
     useHabitsStore.getState().addHabit('A', '#7CB9A8');
     useHabitsStore.getState().addHabit('B', '#E8A87C');
     const { habits } = useHabitsStore.getState();
     useHabitsStore.getState().completeHabit(habits[0].id, '2026-06-01');
-    useHabitsStore.getState().saveLogsForDate('2026-06-01', [habits[1].id]);
+    useHabitsStore.getState().saveLogsForDate('2026-06-01', [habits[1].id], [habits[0].id, habits[1].id]);
     const logs = useHabitsStore.getState().logs.filter(l => l.date === '2026-06-01');
     expect(logs).toHaveLength(1);
     expect(logs[0].habitId).toBe(habits[1].id);
+  });
+
+  it('keeps out-of-scope logs when saving a date', () => {
+    useHabitsStore.getState().addHabit('A', '#7CB9A8');
+    useHabitsStore.getState().addHabit('B', '#E8A87C');
+    const { habits } = useHabitsStore.getState();
+    useHabitsStore.getState().completeHabit(habits[0].id, '2026-06-01');
+    useHabitsStore.getState().completeHabit(habits[1].id, '2026-06-01');
+    // edit only scope = [A]
+    useHabitsStore.getState().saveLogsForDate('2026-06-01', [], [habits[0].id]);
+    const logs = useHabitsStore.getState().logs.filter(l => l.date === '2026-06-01');
+    expect(logs).toHaveLength(1);
+    expect(logs[0].habitId).toBe(habits[1].id); // B (out of scope) is preserved
   });
 });

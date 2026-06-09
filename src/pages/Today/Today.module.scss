@@ -20,13 +20,14 @@
   background: $color-accent;
   color: #fff;
   font-size: 22px;
-  font-weight: 300;
+  font-weight: 400;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 2px 8px rgba(124, 185, 168, 0.35);
   cursor: pointer;
   border: none;
+  padding-bottom: 4px;
 }
 
 .progressWrap { margin-bottom: 18px; }

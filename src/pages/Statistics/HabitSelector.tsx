@@ -1,14 +1,12 @@
-import { useHabits } from '../../hooks/useHabits';
-import type { HabitId } from '../../types';
+import type { Habit, HabitId } from '../../types';
 
 interface Props {
+  habits: Habit[];
   selected: HabitId[] | null; // null = all
   onChange: (ids: HabitId[] | null) => void;
 }
 
-export const HabitSelector = ({ selected, onChange }: Props) => {
-  const { activeHabits } = useHabits();
-
+export const HabitSelector = ({ habits, selected, onChange }: Props) => {
   return (
     <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 14, overflowX: 'auto' }}>
       <button
@@ -22,7 +20,7 @@ export const HabitSelector = ({ selected, onChange }: Props) => {
       >
         Всі
       </button>
-      {activeHabits.map(h => {
+      {habits.map(h => {
         const isActive = selected?.includes(h.id);
         return (
           <button

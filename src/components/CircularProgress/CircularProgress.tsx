@@ -20,7 +20,7 @@ export const CircularProgress = ({
   isFuture = false,
 }: Props) => {
   const offset = calcOffset(progress);
-  const textColor = isToday ? color : isFuture ? '#cccccc' : '#555555';
+  const textColor = isToday ? color : isFuture ? '#cccccc' : '#919191';
 
   return (
     <div style={{ position: 'relative', width: size, height: size, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
