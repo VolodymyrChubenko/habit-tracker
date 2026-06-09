@@ -97,6 +97,25 @@ describe('deleteHabit', () => {
   });
 });
 
+describe('unarchiveHabit', () => {
+  it('clears archivedAt on the habit', () => {
+    useHabitsStore.getState().addHabit('Читання', '#E8A87C');
+    const { habits } = useHabitsStore.getState();
+    useHabitsStore.getState().archiveHabit(habits[0].id);
+    useHabitsStore.getState().unarchiveHabit(habits[0].id);
+    expect(useHabitsStore.getState().habits[0].archivedAt).toBeUndefined();
+  });
+
+  it('does not touch logs', () => {
+    useHabitsStore.getState().addHabit('Спорт', '#9B89D4');
+    const { habits } = useHabitsStore.getState();
+    useHabitsStore.getState().completeHabit(habits[0].id, '2026-06-01');
+    useHabitsStore.getState().archiveHabit(habits[0].id);
+    useHabitsStore.getState().unarchiveHabit(habits[0].id);
+    expect(useHabitsStore.getState().logs).toHaveLength(1);
+  });
+});
+
 describe('saveLogsForDate', () => {
   it('replaces scoped logs for a date with the given habitIds', () => {
     useHabitsStore.getState().addHabit('A', '#7CB9A8');

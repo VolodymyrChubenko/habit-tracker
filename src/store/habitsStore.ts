@@ -13,6 +13,7 @@ interface HabitsState {
   completeHabit: (habitId: HabitId, date: DateString) => void;
   uncompleteHabit: (habitId: HabitId, date: DateString) => void;
   archiveHabit: (habitId: HabitId) => void;
+  unarchiveHabit: (habitId: HabitId) => void;
   saveLogsForDate: (date: DateString, completedHabitIds: HabitId[], scopeHabitIds: HabitId[]) => void;
 }
 
@@ -60,6 +61,13 @@ export const useHabitsStore = create<HabitsState>()(
         set(state => ({
           habits: state.habits.map(h =>
             h.id === habitId ? { ...h, archivedAt: format(new Date(), 'yyyy-MM-dd') } : h,
+          ),
+        })),
+
+      unarchiveHabit: (habitId) =>
+        set(state => ({
+          habits: state.habits.map(h =>
+            h.id === habitId ? { ...h, archivedAt: undefined } : h,
           ),
         })),
 
