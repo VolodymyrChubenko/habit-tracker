@@ -24,10 +24,10 @@ export const AddHabitSheet = ({ onClose, onAdd }: Props) => {
         <p className={styles.title}>Нова звичка</p>
 
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="habit-name">Назва</label>
+          <label className={styles.label} htmlFor="habit-title">Назва</label>
           <input
-            id="habit-name"
-            name="habit-name"
+            id="habit-title"
+            name="habit-title"
             className={styles.input}
             value={name}
             onChange={e => setName(e.target.value)}

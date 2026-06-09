@@ -41,10 +41,10 @@ export const EditHabitSheet = ({ habit, onClose }: Props) => {
       <p className={styles.title}>Редагувати звичку</p>
 
       <div className={styles.field}>
-        <label className={styles.label} htmlFor="edit-habit-name">Назва</label>
+        <label className={styles.label} htmlFor="habit-title-edit">Назва</label>
         <input
-          id="edit-habit-name"
-          name="edit-habit-name"
+          id="habit-title-edit"
+          name="habit-title-edit"
           className={styles.input}
           value={name}
           onChange={e => setName(e.target.value)}
