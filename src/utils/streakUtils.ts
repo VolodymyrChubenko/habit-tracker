@@ -7,8 +7,8 @@ const toStr = (d: Date): DateString => format(d, 'yyyy-MM-dd');
  * Поточний стрейк (днів поспіль).
  * - сьогодні виконано → включаємо сьогодні, рахуємо назад
  * - сьогодні НЕ виконано → рахуємо від учора (сьогодні ще не "пропуск")
- * - перший пропуск зупиняє підрахунок
- * - дні до createdAt не вважаються пропуском
+ * - перший незаповнений день зупиняє підрахунок
+ * - ретроактивні дні до createdAt рахуються, якщо відмічені
  */
 export const calcStreak = (
   habit: Habit,
@@ -22,8 +22,6 @@ export const calcStreak = (
 
   while (true) {
     const dateStr = toStr(cursor);
-    if (dateStr < habit.createdAt) break;
-
     if (completedDates.has(dateStr)) {
       streak += 1;
       cursor = subDays(cursor, 1);
