@@ -7,18 +7,16 @@ import type { DateString } from '../../types';
 import styles from './Statistics.module.scss';
 
 export default function StatisticsPage() {
-  const { activeHabits, archivedHabits } = useHabits();
+  const { activeHabits } = useHabits();
   const [editDate, setEditDate] = useState<DateString | null>(null);
 
   return (
     <>
       <div className={styles.header}>
         <h1 className={styles.title}>Статистика</h1>
-        {archivedHabits.length > 0 && (
-          <Link to="/statistics/archive" className={styles.archiveLink}>
-            Архів
-          </Link>
-        )}
+        <Link to="/statistics/archive" className={styles.archiveLink}>
+          Архів
+        </Link>
       </div>
 
       <StatBoard scope="active" habits={activeHabits} onDayClick={setEditDate} />

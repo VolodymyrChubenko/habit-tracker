@@ -20,11 +20,7 @@ export default function ArchivePage() {
         </button>
       </div>
 
-      {archivedHabits.length === 0 ? (
-        <p className={styles.empty}>Немає заархівованих навичок</p>
-      ) : (
-        <StatBoard scope="archived" habits={archivedHabits} />
-      )}
+      <StatBoard scope="archived" habits={archivedHabits} />
     </>
   );
 }
