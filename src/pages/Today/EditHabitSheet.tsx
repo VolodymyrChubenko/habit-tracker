@@ -44,9 +44,14 @@ export const EditHabitSheet = ({ habit, onClose }: Props) => {
         <label className={styles.label} htmlFor="edit-habit-name">Назва</label>
         <input
           id="edit-habit-name"
+          name="edit-habit-name"
           className={styles.input}
           value={name}
           onChange={e => setName(e.target.value)}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="sentences"
+          spellCheck={false}
           autoFocus
         />
       </div>

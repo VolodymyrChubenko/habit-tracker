@@ -27,10 +27,15 @@ export const AddHabitSheet = ({ onClose, onAdd }: Props) => {
           <label className={styles.label} htmlFor="habit-name">Назва</label>
           <input
             id="habit-name"
+            name="habit-name"
             className={styles.input}
             value={name}
             onChange={e => setName(e.target.value)}
             placeholder="Наприклад: Медитація"
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="sentences"
+            spellCheck={false}
             autoFocus
           />
         </div>

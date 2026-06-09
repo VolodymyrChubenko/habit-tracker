@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useKeyboardInset } from '../../hooks/useKeyboardInset';
 import styles from './BottomSheet.module.scss';
 
 interface Props {
@@ -7,6 +8,8 @@ interface Props {
 }
 
 export const BottomSheet = ({ onClose, children }: Props) => {
+  const keyboardInset = useKeyboardInset();
+
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
     document.addEventListener('keydown', handler);
@@ -15,7 +18,11 @@ export const BottomSheet = ({ onClose, children }: Props) => {
 
   return (
     <div className={styles.backdrop} onClick={onClose}>
-      <div className={styles.sheet} onClick={e => e.stopPropagation()}>
+      <div
+        className={styles.sheet}
+        style={{ paddingBottom: keyboardInset || undefined }}
+        onClick={e => e.stopPropagation()}
+      >
         <div className={styles.handle} />
         {children}
       </div>
