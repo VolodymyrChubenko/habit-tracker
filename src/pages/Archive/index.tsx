@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useHabits } from '../../hooks/useHabits';
 import { StatBoard } from '../Statistics/StatBoard';
+import { ArchivedHabitList } from './ArchivedHabitList';
 import styles from '../Statistics/Statistics.module.scss';
 
 export default function ArchivePage() {
@@ -21,6 +22,7 @@ export default function ArchivePage() {
       </div>
 
       <StatBoard scope="archived" habits={archivedHabits} />
+      <ArchivedHabitList habits={archivedHabits} />
     </>
   );
 }
