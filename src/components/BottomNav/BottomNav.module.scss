@@ -2,7 +2,7 @@
 
 .nav {
   background: $color-surface;
-  border-radius: 12px;
+  border-radius: 18px;
   margin: 0 12px 12px;
   padding: 6px;
   display: flex;
@@ -17,7 +17,7 @@
   align-items: center;
   gap: 3px;
   padding: 8px 12px;
-  border-radius: 6px;
+  border-radius: 12px;
   text-decoration: none;
   color: $color-text-muted;
   transition: background 0.15s;
