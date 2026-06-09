@@ -2,11 +2,11 @@
 
 .nav {
   background: $color-surface;
-  border-radius: 20px;
+  border-radius: 12px;
   margin: 0 12px 12px;
-  padding: 6px 8px;
+  padding: 6px;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   box-shadow: $shadow-nav;
   flex-shrink: 0;
 }
@@ -17,11 +17,11 @@
   align-items: center;
   gap: 3px;
   padding: 8px 12px;
-  border-radius: $radius-pill;
+  border-radius: 6px;
   text-decoration: none;
   color: $color-text-muted;
   transition: background 0.15s;
-
+  flex-basis: 30%;
   svg { stroke: $color-text-muted; }
 
   span {
