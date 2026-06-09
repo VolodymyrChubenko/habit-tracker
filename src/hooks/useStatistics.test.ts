@@ -10,7 +10,7 @@ beforeEach(() => {
 describe('useStatistics — retroactive completions before createdAt', () => {
   it('counts a log on a date before habit createdAt when retroactively added', () => {
     useHabitsStore.setState({
-      habits: [{ id: 'h1', name: 'Test', color: '#7CB9A8', createdAt: '2026-06-10' }],
+      habits: [{ id: 'h1', name: 'Test', color: '#7CB9A8', createdAt: '2026-06-10', order: 0 }],
       logs: [{ habitId: 'h1', date: '2026-06-01', completedAt: '2026-06-10T10:00:00.000Z' }],
     });
 
@@ -21,8 +21,8 @@ describe('useStatistics — retroactive completions before createdAt', () => {
   it('does not include a habit in total for a date before createdAt when no log exists', () => {
     useHabitsStore.setState({
       habits: [
-        { id: 'h1', name: 'Old', color: '#7CB9A8', createdAt: '2026-06-01' },
-        { id: 'h2', name: 'New', color: '#E8A87C', createdAt: '2026-06-10' },
+        { id: 'h1', name: 'Old', color: '#7CB9A8', createdAt: '2026-06-01', order: 0 },
+        { id: 'h2', name: 'New', color: '#E8A87C', createdAt: '2026-06-10', order: 1 },
       ],
       logs: [{ habitId: 'h1', date: '2026-06-01', completedAt: '2026-06-01T10:00:00.000Z' }],
     });
@@ -35,8 +35,8 @@ describe('useStatistics — retroactive completions before createdAt', () => {
   it('includes retroactive habit in total alongside habits that existed on the date', () => {
     useHabitsStore.setState({
       habits: [
-        { id: 'h1', name: 'Old', color: '#7CB9A8', createdAt: '2026-06-01' },
-        { id: 'h2', name: 'New', color: '#E8A87C', createdAt: '2026-06-10' },
+        { id: 'h1', name: 'Old', color: '#7CB9A8', createdAt: '2026-06-01', order: 0 },
+        { id: 'h2', name: 'New', color: '#E8A87C', createdAt: '2026-06-10', order: 1 },
       ],
       logs: [
         { habitId: 'h1', date: '2026-06-01', completedAt: '2026-06-01T10:00:00.000Z' },
@@ -54,8 +54,8 @@ describe('useStatistics — scope separation', () => {
   it('archived habit does not affect active scope progress', () => {
     useHabitsStore.setState({
       habits: [
-        { id: 'h1', name: 'Active', color: '#7CB9A8', createdAt: '2026-06-01' },
-        { id: 'h2', name: 'Archived', color: '#E8A87C', createdAt: '2026-06-01', archivedAt: '2026-06-05' },
+        { id: 'h1', name: 'Active', color: '#7CB9A8', createdAt: '2026-06-01', order: 0 },
+        { id: 'h2', name: 'Archived', color: '#E8A87C', createdAt: '2026-06-01', archivedAt: '2026-06-05', order: 1 },
       ],
       logs: [
         { habitId: 'h1', date: '2026-06-03', completedAt: '2026-06-03T10:00:00.000Z' },
@@ -71,7 +71,7 @@ describe('useStatistics — scope separation', () => {
   it('archived habit with logs is visible in archived scope', () => {
     useHabitsStore.setState({
       habits: [
-        { id: 'h1', name: 'Archived', color: '#7CB9A8', createdAt: '2026-06-01', archivedAt: '2026-06-05' },
+        { id: 'h1', name: 'Archived', color: '#7CB9A8', createdAt: '2026-06-01', archivedAt: '2026-06-05', order: 0 },
       ],
       logs: [
         { habitId: 'h1', date: '2026-06-03', completedAt: '2026-06-03T10:00:00.000Z' },
@@ -85,8 +85,8 @@ describe('useStatistics — scope separation', () => {
   it('active scope counts only active habits; archived scope counts only archived', () => {
     useHabitsStore.setState({
       habits: [
-        { id: 'h1', name: 'Active', color: '#7CB9A8', createdAt: '2026-06-01' },
-        { id: 'h2', name: 'Archived', color: '#E8A87C', createdAt: '2026-06-01', archivedAt: '2026-06-10' },
+        { id: 'h1', name: 'Active', color: '#7CB9A8', createdAt: '2026-06-01', order: 0 },
+        { id: 'h2', name: 'Archived', color: '#E8A87C', createdAt: '2026-06-01', archivedAt: '2026-06-10', order: 1 },
       ],
       logs: [
         { habitId: 'h1', date: '2026-06-03', completedAt: '2026-06-03T10:00:00.000Z' },

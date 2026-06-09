@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { format } from 'date-fns';
 import { uk } from 'date-fns/locale';
 import { useStatistics } from '../../hooks/useStatistics';
+import { useSwipe } from '../../hooks/useSwipe';
 import { HabitSelector } from './HabitSelector';
 import { ProgressCalendar } from './ProgressCalendar';
+import { StreakTiles } from './StreakTiles';
 import type { DateString, Habit, HabitId, StatScope } from '../../types';
 import styles from './Statistics.module.scss';
 
@@ -30,6 +32,8 @@ export const StatBoard = ({ scope, habits, onDayClick }: Props) => {
     else setMonth(m => m + 1);
   };
 
+  const swipe = useSwipe({ onSwipeLeft: nextMonth, onSwipeRight: prevMonth });
+
   return (
     <>
       <HabitSelector habits={habits} selected={filterIds} onChange={setFilterIds} />
@@ -42,12 +46,16 @@ export const StatBoard = ({ scope, habits, onDayClick }: Props) => {
         <button className={styles.navBtn} onClick={nextMonth}>›</button>
       </div>
 
-      <ProgressCalendar
-        year={year}
-        month={month}
-        progressByDate={progressByDate}
-        onDayClick={onDayClick}
-      />
+      <div {...swipe}>
+        <ProgressCalendar
+          year={year}
+          month={month}
+          progressByDate={progressByDate}
+          onDayClick={onDayClick}
+        />
+      </div>
+
+      <StreakTiles scope={scope} habits={habits} filterIds={filterIds} />
     </>
   );
 };

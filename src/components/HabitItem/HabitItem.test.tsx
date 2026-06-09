@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { HabitItem } from './HabitItem';
 
-const habit = { id: '1', name: 'Медитація', color: '#7CB9A8', createdAt: '2026-06-01' };
+const habit = { id: '1', name: 'Медитація', color: '#7CB9A8', createdAt: '2026-06-01', order: 0 };
 
 it('renders habit name', () => {
   render(<HabitItem habit={habit} done={false} onToggle={vi.fn()} onEdit={vi.fn()} />);

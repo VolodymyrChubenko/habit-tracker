@@ -7,6 +7,7 @@ export interface Habit {
   color: string; // hex "#7CB9A8"
   createdAt: DateString;
   archivedAt?: DateString;
+  order: number;
 }
 
 export interface HabitLog {
@@ -17,5 +18,4 @@ export interface HabitLog {
 
 export type Theme = 'light' | 'dark' | 'system';
 export type StatScope = 'active' | 'archived';
-
 export type ActiveTab = 'today' | 'statistics' | 'settings';

@@ -116,6 +116,44 @@ describe('unarchiveHabit', () => {
   });
 });
 
+describe('reorderHabits', () => {
+  it('призначає order відповідно до переданого порядку id', () => {
+    useHabitsStore.getState().addHabit('A', '#7CB9A8');
+    useHabitsStore.getState().addHabit('B', '#E8A87C');
+    useHabitsStore.getState().addHabit('C', '#9B89D4');
+    const [a, b, c] = useHabitsStore.getState().habits;
+
+    useHabitsStore.getState().reorderHabits([c.id, a.id, b.id]);
+
+    const byId = Object.fromEntries(
+      useHabitsStore.getState().habits.map(h => [h.name, h.order]),
+    );
+    expect(byId['C']).toBe(0);
+    expect(byId['A']).toBe(1);
+    expect(byId['B']).toBe(2);
+  });
+
+  it('не змінює order звичок поза переданим списком', () => {
+    useHabitsStore.getState().addHabit('A', '#7CB9A8');
+    useHabitsStore.getState().addHabit('B', '#E8A87C');
+    const [a, b] = useHabitsStore.getState().habits;
+    const originalBOrder = b.order;
+
+    useHabitsStore.getState().reorderHabits([a.id]);
+
+    const updatedB = useHabitsStore.getState().habits.find(h => h.id === b.id)!;
+    expect(updatedB.order).toBe(originalBOrder);
+  });
+
+  it('addHabit призначає зростаючий order', () => {
+    useHabitsStore.getState().addHabit('A', '#7CB9A8');
+    useHabitsStore.getState().addHabit('B', '#E8A87C');
+    const habits = useHabitsStore.getState().habits;
+    expect(habits[0].order).toBe(0);
+    expect(habits[1].order).toBe(1);
+  });
+});
+
 describe('saveLogsForDate', () => {
   it('replaces scoped logs for a date with the given habitIds', () => {
     useHabitsStore.getState().addHabit('A', '#7CB9A8');

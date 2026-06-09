@@ -15,7 +15,11 @@ interface HabitsState {
   archiveHabit: (habitId: HabitId) => void;
   unarchiveHabit: (habitId: HabitId) => void;
   saveLogsForDate: (date: DateString, completedHabitIds: HabitId[], scopeHabitIds: HabitId[]) => void;
+  reorderHabits: (orderedIds: HabitId[]) => void;
 }
+
+const nextOrder = (habits: Habit[]): number =>
+  habits.reduce((max, h) => Math.max(max, h.order ?? 0), -1) + 1;
 
 export const useHabitsStore = create<HabitsState>()(
   persist(
@@ -27,7 +31,13 @@ export const useHabitsStore = create<HabitsState>()(
         set(state => ({
           habits: [
             ...state.habits,
-            { id: nanoid(), name, color, createdAt: format(new Date(), 'yyyy-MM-dd') },
+            {
+              id: nanoid(),
+              name,
+              color,
+              createdAt: format(new Date(), 'yyyy-MM-dd'),
+              order: nextOrder(state.habits),
+            },
           ],
         })),
 
@@ -85,7 +95,27 @@ export const useHabitsStore = create<HabitsState>()(
             ],
           };
         }),
+
+      reorderHabits: (orderedIds) =>
+        set(state => {
+          const position = new Map(orderedIds.map((id, i) => [id, i]));
+          return {
+            habits: state.habits.map(h =>
+              position.has(h.id) ? { ...h, order: position.get(h.id)! } : h,
+            ),
+          };
+        }),
     }),
-    { name: 'habit-tracker-storage' },
+    {
+      name: 'habit-tracker-storage',
+      version: 1,
+      migrate: (persisted: unknown, version: number) => {
+        const state = persisted as HabitsState;
+        if (version === 0 && state?.habits) {
+          state.habits = state.habits.map((h, i) => ({ ...h, order: h.order ?? i }));
+        }
+        return state;
+      },
+    },
   ),
 );
