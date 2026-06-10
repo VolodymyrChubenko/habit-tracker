@@ -56,3 +56,47 @@
 }
 
 .version { font-size: 15px; color: $color-text-muted; }
+
+// Toggle
+.toggle {
+  position: relative;
+  width: 44px;
+  height: 26px;
+  flex-shrink: 0;
+}
+
+.toggleTrack {
+  position: absolute;
+  inset: 0;
+  border-radius: 13px;
+  background: $color-border;
+  transition: background 0.2s ease;
+}
+
+.toggleThumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.toggleOn .toggleTrack { background: $color-accent; }
+.toggleOn .toggleThumb { transform: translateX(18px); }
+
+// Time input
+.timeInput {
+  font-size: 15px;
+  font-weight: 500;
+  color: $color-text;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
