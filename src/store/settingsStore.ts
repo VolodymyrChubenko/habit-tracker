@@ -24,13 +24,16 @@ export const useSettingsStore = create<SettingsState>()(
     {
       name: 'habit-tracker-settings',
       version: 1,
-      migrate: (persisted: unknown) => {
+      migrate: (persisted: unknown, version: number) => {
         const state = persisted as Partial<SettingsState>;
-        return {
-          theme: state.theme ?? 'system',
-          reminderEnabled: state.reminderEnabled ?? false,
-          reminderTime: state.reminderTime ?? '08:00',
-        } as SettingsState;
+        if (version < 1) {
+          return {
+            theme: state.theme ?? 'system',
+            reminderEnabled: state.reminderEnabled ?? false,
+            reminderTime: state.reminderTime ?? '08:00',
+          } as SettingsState;
+        }
+        return state as SettingsState;
       },
     },
   ),

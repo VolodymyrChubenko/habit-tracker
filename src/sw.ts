@@ -20,14 +20,18 @@ self.addEventListener('message', (event: ExtendableMessageEvent) => {
 
   if (!data.enabled) return;
 
-  const ms = calcMsUntilTime(data.time);
-  scheduledTimer = setTimeout(() => {
-    void self.registration.showNotification('Habit Tracker', {
-      body: 'Час відмічати звички! 🌿',
-      icon: '/icon-192.png',
-      badge: '/icon-192.png',
-      tag: 'daily-reminder',
-    });
-    scheduledTimer = null;
-  }, ms);
+  const schedule = () => {
+    const ms = calcMsUntilTime(data.time);
+    scheduledTimer = setTimeout(() => {
+      void self.registration.showNotification('Habit Tracker', {
+        body: 'Час відмічати звички! 🌿',
+        icon: '/icon-192.png',
+        badge: '/icon-192.png',
+        tag: 'daily-reminder',
+      });
+      scheduledTimer = null;
+      schedule();
+    }, ms);
+  };
+  schedule();
 });

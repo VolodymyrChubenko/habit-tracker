@@ -122,6 +122,8 @@ export default function SettingsPage() {
             value={reminderTime}
             onChange={e => setReminderTime(e.target.value)}
             onClick={e => e.stopPropagation()}
+            disabled={!reminderEnabled}
+            aria-label="Час нагадування"
           />
         </div>
       </div>
