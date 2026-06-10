@@ -15,6 +15,8 @@
   border-radius: $radius-sheet $radius-sheet 0 0;
   padding: 20px;
   width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
   max-height: 85dvh;
   overflow-y: auto;
   animation: slideUp 0.2s ease;
