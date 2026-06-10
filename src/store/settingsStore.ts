@@ -21,6 +21,17 @@ export const useSettingsStore = create<SettingsState>()(
       setReminderEnabled: v => set({ reminderEnabled: v }),
       setReminderTime: t => set({ reminderTime: t }),
     }),
-    { name: 'habit-tracker-settings' },
+    {
+      name: 'habit-tracker-settings',
+      version: 1,
+      migrate: (persisted: unknown) => {
+        const state = persisted as Partial<SettingsState>;
+        return {
+          theme: state.theme ?? 'system',
+          reminderEnabled: state.reminderEnabled ?? false,
+          reminderTime: state.reminderTime ?? '08:00',
+        } as SettingsState;
+      },
+    },
   ),
 );
