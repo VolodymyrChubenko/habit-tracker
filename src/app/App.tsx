@@ -2,10 +2,12 @@ import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { BottomNav } from '../components/BottomNav/BottomNav';
 import { useSettingsStore } from '../store/settingsStore';
+import { useReminderScheduler } from '../hooks/useReminderScheduler';
 import styles from './App.module.scss';
 
 export default function App() {
   const theme = useSettingsStore(s => s.theme);
+  useReminderScheduler();
 
   useEffect(() => {
     const root = document.documentElement;
