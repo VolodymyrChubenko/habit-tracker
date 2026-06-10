@@ -85,7 +85,15 @@ export default function SettingsPage() {
       <div className={styles.section}>
         <div className={styles.sectionLabel}>Нагадування</div>
 
-        <div className={styles.row} onClick={() => void handleReminderToggle()}>
+        <div
+          className={styles.row}
+          role="switch"
+          aria-checked={reminderEnabled}
+          aria-label="Щоденне нагадування"
+          tabIndex={0}
+          onKeyDown={e => { if (e.key === ' ' || e.key === 'Enter') void handleReminderToggle(); }}
+          onClick={() => void handleReminderToggle()}
+        >
           <div className={styles.icon} style={{ background: '#F0EBF8', border: '1.5px solid #E8E4DC' }}>
             <BellIcon />
           </div>

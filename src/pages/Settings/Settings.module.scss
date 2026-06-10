@@ -80,7 +80,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: white;
+  background: $color-surface;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   transition: transform 0.2s ease;
 }
@@ -90,6 +90,7 @@
 
 // Time input
 .timeInput {
+  color-scheme: light dark;
   font-size: 15px;
   font-weight: 500;
   color: $color-text;
