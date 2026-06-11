@@ -1515,7 +1515,7 @@ git commit -m "feat: HabitItem with long-press archive and toggle"
 
 .titles { display: flex; flex-direction: column; gap: 2px; }
 
-.title { font-size: 24px; font-weight: 700; color: $color-text; }
+.title { font-size: 24px; font-weight: 600; color: $color-text; }
 
 .subtitle { font-size: 13px; color: $color-text-secondary; }
 
@@ -1758,7 +1758,7 @@ git commit -m "feat: Today page with HabitList, DoneList, progress bar, archive 
 ```scss
 @use '../../styles/tokens' as *;
 
-.title { font-size: 17px; font-weight: 700; color: $color-text; margin-bottom: 18px; }
+.title { font-size: 17px; font-weight: 600; color: $color-text; margin-bottom: 18px; }
 
 .field { margin-bottom: 14px; }
 
@@ -1875,7 +1875,7 @@ git commit -m "feat: AddHabitSheet with name input and ColorPicker"
 ```scss
 @use '../../styles/tokens' as *;
 
-.title { font-size: 24px; font-weight: 700; color: $color-text; margin-bottom: 16px; }
+.title { font-size: 24px; font-weight: 600; color: $color-text; margin-bottom: 16px; }
 
 .monthNav {
   display: flex;
@@ -2213,7 +2213,7 @@ git commit -m "feat: Statistics page with calendar, habit filter, past-date edit
 ```scss
 @use '../../styles/tokens' as *;
 
-.title { font-size: 24px; font-weight: 700; color: $color-text; margin-bottom: 24px; }
+.title { font-size: 24px; font-weight: 600; color: $color-text; margin-bottom: 24px; }
 
 .section {
   background: $color-surface;

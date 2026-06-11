@@ -515,7 +515,7 @@ export const StreakTiles = ({ habits, filterIds }: Props) => {
 
 .count {
   font-size: 26px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.1;
 }
 
