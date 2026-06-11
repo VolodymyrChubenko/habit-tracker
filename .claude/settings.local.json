@@ -7,7 +7,34 @@
       "Bash(npm run *)",
       "Bash(git add *)",
       "Bash(git commit *)",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(git checkout *)"
+    ]
+  },
+  "preferredNotifChannel": "terminal_bell",
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe -c \"[System.Media.SystemSounds]::Asterisk.Play()\""
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe -c \"[System.Media.SystemSounds]::Question.Play()\""
+          }
+        ]
+      }
     ]
   }
 }
+
