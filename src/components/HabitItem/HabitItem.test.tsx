@@ -23,6 +23,16 @@ it('defers onToggle until the complete animation finishes', () => {
   expect(onToggle).toHaveBeenCalledOnce();
 });
 
+it('defers onToggle on the uncomplete path', () => {
+  vi.useFakeTimers();
+  const onToggle = vi.fn();
+  render(<HabitItem habit={habit} done={true} onToggle={onToggle} onEdit={vi.fn()} />);
+  fireEvent.click(screen.getByRole('button', { name: /скасувати виконання/i }));
+  expect(onToggle).not.toHaveBeenCalled();
+  act(() => { vi.advanceTimersByTime(350); });
+  expect(onToggle).toHaveBeenCalledOnce();
+});
+
 it('does not call onToggle twice on a double click', () => {
   vi.useFakeTimers();
   const onToggle = vi.fn();

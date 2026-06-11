@@ -19,12 +19,14 @@ const prefersReducedMotion = () =>
 export const HabitItem = ({ habit, done, onToggle, onEdit }: Props) => {
   const [animating, setAnimating] = useState(false);
   const timer = useRef<number | undefined>(undefined);
+  const firing = useRef(false);
 
   useEffect(() => () => clearTimeout(timer.current), []);
 
   const handleToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (animating) return;
+    if (firing.current) return;
+    firing.current = true;
     if (prefersReducedMotion()) {
       onToggle();
       return;
@@ -33,6 +35,7 @@ export const HabitItem = ({ habit, done, onToggle, onEdit }: Props) => {
     timer.current = window.setTimeout(onToggle, done ? UNCOMPLETE_MS : COMPLETE_MS);
   };
 
+  // While animating: a done tile fades out (uncomplete), a todo tile sweeps + collapses (complete).
   const className = [
     styles.card,
     done ? styles.done : '',
