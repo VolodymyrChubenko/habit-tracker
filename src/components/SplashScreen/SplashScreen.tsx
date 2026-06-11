@@ -34,6 +34,8 @@ export function SplashScreen({ onDone }: Props) {
     add('exit', 3300);
     timers.current.push(window.setTimeout(finish, 3700));
 
+    // ids aliases timers.current intentionally: StrictMode re-mounts push into
+    // the same array, so cleanup always sees every registered timer.
     const ids = timers.current;
     return () => ids.forEach(clearTimeout);
   }, [finish]);
@@ -41,15 +43,26 @@ export function SplashScreen({ onDone }: Props) {
   const skip = () => {
     if (finished.current) return;
     timers.current.forEach(clearTimeout);
-    timers.current = [];
+    timers.current.length = 0;
     setPhases(p => (p.includes('exit') ? p : [...p, 'exit']));
     timers.current.push(window.setTimeout(finish, 250));
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape') skip();
   };
 
   const className = [styles.splash, ...phases.map(p => styles[p])].join(' ');
 
   return (
-    <div className={className} onClick={skip} role="presentation">
+    <div
+      className={className}
+      onClick={skip}
+      onKeyDown={handleKeyDown}
+      role="button"
+      aria-label="Пропустити заставку"
+      tabIndex={0}
+    >
       <svg className={styles.logo} viewBox="0 0 200 200" aria-hidden="true">
         <circle
           className={`${styles.ring} ${styles.orange}`}

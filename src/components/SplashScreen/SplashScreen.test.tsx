@@ -28,6 +28,16 @@ it('skips to onDone on tap', () => {
   expect(onDone).toHaveBeenCalledOnce();
 });
 
+it('does not call onDone twice on double tap', () => {
+  vi.useFakeTimers();
+  const onDone = vi.fn();
+  const { container } = render(<SplashScreen onDone={onDone} />);
+  fireEvent.click(container.firstChild as Element);
+  fireEvent.click(container.firstChild as Element);
+  act(() => { vi.advanceTimersByTime(300); });
+  expect(onDone).toHaveBeenCalledOnce();
+});
+
 it('calls onDone immediately when reduced motion is preferred', () => {
   const mql = {
     matches: true, media: '', onchange: null,
