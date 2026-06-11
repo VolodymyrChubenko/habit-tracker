@@ -1,2 +1,87 @@
-// Stub — full animation styles added in Task 4
-.splash { }
+@use '../../styles/tokens' as *;
+
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: #FAF7F0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+.exit { opacity: 0; }
+
+/* logo intro */
+.logo {
+  width: 130px;
+  height: 130px;
+  transform: rotate(-120deg) scale(0.9);
+  transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.draw .logo { transform: rotate(0deg) scale(1); }
+
+/* ring arcs */
+.ring { fill: none; stroke-width: 13; stroke-linecap: round; }
+.orange {
+  stroke: $color-accent-warm;
+  stroke-dasharray: 0 100;
+  transition: stroke-dasharray 0.9s ease;
+}
+.green {
+  stroke: $color-accent;
+  stroke-dasharray: 0 100;
+  stroke-dashoffset: 0;
+  transition: stroke-dasharray 0.9s ease, stroke-dashoffset 0.9s ease;
+}
+.draw .orange { stroke-dasharray: 50 100; }
+.draw .green  { stroke-dasharray: 50 100; stroke-dashoffset: -50; }
+.morph .orange { stroke-dasharray: 25 100; }
+.morph .green  { stroke-dasharray: 75 100; stroke-dashoffset: -25; }
+
+/* checkmark */
+.check {
+  fill: none;
+  stroke: $color-accent;
+  stroke-width: 13;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 0.4s ease-out;
+}
+.checkOn .check { stroke-dashoffset: 0; }
+
+/* tagline */
+.word {
+  display: flex;
+  margin-top: 28px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  color: #333333;
+  letter-spacing: 0.04em;
+  transition: letter-spacing 0.6s ease;
+}
+.text .word { letter-spacing: 0.10em; }
+
+.word span {
+  opacity: 0;
+  filter: blur(4px);
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+.text .word span {
+  opacity: 1;
+  filter: blur(0);
+  transition-delay: calc(var(--i) * 45ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .splash, .logo, .orange, .green, .check, .word, .word span {
+    transition: none !important;
+  }
+}
