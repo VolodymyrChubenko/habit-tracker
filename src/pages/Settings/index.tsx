@@ -152,7 +152,7 @@ export default function SettingsPage() {
       <div className={styles.section}>
         <div className={styles.row} style={{ cursor: 'default' }}>
           <span style={{ flex: 1, fontSize: 15, color: '#aaa' }}>Версія</span>
-          <span className={styles.version}>1.0.0</span>
+          <span className={styles.version}>1.1.0</span>
         </div>
       </div>
 
