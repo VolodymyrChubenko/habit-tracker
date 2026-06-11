@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { BottomNav } from '../components/BottomNav/BottomNav';
+import { SplashScreen } from '../components/SplashScreen/SplashScreen';
 import { useSettingsStore } from '../store/settingsStore';
 import { useReminderScheduler } from '../hooks/useReminderScheduler';
 import styles from './App.module.scss';
@@ -8,6 +9,15 @@ import styles from './App.module.scss';
 export default function App() {
   const theme = useSettingsStore(s => s.theme);
   useReminderScheduler();
+
+  const [showSplash, setShowSplash] = useState(
+    () => typeof sessionStorage !== 'undefined' && !sessionStorage.getItem('splashShown'),
+  );
+
+  const handleSplashDone = useCallback(() => {
+    try { sessionStorage.setItem('splashShown', '1'); } catch { /* ignore */ }
+    setShowSplash(false);
+  }, []);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -34,6 +44,7 @@ export default function App() {
         <Outlet />
       </main>
       <BottomNav />
+      {showSplash && <SplashScreen onDone={handleSplashDone} />}
     </div>
   );
 }
