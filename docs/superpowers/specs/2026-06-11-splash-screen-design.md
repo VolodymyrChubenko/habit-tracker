@@ -15,7 +15,7 @@ duration ~3 seconds. Also switch the app's typeface to **Montserrat** everywhere
 
 - **Background:** `#FAF7F0` (matches `$color-bg-raw`), full-screen.
 - **Logo colors:** green `#7CB9A8` (`$color-accent`), orange `#E8A87C` (`$color-accent-warm`).
-- **Tagline text:** `IMPROVE YOURSELF`, color `#333333`, Montserrat, `font-weight: 300`.
+- **Tagline text:** `IMPROVE YOURSELF`, color `#333333`, Montserrat, `font-weight: 400`.
 - **Chosen motion style:** Variant **C — "Bold sweep"**.
 
 ### Animation sequence (~3s total)
