@@ -1,4 +1,5 @@
 @use 'tokens' as *;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
 // CSS custom properties — define light defaults, override for dark theme
 :root {
@@ -32,7 +33,7 @@
 html {
   background: $color-bg;
   color: $color-text;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-tap-highlight-color: transparent;
 }
 
