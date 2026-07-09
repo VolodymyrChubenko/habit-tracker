@@ -3,23 +3,23 @@ import { format } from 'date-fns';
 import { uk } from 'date-fns/locale';
 import { useStatistics } from '../../hooks/useStatistics';
 import { useSwipe } from '../../hooks/useSwipe';
-import { HabitSelector } from './HabitSelector';
+import { ChallengeSelector } from './ChallengeSelector';
 import { ProgressCalendar } from './ProgressCalendar';
 import { StreakTiles } from './StreakTiles';
-import type { DateString, Habit, HabitId, StatScope } from '../../types';
+import type { DateString, Challenge, ChallengeId, StatScope } from '../../types';
 import styles from './Statistics.module.scss';
 
 interface Props {
   scope: StatScope;
-  habits: Habit[];
+  challenges: Challenge[];
   onDayClick?: (date: DateString) => void;
 }
 
-export const StatBoard = ({ scope, habits, onDayClick }: Props) => {
+export const StatBoard = ({ scope, challenges, onDayClick }: Props) => {
   const now = new Date();
   const [year, setYear] = useState(now.getFullYear());
   const [month, setMonth] = useState(now.getMonth());
-  const [filterIds, setFilterIds] = useState<HabitId[] | null>(null);
+  const [filterIds, setFilterIds] = useState<ChallengeId[] | null>(null);
   const [slideDir, setSlideDir] = useState<'next' | 'prev' | null>(null);
   const [animKey, setAnimKey] = useState(0);
 
@@ -42,7 +42,7 @@ export const StatBoard = ({ scope, habits, onDayClick }: Props) => {
 
   return (
     <>
-      <HabitSelector habits={habits} selected={filterIds} onChange={setFilterIds} />
+      <ChallengeSelector challenges={challenges} selected={filterIds} onChange={setFilterIds} />
 
       <div className={styles.monthNav}>
         <button className={styles.navBtn} onClick={prevMonth}>‹</button>
@@ -66,7 +66,7 @@ export const StatBoard = ({ scope, habits, onDayClick }: Props) => {
         </div>
       </div>
 
-      <StreakTiles scope={scope} habits={habits} filterIds={filterIds} />
+      <StreakTiles scope={scope} challenges={challenges} filterIds={filterIds} />
     </>
   );
 };

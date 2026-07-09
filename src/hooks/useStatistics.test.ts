@@ -1,30 +1,30 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { renderHook } from '@testing-library/react';
-import { useHabitsStore } from '../store/habitsStore';
+import { useChallengesStore } from '../store/challengesStore';
 import { useStatistics } from './useStatistics';
 
 beforeEach(() => {
-  useHabitsStore.setState({ habits: [], logs: [] });
+  useChallengesStore.setState({ challenges: [], logs: [] });
 });
 
 describe('useStatistics — retroactive completions before createdAt', () => {
-  it('counts a log on a date before habit createdAt when retroactively added', () => {
-    useHabitsStore.setState({
-      habits: [{ id: 'h1', name: 'Test', color: '#7CB9A8', createdAt: '2026-06-10', order: 0 }],
-      logs: [{ habitId: 'h1', date: '2026-06-01', completedAt: '2026-06-10T10:00:00.000Z' }],
+  it('counts a log on a date before challenge createdAt when retroactively added', () => {
+    useChallengesStore.setState({
+      challenges: [{ id: 'h1', name: 'Test', color: '#7CB9A8', createdAt: '2026-06-10', order: 0 }],
+      logs: [{ challengeId: 'h1', date: '2026-06-01', completedAt: '2026-06-10T10:00:00.000Z' }],
     });
 
     const { result } = renderHook(() => useStatistics('active'));
     expect(result.current.progressByDate.get('2026-06-01')).toBe(1);
   });
 
-  it('does not include a habit in total for a date before createdAt when no log exists', () => {
-    useHabitsStore.setState({
-      habits: [
+  it('does not include a challenge in total for a date before createdAt when no log exists', () => {
+    useChallengesStore.setState({
+      challenges: [
         { id: 'h1', name: 'Old', color: '#7CB9A8', createdAt: '2026-06-01', order: 0 },
         { id: 'h2', name: 'New', color: '#E8A87C', createdAt: '2026-06-10', order: 1 },
       ],
-      logs: [{ habitId: 'h1', date: '2026-06-01', completedAt: '2026-06-01T10:00:00.000Z' }],
+      logs: [{ challengeId: 'h1', date: '2026-06-01', completedAt: '2026-06-01T10:00:00.000Z' }],
     });
 
     const { result } = renderHook(() => useStatistics('active'));
@@ -32,15 +32,15 @@ describe('useStatistics — retroactive completions before createdAt', () => {
     expect(result.current.progressByDate.get('2026-06-01')).toBe(1);
   });
 
-  it('includes retroactive habit in total alongside habits that existed on the date', () => {
-    useHabitsStore.setState({
-      habits: [
+  it('includes retroactive challenge in total alongside challenges that existed on the date', () => {
+    useChallengesStore.setState({
+      challenges: [
         { id: 'h1', name: 'Old', color: '#7CB9A8', createdAt: '2026-06-01', order: 0 },
         { id: 'h2', name: 'New', color: '#E8A87C', createdAt: '2026-06-10', order: 1 },
       ],
       logs: [
-        { habitId: 'h1', date: '2026-06-01', completedAt: '2026-06-01T10:00:00.000Z' },
-        { habitId: 'h2', date: '2026-06-01', completedAt: '2026-06-10T10:00:00.000Z' },
+        { challengeId: 'h1', date: '2026-06-01', completedAt: '2026-06-01T10:00:00.000Z' },
+        { challengeId: 'h2', date: '2026-06-01', completedAt: '2026-06-10T10:00:00.000Z' },
       ],
     });
 
@@ -51,15 +51,15 @@ describe('useStatistics — retroactive completions before createdAt', () => {
 });
 
 describe('useStatistics — scope separation', () => {
-  it('archived habit does not affect active scope progress', () => {
-    useHabitsStore.setState({
-      habits: [
+  it('archived challenge does not affect active scope progress', () => {
+    useChallengesStore.setState({
+      challenges: [
         { id: 'h1', name: 'Active', color: '#7CB9A8', createdAt: '2026-06-01', order: 0 },
         { id: 'h2', name: 'Archived', color: '#E8A87C', createdAt: '2026-06-01', archivedAt: '2026-06-05', order: 1 },
       ],
       logs: [
-        { habitId: 'h1', date: '2026-06-03', completedAt: '2026-06-03T10:00:00.000Z' },
-        { habitId: 'h2', date: '2026-06-03', completedAt: '2026-06-03T10:00:00.000Z' },
+        { challengeId: 'h1', date: '2026-06-03', completedAt: '2026-06-03T10:00:00.000Z' },
+        { challengeId: 'h2', date: '2026-06-03', completedAt: '2026-06-03T10:00:00.000Z' },
       ],
     });
 
@@ -68,13 +68,13 @@ describe('useStatistics — scope separation', () => {
     expect(result.current.progressByDate.get('2026-06-03')).toBe(1);
   });
 
-  it('archived habit with logs is visible in archived scope', () => {
-    useHabitsStore.setState({
-      habits: [
+  it('archived challenge with logs is visible in archived scope', () => {
+    useChallengesStore.setState({
+      challenges: [
         { id: 'h1', name: 'Archived', color: '#7CB9A8', createdAt: '2026-06-01', archivedAt: '2026-06-05', order: 0 },
       ],
       logs: [
-        { habitId: 'h1', date: '2026-06-03', completedAt: '2026-06-03T10:00:00.000Z' },
+        { challengeId: 'h1', date: '2026-06-03', completedAt: '2026-06-03T10:00:00.000Z' },
       ],
     });
 
@@ -82,15 +82,15 @@ describe('useStatistics — scope separation', () => {
     expect(result.current.progressByDate.get('2026-06-03')).toBe(1);
   });
 
-  it('active scope counts only active habits; archived scope counts only archived', () => {
-    useHabitsStore.setState({
-      habits: [
+  it('active scope counts only active challenges; archived scope counts only archived', () => {
+    useChallengesStore.setState({
+      challenges: [
         { id: 'h1', name: 'Active', color: '#7CB9A8', createdAt: '2026-06-01', order: 0 },
         { id: 'h2', name: 'Archived', color: '#E8A87C', createdAt: '2026-06-01', archivedAt: '2026-06-10', order: 1 },
       ],
       logs: [
-        { habitId: 'h1', date: '2026-06-03', completedAt: '2026-06-03T10:00:00.000Z' },
-        { habitId: 'h2', date: '2026-06-03', completedAt: '2026-06-03T10:00:00.000Z' },
+        { challengeId: 'h1', date: '2026-06-03', completedAt: '2026-06-03T10:00:00.000Z' },
+        { challengeId: 'h2', date: '2026-06-03', completedAt: '2026-06-03T10:00:00.000Z' },
       ],
     });
 

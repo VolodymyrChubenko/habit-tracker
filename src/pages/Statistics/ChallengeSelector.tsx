@@ -1,12 +1,12 @@
-import type { Habit, HabitId } from '../../types';
+import type { Challenge, ChallengeId } from '../../types';
 
 interface Props {
-  habits: Habit[];
-  selected: HabitId[] | null; // null = all
-  onChange: (ids: HabitId[] | null) => void;
+  challenges: Challenge[];
+  selected: ChallengeId[] | null; // null = all
+  onChange: (ids: ChallengeId[] | null) => void;
 }
 
-export const HabitSelector = ({ habits, selected, onChange }: Props) => {
+export const ChallengeSelector = ({ challenges, selected, onChange }: Props) => {
   return (
     <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 14, overflowX: 'auto' }}>
       <button
@@ -20,7 +20,7 @@ export const HabitSelector = ({ habits, selected, onChange }: Props) => {
       >
         Всі
       </button>
-      {habits.map(h => {
+      {challenges.map(h => {
         const isActive = selected?.includes(h.id);
         return (
           <button

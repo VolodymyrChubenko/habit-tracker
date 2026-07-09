@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useHabits } from '../../hooks/useHabits';
+import { useChallenges } from '../../hooks/useChallenges';
 import { StatBoard } from './StatBoard';
 import { DateEditSheet } from './DateEditSheet';
 import type { DateString } from '../../types';
 import styles from './Statistics.module.scss';
 
 export default function StatisticsPage() {
-  const { activeHabits } = useHabits();
+  const { activeChallenges } = useChallenges();
   const [editDate, setEditDate] = useState<DateString | null>(null);
 
   return (
@@ -19,7 +19,7 @@ export default function StatisticsPage() {
         </Link>
       </div>
 
-      <StatBoard scope="active" habits={activeHabits} onDayClick={setEditDate} />
+      <StatBoard scope="active" challenges={activeChallenges} onDayClick={setEditDate} />
 
       {editDate && (
         <DateEditSheet date={editDate} onClose={() => setEditDate(null)} />

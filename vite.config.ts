@@ -12,9 +12,9 @@ export default defineConfig({
       srcDir: 'src',
       filename: 'sw.ts',
       manifest: {
-        name: 'Habit Tracker',
-        short_name: 'Habits',
-        description: 'Відслідковуй щоденні звички',
+        name: 'Challenge Tracker',
+        short_name: 'Challenges',
+        description: 'Відслідковуй щоденні челенджі',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#FAF7F0',

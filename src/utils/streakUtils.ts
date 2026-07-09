@@ -1,5 +1,5 @@
 import { format, subDays, parseISO } from 'date-fns';
-import type { DateString, Habit } from '../types';
+import type { DateString, Challenge } from '../types';
 
 const toStr = (d: Date): DateString => format(d, 'yyyy-MM-dd');
 
@@ -11,7 +11,7 @@ const toStr = (d: Date): DateString => format(d, 'yyyy-MM-dd');
  * - ретроактивні дні до createdAt рахуються, якщо відмічені
  */
 export const calcStreak = (
-  _habit: Habit,
+  _challenge: Challenge,
   completedDates: Set<DateString>,
   todayStr: DateString,
 ): number => {

@@ -1,6 +1,9 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { Theme } from '../types';
+import { adoptLegacyStorageKey } from '../utils/storageMigration';
+
+const STORAGE_KEY = 'challenge-tracker-settings';
 
 interface SettingsState {
   theme: Theme;
@@ -10,6 +13,8 @@ interface SettingsState {
   setReminderEnabled: (v: boolean) => void;
   setReminderTime: (t: string) => void;
 }
+
+adoptLegacyStorageKey('habit-tracker-settings', STORAGE_KEY);
 
 export const useSettingsStore = create<SettingsState>()(
   persist(
@@ -22,7 +27,7 @@ export const useSettingsStore = create<SettingsState>()(
       setReminderTime: t => set({ reminderTime: t }),
     }),
     {
-      name: 'habit-tracker-settings',
+      name: STORAGE_KEY,
       version: 1,
       migrate: (persisted: unknown, version: number) => {
         const state = persisted as Partial<SettingsState>;

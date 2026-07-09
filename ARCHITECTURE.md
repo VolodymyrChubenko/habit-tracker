@@ -1,4 +1,4 @@
-# Habit Tracker PWA — Architecture
+# Challenge Tracker PWA — Architecture
 
 > **Стек:** React 18 + TypeScript (strict) + Vite + Zustand + React Router v6  
 > **Тип:** PWA, орієнтований на мобільні пристрої  
@@ -65,28 +65,28 @@ src/
 ├── pages/
 │   ├── Today/
 │   │   ├── index.tsx            # Сторінка Today
-│   │   ├── HabitList.tsx        # Список активних звичок
+│   │   ├── ChallengeList.tsx        # Список активних звичок
 │   │   ├── DoneList.tsx         # Акордіон зі списком виконаних
-│   │   └── AddHabitSheet.tsx    # Bottom sheet — форма додавання звички
+│   │   └── AddChallengeSheet.tsx    # Bottom sheet — форма додавання звички
 │   ├── Statistics/
 │   │   ├── index.tsx            # Сторінка Statistics
-│   │   ├── HabitSelector.tsx    # Вибір звички для фільтрації
+│   │   ├── ChallengeSelector.tsx    # Вибір звички для фільтрації
 │   │   └── ProgressCalendar.tsx # Календар з SVG-окружностями прогресу
 │   └── Settings/
 │       └── index.tsx            # Сторінка Settings
 │
 ├── components/                  # Перевикористовувані UI компоненти
-│   ├── HabitItem.tsx            # Картка звички (Today і Done)
+│   ├── ChallengeItem.tsx            # Картка звички (Today і Done)
 │   ├── BottomNav.tsx            # Footer навігація (3 таби)
 │   ├── ColorPicker.tsx          # Обгортка для input[type=color]
 │   └── CircularProgress.tsx     # SVG окружність для календаря
 │
 ├── store/
-│   ├── habitsStore.ts           # Звички + логи + CRUD операції
+│   ├── challengesStore.ts           # Звички + логи + CRUD операції
 │   └── settingsStore.ts         # Тема та інші налаштування
 │
 ├── hooks/
-│   ├── useHabits.ts             # Селектори і actions з habitsStore
+│   ├── useChallenges.ts             # Селектори і actions з challengesStore
 │   ├── useTodayProgress.ts      # Логіка розбивки Today / Done
 │   └── useStatistics.ts         # Обрахунок прогресу по датах
 │
@@ -107,20 +107,20 @@ src/
 ```typescript
 // src/types/index.ts
 
-export type HabitId = string;
+export type ChallengeId = string;
 export type DateString = string; // ISO формат: "2026-06-03"
 
-export interface Habit {
-  id: HabitId;
+export interface Challenge {
+  id: ChallengeId;
   name: string;
   color: string;        // HEX: "#FF5733"
   createdAt: DateString;
   archivedAt?: DateString;
 }
 
-// Розділено від Habit — щоб легко синхронізувати з бекендом пізніше
-export interface HabitLog {
-  habitId: HabitId;
+// Розділено від Challenge — щоб легко синхронізувати з бекендом пізніше
+export interface ChallengeLog {
+  challengeId: ChallengeId;
   date: DateString;
   completedAt: string;  // ISO timestamp
 }
@@ -128,43 +128,43 @@ export interface HabitLog {
 export type ActiveTab = 'today' | 'statistics' | 'settings';
 ```
 
-> **Ключове рішення:** `habits` і `logs` зберігаються окремо.  
-> Це дозволяє: не мутувати Habit при кожному виконанні, ефективно рахувати статистику по будь-якому діапазону дат, та легко замінити logs на API calls пізніше.
+> **Ключове рішення:** `challenges` і `logs` зберігаються окремо.  
+> Це дозволяє: не мутувати Challenge при кожному виконанні, ефективно рахувати статистику по будь-якому діапазону дат, та легко замінити logs на API calls пізніше.
 
 ---
 
 ## Стейт менеджмент
 
-### habitsStore
+### challengesStore
 
 ```typescript
-// src/store/habitsStore.ts
+// src/store/challengesStore.ts
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { nanoid } from 'nanoid';
 import { format } from 'date-fns';
-import type { Habit, HabitId, HabitLog, DateString } from '../types';
+import type { Challenge, ChallengeId, ChallengeLog, DateString } from '../types';
 
-interface HabitsState {
-  habits: Habit[];
-  logs: HabitLog[];
+interface ChallengesState {
+  challenges: Challenge[];
+  logs: ChallengeLog[];
 
-  addHabit: (name: string, color: string) => void;
-  completeHabit: (habitId: HabitId, date: DateString) => void;
-  uncompleteHabit: (habitId: HabitId, date: DateString) => void;
-  archiveHabit: (habitId: HabitId) => void;
+  addChallenge: (name: string, color: string) => void;
+  completeChallenge: (challengeId: ChallengeId, date: DateString) => void;
+  uncompleteChallenge: (challengeId: ChallengeId, date: DateString) => void;
+  archiveChallenge: (challengeId: ChallengeId) => void;
 }
 
-export const useHabitsStore = create<HabitsState>()(
+export const useChallengesStore = create<ChallengesState>()(
   persist(
     (set) => ({
-      habits: [],
+      challenges: [],
       logs: [],
 
-      addHabit: (name, color) =>
+      addChallenge: (name, color) =>
         set((state) => ({
-          habits: [
-            ...state.habits,
+          challenges: [
+            ...state.challenges,
             {
               id: nanoid(),
               name,
@@ -174,35 +174,35 @@ export const useHabitsStore = create<HabitsState>()(
           ],
         })),
 
-      completeHabit: (habitId, date) =>
+      completeChallenge: (challengeId, date) =>
         set((state) => ({
           logs: [
             ...state.logs,
             {
-              habitId,
+              challengeId,
               date,
               completedAt: new Date().toISOString(),
             },
           ],
         })),
 
-      uncompleteHabit: (habitId, date) =>
+      uncompleteChallenge: (challengeId, date) =>
         set((state) => ({
           logs: state.logs.filter(
-            (log) => !(log.habitId === habitId && log.date === date)
+            (log) => !(log.challengeId === challengeId && log.date === date)
           ),
         })),
 
-      archiveHabit: (habitId) =>
+      archiveChallenge: (challengeId) =>
         set((state) => ({
-          habits: state.habits.map((h) =>
-            h.id === habitId
+          challenges: state.challenges.map((h) =>
+            h.id === challengeId
               ? { ...h, archivedAt: format(new Date(), 'yyyy-MM-dd') }
               : h
           ),
         })),
     }),
-    { name: 'habit-tracker-storage' }
+    { name: 'challenge-tracker-storage' }
   )
 );
 ```
@@ -227,7 +227,7 @@ export const useSettingsStore = create<SettingsState>()(
       theme: 'system',
       setTheme: (theme) => set({ theme }),
     }),
-    { name: 'habit-tracker-settings' }
+    { name: 'challenge-tracker-settings' }
   )
 );
 ```
@@ -282,30 +282,30 @@ export default function App() {
 
 **Логіка розбивки списків:**
 ```
-activeHabits = habits.filter(h => !isCompletedToday(h.id))
-doneHabits   = habits.filter(h =>  isCompletedToday(h.id))
+activeChallenges = challenges.filter(h => !isCompletedToday(h.id))
+doneChallenges   = challenges.filter(h =>  isCompletedToday(h.id))
 ```
 
 **Компоненти:**
-- `HabitList` — рендерить активні звички, по кліку → `completeHabit`
-- `DoneList` — акордіон, по кліку на елемент → `uncompleteHabit`, повертає у Today
-- `AddHabitSheet` — bottom sheet з формою (відкривається по кнопці `+`)
+- `ChallengeList` — рендерить активні звички, по кліку → `completeChallenge`
+- `DoneList` — акордіон, по кліку на елемент → `uncompleteChallenge`, повертає у Today
+- `AddChallengeSheet` — bottom sheet з формою (відкривається по кнопці `+`)
 
 **Відкриття форми:** через локальний `useState` або URL-параметр `?add=true`
 
 ### Statistics (`/statistics`)
 
 **Компоненти:**
-- `HabitSelector` — мультивибір звичок (дефолт: всі)
+- `ChallengeSelector` — мультивибір звичок (дефолт: всі)
 - `ProgressCalendar` — відображає місяць, для кожної дати рахує прогрес
 
 **Логіка прогресу:**
 ```typescript
 // Всі звички обрано:
-const progress = completedCount / totalActiveHabits; // 0..1
+const progress = completedCount / totalActiveChallenges; // 0..1
 
 // Одна звичка обрана:
-const isDone = logs.some(l => l.habitId === id && l.date === date);
+const isDone = logs.some(l => l.challengeId === id && l.date === date);
 // true → окружність, false → немає
 ```
 
@@ -335,14 +335,14 @@ const isDone = logs.some(l => l.habitId === id && l.date === date);
 
 ```typescript
 // src/hooks/useTodayProgress.ts
-// Повертає { activeHabits, doneHabits } для сьогоднішньої дати
+// Повертає { activeChallenges, doneChallenges } для сьогоднішньої дати
 
 // src/hooks/useStatistics.ts
 // Повертає Map<DateString, number> де number = прогрес 0..1
 // Фільтрує по обраних звичках
 
-// src/hooks/useHabits.ts
-// Зручні селектори: activeHabits (без archived), getHabitById тощо
+// src/hooks/useChallenges.ts
+// Зручні селектори: activeChallenges (без archived), getChallengeById тощо
 ```
 
 ---
@@ -361,8 +361,8 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'Habit Tracker',
-        short_name: 'Habits',
+        name: 'Challenge Tracker',
+        short_name: 'Challenges',
         description: 'Відслідковуй щоденні звички',
         display: 'standalone',        // без браузерного UI
         orientation: 'portrait',      // мобільний додаток
@@ -385,18 +385,18 @@ export default defineConfig({
 
 ## Міграція на бекенд
 
-Оскільки `habits` і `logs` розділені, заміна локального сховища на API буде точковою:
+Оскільки `challenges` і `logs` розділені, заміна локального сховища на API буде точковою:
 
 ```typescript
 // Зараз (Zustand persist → localStorage):
-completeHabit: (habitId, date) =>
+completeChallenge: (challengeId, date) =>
   set((state) => ({
-    logs: [...state.logs, { habitId, date, completedAt: new Date().toISOString() }],
+    logs: [...state.logs, { challengeId, date, completedAt: new Date().toISOString() }],
   }))
 
 // Пізніше (з бекендом, наприклад через react-query):
-completeHabit: async (habitId, date) => {
-  await api.logs.create({ habitId, date });
+completeChallenge: async (challengeId, date) => {
+  await api.logs.create({ challengeId, date });
   await queryClient.invalidateQueries({ queryKey: ['logs'] });
 }
 ```
@@ -410,8 +410,8 @@ completeHabit: async (habitId, date) => {
 
 ```bash
 # Створення проєкту
-npm create vite@latest habit-tracker -- --template react-ts
-cd habit-tracker
+npm create vite@latest challenge-tracker -- --template react-ts
+cd challenge-tracker
 
 # Встановлення залежностей
 npm install react-router-dom zustand date-fns nanoid
@@ -432,10 +432,10 @@ npm run preview
 ## Порядок розробки (рекомендований)
 
 1. `types/index.ts` — типи
-2. `store/habitsStore.ts` — стейт і персистентність
+2. `store/challengesStore.ts` — стейт і персистентність
 3. `app/router.tsx` + `App.tsx` — роутинг і layout
 4. `components/BottomNav.tsx` — навігація
-5. `pages/Today/` — головний екран (HabitList → DoneList → AddHabitSheet)
+5. `pages/Today/` — головний екран (ChallengeList → DoneList → AddChallengeSheet)
 6. `pages/Statistics/` — календар з прогресом
 7. `pages/Settings/` — тема
 8. `vite.config.ts` — PWA конфігурація

@@ -1,11 +1,11 @@
 import { useStreaks } from '../../hooks/useStreaks';
-import type { Habit, HabitId, StatScope } from '../../types';
+import type { Challenge, ChallengeId, StatScope } from '../../types';
 import styles from './StreakTiles.module.scss';
 
 interface Props {
   scope: StatScope;
-  habits: Habit[];
-  filterIds: HabitId[] | null;
+  challenges: Challenge[];
+  filterIds: ChallengeId[] | null;
 }
 
 const dayWord = (n: number): string => {
@@ -16,8 +16,8 @@ const dayWord = (n: number): string => {
   return 'днів';
 };
 
-export const StreakTiles = ({ habits, filterIds }: Props) => {
-  const streaks = useStreaks(habits, filterIds);
+export const StreakTiles = ({ challenges, filterIds }: Props) => {
+  const streaks = useStreaks(challenges, filterIds);
 
   if (streaks.length === 0) return null;
 
@@ -25,10 +25,10 @@ export const StreakTiles = ({ habits, filterIds }: Props) => {
     <div className={styles.section}>
       <p className={styles.heading}>Статус</p>
       <div className={styles.grid}>
-        {streaks.map(({ habit, streak }) => (
-          <div key={habit.id} className={styles.tile} style={{ borderLeftColor: habit.color }}>
-            <span className={styles.name}>{habit.name}</span>
-            <span className={styles.count} style={{ color: habit.color }}>{streak}</span>
+        {streaks.map(({ challenge, streak }) => (
+          <div key={challenge.id} className={styles.tile} style={{ borderLeftColor: challenge.color }}>
+            <span className={styles.name}>{challenge.name}</span>
+            <span className={styles.count} style={{ color: challenge.color }}>{streak}</span>
             <span className={styles.label}>{dayWord(streak)} поспіль</span>
           </div>
         ))}

@@ -1,21 +1,21 @@
 import { useState } from 'react';
-import { useHabitsStore } from '../../store/habitsStore';
-import { HabitItem } from '../../components/HabitItem/HabitItem';
+import { useChallengesStore } from '../../store/challengesStore';
+import { ChallengeItem } from '../../components/ChallengeItem/ChallengeItem';
 import { today } from '../../utils/dateUtils';
-import type { Habit } from '../../types';
+import type { Challenge } from '../../types';
 import styles from './Today.module.scss';
 
 interface Props {
-  habits: Habit[];
-  onEdit: (habit: Habit) => void;
+  challenges: Challenge[];
+  onEdit: (challenge: Challenge) => void;
 }
 
-export const DoneList = ({ habits, onEdit }: Props) => {
+export const DoneList = ({ challenges, onEdit }: Props) => {
   const [open, setOpen] = useState(true);
-  const { uncompleteHabit } = useHabitsStore();
+  const { uncompleteChallenge } = useChallengesStore();
   const date = today();
 
-  if (habits.length === 0) return null;
+  if (challenges.length === 0) return null;
 
   return (
     <div style={{ marginTop: 8 }}>
@@ -24,7 +24,7 @@ export const DoneList = ({ habits, onEdit }: Props) => {
         style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 4px 8px', background: 'none', border: 'none', cursor: 'pointer', width: '100%' }}
       >
         <span style={{ width: 18, height: 18, borderRadius: '50%', background: '#7CB9A8', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 10, fontWeight: 600, flexShrink: 0 }}>
-          {habits.length}
+          {challenges.length}
         </span>
         <span style={{ fontSize: 14, color: '#888', fontWeight: 500 }}>Виконано</span>
         <span style={{ marginLeft: 'auto', color: '#bbb', fontSize: 11 }}>{open ? '▴' : '▾'}</span>
@@ -32,13 +32,13 @@ export const DoneList = ({ habits, onEdit }: Props) => {
 
       {open && (
         <div className={styles.list}>
-          {habits.map(habit => (
-            <HabitItem
-              key={habit.id}
-              habit={habit}
+          {challenges.map(challenge => (
+            <ChallengeItem
+              key={challenge.id}
+              challenge={challenge}
               done={true}
-              onToggle={() => uncompleteHabit(habit.id, date)}
-              onEdit={() => onEdit(habit)}
+              onToggle={() => uncompleteChallenge(challenge.id, date)}
+              onEdit={() => onEdit(challenge)}
             />
           ))}
         </div>

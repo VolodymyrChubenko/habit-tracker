@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { BottomSheet } from '../../components/BottomSheet/BottomSheet';
-import { useHabits } from '../../hooks/useHabits';
-import { useHabitsStore } from '../../store/habitsStore';
+import { useChallenges } from '../../hooks/useChallenges';
+import { useChallengesStore } from '../../store/challengesStore';
 import { formatDisplayDate } from '../../utils/dateUtils';
-import type { DateString, HabitId } from '../../types';
+import type { DateString, ChallengeId } from '../../types';
 
 interface Props {
   date: DateString;
@@ -11,17 +11,17 @@ interface Props {
 }
 
 export const DateEditSheet = ({ date, onClose }: Props) => {
-  const { activeHabits } = useHabits();
-  const logs = useHabitsStore(s => s.logs);
-  const { saveLogsForDate } = useHabitsStore();
+  const { activeChallenges } = useChallenges();
+  const logs = useChallengesStore(s => s.logs);
+  const { saveLogsForDate } = useChallengesStore();
 
-  const activeIds = new Set(activeHabits.map(h => h.id));
-  const initial = new Set<HabitId>(
-    logs.filter(l => l.date === date && activeIds.has(l.habitId)).map(l => l.habitId),
+  const activeIds = new Set(activeChallenges.map(h => h.id));
+  const initial = new Set<ChallengeId>(
+    logs.filter(l => l.date === date && activeIds.has(l.challengeId)).map(l => l.challengeId),
   );
-  const [checked, setChecked] = useState<Set<HabitId>>(initial);
+  const [checked, setChecked] = useState<Set<ChallengeId>>(initial);
 
-  const toggle = (id: HabitId) => {
+  const toggle = (id: ChallengeId) => {
     setChecked(prev => {
       const next = new Set(prev);
       next.has(id) ? next.delete(id) : next.add(id);
@@ -30,7 +30,7 @@ export const DateEditSheet = ({ date, onClose }: Props) => {
   };
 
   const handleSave = () => {
-    saveLogsForDate(date, [...checked], activeHabits.map(h => h.id));
+    saveLogsForDate(date, [...checked], activeChallenges.map(h => h.id));
     onClose();
   };
 
@@ -40,11 +40,11 @@ export const DateEditSheet = ({ date, onClose }: Props) => {
         {formatDisplayDate(date)}
       </div>
       <div style={{ fontSize: 12, color: '#aaa', marginBottom: 18 }}>
-        Відмітити виконані звички
+        Відмітити виконані челенджі
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {activeHabits.map(h => (
+        {activeChallenges.map(h => (
           <div
             key={h.id}
             onClick={() => toggle(h.id)}

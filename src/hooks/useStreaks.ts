@@ -1,35 +1,35 @@
 import { useMemo } from 'react';
-import { useHabitsStore } from '../store/habitsStore';
+import { useChallengesStore } from '../store/challengesStore';
 import { calcStreak } from '../utils/streakUtils';
 import { today } from '../utils/dateUtils';
-import type { Habit, HabitId, DateString } from '../types';
+import type { Challenge, ChallengeId, DateString } from '../types';
 
 interface StreakResult {
-  habit: Habit;
+  challenge: Challenge;
   streak: number;
 }
 
-export const useStreaks = (habits: Habit[], filterIds: HabitId[] | null): StreakResult[] => {
-  const logs = useHabitsStore(s => s.logs);
+export const useStreaks = (challenges: Challenge[], filterIds: ChallengeId[] | null): StreakResult[] => {
+  const logs = useChallengesStore(s => s.logs);
 
   return useMemo(() => {
     const todayStr = today();
 
-    const completedByHabit = new Map<HabitId, Set<DateString>>();
+    const completedByChallenge = new Map<ChallengeId, Set<DateString>>();
     for (const log of logs) {
-      if (!completedByHabit.has(log.habitId)) completedByHabit.set(log.habitId, new Set());
-      completedByHabit.get(log.habitId)!.add(log.date);
+      if (!completedByChallenge.has(log.challengeId)) completedByChallenge.set(log.challengeId, new Set());
+      completedByChallenge.get(log.challengeId)!.add(log.date);
     }
 
     const filtered = filterIds
-      ? habits.filter(h => filterIds.includes(h.id))
-      : habits;
+      ? challenges.filter(h => filterIds.includes(h.id))
+      : challenges;
 
     return filtered
-      .map(habit => ({
-        habit,
-        streak: calcStreak(habit, completedByHabit.get(habit.id) ?? new Set(), todayStr),
+      .map(challenge => ({
+        challenge,
+        streak: calcStreak(challenge, completedByChallenge.get(challenge.id) ?? new Set(), todayStr),
       }))
       .filter(r => r.streak >= 2);
-  }, [logs, habits, filterIds]);
+  }, [logs, challenges, filterIds]);
 };

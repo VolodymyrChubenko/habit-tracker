@@ -1,33 +1,36 @@
 import { useState } from 'react';
 import { BottomSheet } from '../../components/BottomSheet/BottomSheet';
 import { ColorPicker } from '../../components/ColorPicker/ColorPicker';
-import styles from './AddHabitSheet.module.scss';
+import { ReminderField } from '../../components/ReminderField/ReminderField';
+import styles from './AddChallengeSheet.module.scss';
 
 interface Props {
   onClose: () => void;
-  onAdd: (name: string, color: string) => void;
+  onAdd: (name: string, color: string, reminder: { enabled: boolean; time: string }) => void;
 }
 
-export const AddHabitSheet = ({ onClose, onAdd }: Props) => {
+export const AddChallengeSheet = ({ onClose, onAdd }: Props) => {
   const [name, setName] = useState('');
   const [color, setColor] = useState('#7CB9A8');
+  const [reminderEnabled, setReminderEnabled] = useState(false);
+  const [reminderTime, setReminderTime] = useState('09:00');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
-    onAdd(name.trim(), color);
+    onAdd(name.trim(), color, { enabled: reminderEnabled, time: reminderTime });
   };
 
   return (
     <BottomSheet onClose={onClose}>
       <form onSubmit={handleSubmit}>
-        <p className={styles.title}>Нова звичка</p>
+        <p className={styles.title}>Новий челендж</p>
 
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="habit-title">Назва</label>
+          <label className={styles.label} htmlFor="challenge-title">Назва</label>
           <input
-            id="habit-title"
-            name="habit-title"
+            id="challenge-title"
+            name="challenge-title"
             className={styles.input}
             value={name}
             onChange={e => setName(e.target.value)}
@@ -45,8 +48,15 @@ export const AddHabitSheet = ({ onClose, onAdd }: Props) => {
           <ColorPicker value={color} onChange={setColor} />
         </div>
 
+        <ReminderField
+          enabled={reminderEnabled}
+          time={reminderTime}
+          onToggle={() => setReminderEnabled(v => !v)}
+          onTimeChange={setReminderTime}
+        />
+
         <button type="submit" className={styles.btn} disabled={!name.trim()}>
-          Додати звичку
+          Додати челендж
         </button>
       </form>
     </BottomSheet>

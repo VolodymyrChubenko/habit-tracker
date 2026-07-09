@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
-import { useHabits } from '../../hooks/useHabits';
+import { useChallenges } from '../../hooks/useChallenges';
 import { StatBoard } from '../Statistics/StatBoard';
-import { ArchivedHabitList } from './ArchivedHabitList';
+import { ArchivedChallengeList } from './ArchivedChallengeList';
 import styles from '../Statistics/Statistics.module.scss';
 
 export default function ArchivePage() {
   const navigate = useNavigate();
-  const { archivedHabits } = useHabits();
+  const { archivedChallenges } = useChallenges();
 
   return (
     <>
@@ -21,8 +21,8 @@ export default function ArchivePage() {
         </button>
       </div>
 
-      <StatBoard scope="archived" habits={archivedHabits} />
-      <ArchivedHabitList habits={archivedHabits} />
+      <StatBoard scope="archived" challenges={archivedChallenges} />
+      <ArchivedChallengeList challenges={archivedChallenges} />
     </>
   );
 }

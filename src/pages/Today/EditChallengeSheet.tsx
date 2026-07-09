@@ -1,29 +1,37 @@
 import { useState } from 'react';
 import { BottomSheet } from '../../components/BottomSheet/BottomSheet';
 import { ColorPicker } from '../../components/ColorPicker/ColorPicker';
-import { useHabitsStore } from '../../store/habitsStore';
-import type { Habit } from '../../types';
-import styles from './EditHabitSheet.module.scss';
+import { ReminderField } from '../../components/ReminderField/ReminderField';
+import { useChallengesStore } from '../../store/challengesStore';
+import type { Challenge } from '../../types';
+import styles from './EditChallengeSheet.module.scss';
 
 interface Props {
-  habit: Habit;
+  challenge: Challenge;
   onClose: () => void;
 }
 
-export const EditHabitSheet = ({ habit, onClose }: Props) => {
-  const [name, setName] = useState(habit.name);
-  const [color, setColor] = useState(habit.color);
+export const EditChallengeSheet = ({ challenge, onClose }: Props) => {
+  const [name, setName] = useState(challenge.name);
+  const [color, setColor] = useState(challenge.color);
+  const [reminderEnabled, setReminderEnabled] = useState(challenge.reminderEnabled ?? false);
+  const [reminderTime, setReminderTime] = useState(challenge.reminderTime ?? '09:00');
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const { updateHabit, archiveHabit, deleteHabit } = useHabitsStore();
+  const { updateChallenge, archiveChallenge, deleteChallenge } = useChallengesStore();
 
   const handleSave = () => {
     if (!name.trim()) return;
-    updateHabit(habit.id, { name: name.trim(), color });
+    updateChallenge(challenge.id, {
+      name: name.trim(),
+      color,
+      reminderEnabled,
+      reminderTime,
+    });
     onClose();
   };
 
   const handleStop = () => {
-    archiveHabit(habit.id);
+    archiveChallenge(challenge.id);
     onClose();
   };
 
@@ -32,19 +40,19 @@ export const EditHabitSheet = ({ habit, onClose }: Props) => {
       setConfirmDelete(true);
       return;
     }
-    deleteHabit(habit.id);
+    deleteChallenge(challenge.id);
     onClose();
   };
 
   return (
     <BottomSheet onClose={onClose}>
-      <p className={styles.title}>Редагувати звичку</p>
+      <p className={styles.title}>Редагувати челендж</p>
 
       <div className={styles.field}>
-        <label className={styles.label} htmlFor="habit-title-edit">Назва</label>
+        <label className={styles.label} htmlFor="challenge-title-edit">Назва</label>
         <input
-          id="habit-title-edit"
-          name="habit-title-edit"
+          id="challenge-title-edit"
+          name="challenge-title-edit"
           className={styles.input}
           value={name}
           onChange={e => setName(e.target.value)}
@@ -61,6 +69,13 @@ export const EditHabitSheet = ({ habit, onClose }: Props) => {
         <ColorPicker value={color} onChange={setColor} />
       </div>
 
+      <ReminderField
+        enabled={reminderEnabled}
+        time={reminderTime}
+        onToggle={() => setReminderEnabled(v => !v)}
+        onTimeChange={setReminderTime}
+      />
+
       <button
         type="button"
         className={styles.btnSave}
@@ -73,9 +88,9 @@ export const EditHabitSheet = ({ habit, onClose }: Props) => {
       <div className={styles.danger}>
         <p className={styles.dangerLabel}>Небезпечна зона</p>
 
-        {!habit.archivedAt && (
+        {!challenge.archivedAt && (
           <button type="button" className={styles.btnStop} onClick={handleStop}>
-            Зупинити звичку
+            Зупинити челендж
           </button>
         )}
 
@@ -84,7 +99,7 @@ export const EditHabitSheet = ({ habit, onClose }: Props) => {
           className={confirmDelete ? styles.btnDeleteConfirm : styles.btnDelete}
           onClick={handleDelete}
         >
-          {confirmDelete ? 'Натисніть ще раз для підтвердження' : 'Видалити звичку'}
+          {confirmDelete ? 'Натисніть ще раз для підтвердження' : 'Видалити челендж'}
         </button>
       </div>
     </BottomSheet>

@@ -16,26 +16,26 @@ import {
   arrayMove,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { useHabitsStore } from '../../store/habitsStore';
-import { useHabits } from '../../hooks/useHabits';
-import { HabitItem } from '../../components/HabitItem/HabitItem';
+import { useChallengesStore } from '../../store/challengesStore';
+import { useChallenges } from '../../hooks/useChallenges';
+import { ChallengeItem } from '../../components/ChallengeItem/ChallengeItem';
 import { today } from '../../utils/dateUtils';
-import type { Habit } from '../../types';
+import type { Challenge } from '../../types';
 
 interface Props {
-  habits: Habit[];
-  onEdit: (habit: Habit) => void;
+  challenges: Challenge[];
+  onEdit: (challenge: Challenge) => void;
 }
 
 interface RowProps {
-  habit: Habit;
+  challenge: Challenge;
   onToggle: () => void;
   onEdit: () => void;
 }
 
-const SortableRow = ({ habit, onToggle, onEdit }: RowProps) => {
+const SortableRow = ({ challenge, onToggle, onEdit }: RowProps) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-    useSortable({ id: habit.id });
+    useSortable({ id: challenge.id });
 
   const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
@@ -46,14 +46,14 @@ const SortableRow = ({ habit, onToggle, onEdit }: RowProps) => {
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <HabitItem habit={habit} done={false} onToggle={onToggle} onEdit={onEdit} />
+      <ChallengeItem challenge={challenge} done={false} onToggle={onToggle} onEdit={onEdit} />
     </div>
   );
 };
 
-export const HabitList = ({ habits, onEdit }: Props) => {
-  const { completeHabit, reorderHabits } = useHabitsStore();
-  const { activeHabits } = useHabits();
+export const ChallengeList = ({ challenges, onEdit }: Props) => {
+  const { completeChallenge, reorderChallenges } = useChallengesStore();
+  const { activeChallenges } = useChallenges();
   const date = today();
 
   const sensors = useSensors(
@@ -66,25 +66,25 @@ export const HabitList = ({ habits, onEdit }: Props) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
-    const ids = habits.map(h => h.id);
+    const ids = challenges.map(h => h.id);
     const oldIndex = ids.indexOf(active.id as string);
     const newIndex = ids.indexOf(over.id as string);
     const reorderedVisible = arrayMove(ids, oldIndex, newIndex);
 
     const visibleSet = new Set(reorderedVisible);
-    const rest = activeHabits.map(h => h.id).filter(id => !visibleSet.has(id));
-    reorderHabits([...reorderedVisible, ...rest]);
+    const rest = activeChallenges.map(h => h.id).filter(id => !visibleSet.has(id));
+    reorderChallenges([...reorderedVisible, ...rest]);
   };
 
   return (
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-      <SortableContext items={habits.map(h => h.id)} strategy={verticalListSortingStrategy}>
-        {habits.map(habit => (
+      <SortableContext items={challenges.map(h => h.id)} strategy={verticalListSortingStrategy}>
+        {challenges.map(challenge => (
           <SortableRow
-            key={habit.id}
-            habit={habit}
-            onToggle={() => completeHabit(habit.id, date)}
-            onEdit={() => onEdit(habit)}
+            key={challenge.id}
+            challenge={challenge}
+            onToggle={() => completeChallenge(challenge.id, date)}
+            onEdit={() => onEdit(challenge)}
           />
         ))}
       </SortableContext>

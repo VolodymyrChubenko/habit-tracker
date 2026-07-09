@@ -2,21 +2,21 @@ import { useState } from 'react';
 import { format } from 'date-fns';
 import { uk } from 'date-fns/locale';
 import { useTodayProgress } from '../../hooks/useTodayProgress';
-import { useHabitsStore } from '../../store/habitsStore';
-import { HabitList } from './HabitList';
+import { useChallengesStore } from '../../store/challengesStore';
+import { ChallengeList } from './ChallengeList';
 import { DoneList } from './DoneList';
-import { AddHabitSheet } from './AddHabitSheet';
-import { EditHabitSheet } from './EditHabitSheet';
-import type { Habit } from '../../types';
+import { AddChallengeSheet } from './AddChallengeSheet';
+import { EditChallengeSheet } from './EditChallengeSheet';
+import type { Challenge } from '../../types';
 import styles from './Today.module.scss';
 
 export default function TodayPage() {
   const [showAdd, setShowAdd] = useState(false);
-  const [editingHabit, setEditingHabit] = useState<Habit | null>(null);
-  const { todoHabits, doneHabits, total } = useTodayProgress();
-  const { addHabit } = useHabitsStore();
+  const [editingChallenge, setEditingChallenge] = useState<Challenge | null>(null);
+  const { todoChallenges, doneChallenges, total } = useTodayProgress();
+  const { addChallenge } = useChallengesStore();
 
-  const completed = doneHabits.length;
+  const completed = doneChallenges.length;
   const progressPct = total === 0 ? 0 : (completed / total) * 100;
 
   return (
@@ -28,7 +28,7 @@ export default function TodayPage() {
             {format(new Date(), 'EEEE, d MMMM', { locale: uk })}
           </p>
         </div>
-        <button className={styles.addBtn} onClick={() => setShowAdd(true)} aria-label="Додати звичку">
+        <button className={styles.addBtn} onClick={() => setShowAdd(true)} aria-label="Додати челендж">
           +
         </button>
       </div>
@@ -44,24 +44,39 @@ export default function TodayPage() {
           </div>
         </div>
       )}
+      
+      {total === 0 ? (
+        <div className={styles.empty}>
+          <div className={styles.emptyIcon}>🎯</div>
+          <h2 className={styles.emptyTitle}>Ще немає челенджів</h2>
+          <p className={styles.emptyText}>
+            Створи свій перший челендж і почни відстежувати прогрес
+          </p>
+          <button className={styles.emptyBtn} onClick={() => setShowAdd(true)}>
+            <span className={styles.emptyBtnPlus}>+</span> Додати челендж
+          </button>
+        </div>
+      ) : (
+        <>
+          <div className={styles.list}>
+            <ChallengeList challenges={todoChallenges} onEdit={setEditingChallenge} />
+          </div>
 
-      <div className={styles.list}>
-        <HabitList habits={todoHabits} onEdit={setEditingHabit} />
-      </div>
-
-      <DoneList habits={doneHabits} onEdit={setEditingHabit} />
+          <DoneList challenges={doneChallenges} onEdit={setEditingChallenge} />
+        </>
+      )}
 
       {showAdd && (
-        <AddHabitSheet
+        <AddChallengeSheet
           onClose={() => setShowAdd(false)}
-          onAdd={(name, color) => { addHabit(name, color); setShowAdd(false); }}
+          onAdd={(name, color, reminder) => { addChallenge(name, color, reminder); setShowAdd(false); }}
         />
       )}
 
-      {editingHabit && (
-        <EditHabitSheet
-          habit={editingHabit}
-          onClose={() => setEditingHabit(null)}
+      {editingChallenge && (
+        <EditChallengeSheet
+          challenge={editingChallenge}
+          onClose={() => setEditingChallenge(null)}
         />
       )}
     </>

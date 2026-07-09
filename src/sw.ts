@@ -23,8 +23,8 @@ self.addEventListener('message', (event: ExtendableMessageEvent) => {
   const schedule = () => {
     const ms = calcMsUntilTime(data.time);
     scheduledTimer = setTimeout(() => {
-      void self.registration.showNotification('Habit Tracker', {
-        body: 'Час відмічати звички! 🌿',
+      void self.registration.showNotification('Challenge Tracker', {
+        body: 'Час відмічати челенджі! 🌿',
         icon: '/icon-192.png',
         badge: '/icon-192.png',
         tag: 'daily-reminder',

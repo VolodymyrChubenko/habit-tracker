@@ -1,17 +1,19 @@
-export type HabitId = string;
+export type ChallengeId = string;
 export type DateString = string; // "yyyy-MM-dd"
 
-export interface Habit {
-  id: HabitId;
+export interface Challenge {
+  id: ChallengeId;
   name: string;
   color: string; // hex "#7CB9A8"
   createdAt: DateString;
   archivedAt?: DateString;
   order: number;
+  reminderEnabled?: boolean;
+  reminderTime?: string; // "HH:mm"
 }
 
-export interface HabitLog {
-  habitId: HabitId;
+export interface ChallengeLog {
+  challengeId: ChallengeId;
   date: DateString;
   completedAt: string; // ISO timestamp
 }

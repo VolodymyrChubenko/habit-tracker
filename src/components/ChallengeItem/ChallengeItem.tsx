@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import type { Habit } from '../../types';
-import styles from './HabitItem.module.scss';
+import type { Challenge } from '../../types';
+import styles from './ChallengeItem.module.scss';
 
 interface Props {
-  habit: Habit;
+  challenge: Challenge;
   done: boolean;
   onToggle: () => void;
   onEdit: () => void;
@@ -16,7 +16,7 @@ const prefersReducedMotion = () =>
   typeof window !== 'undefined' &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-export const HabitItem = ({ habit, done, onToggle, onEdit }: Props) => {
+export const ChallengeItem = ({ challenge, done, onToggle, onEdit }: Props) => {
   const [animating, setAnimating] = useState(false);
   const timer = useRef<number | undefined>(undefined);
   const firing = useRef(false);
@@ -44,18 +44,18 @@ export const HabitItem = ({ habit, done, onToggle, onEdit }: Props) => {
 
   return (
     <div className={className} onClick={onEdit}>
-      {!done && <span className={styles.sweep} style={{ background: habit.color }} />}
-      <div className={styles.dot} style={{ background: habit.color }} />
+      {!done && <span className={styles.sweep} style={{ background: challenge.color }} />}
+      <div className={styles.dot} style={{ background: challenge.color }} />
       <span
         className={styles.name}
         style={done ? { textDecoration: 'line-through' } : undefined}
       >
-        {habit.name}
+        {challenge.name}
       </span>
       <button
         className={styles.circle}
         aria-label={done ? 'скасувати виконання' : 'виконати'}
-        style={{ borderColor: habit.color, background: done ? habit.color : 'transparent' }}
+        style={{ borderColor: challenge.color, background: done ? challenge.color : 'transparent' }}
         onClick={handleToggle}
       >
         <svg className={styles.check} viewBox="0 0 24 24" aria-hidden="true">

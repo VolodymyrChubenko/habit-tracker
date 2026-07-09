@@ -1,33 +1,33 @@
 import { useState } from 'react';
-import { useHabitsStore } from '../../store/habitsStore';
+import { useChallengesStore } from '../../store/challengesStore';
 import { formatDisplayDate } from '../../utils/dateUtils';
-import type { Habit, HabitId } from '../../types/index';
-import styles from './ArchivedHabitList.module.scss';
+import type { Challenge, ChallengeId } from '../../types/index';
+import styles from './ArchivedChallengeList.module.scss';
 
 interface Props {
-  habits: Habit[];
+  challenges: Challenge[];
 }
 
-export const ArchivedHabitList = ({ habits }: Props) => {
-  const { unarchiveHabit, deleteHabit } = useHabitsStore();
-  const [confirmId, setConfirmId] = useState<HabitId | null>(null);
+export const ArchivedChallengeList = ({ challenges }: Props) => {
+  const { unarchiveChallenge, deleteChallenge } = useChallengesStore();
+  const [confirmId, setConfirmId] = useState<ChallengeId | null>(null);
 
-  if (habits.length === 0) return null;
+  if (challenges.length === 0) return null;
 
-  const handleDelete = (id: HabitId) => {
+  const handleDelete = (id: ChallengeId) => {
     if (confirmId !== id) {
       setConfirmId(id);
       return;
     }
-    deleteHabit(id);
+    deleteChallenge(id);
     setConfirmId(null);
   };
 
   return (
     <div className={styles.section}>
-      <p className={styles.label}>Заархівовані звички</p>
+      <p className={styles.label}>Заархівовані челенджі</p>
       <div className={styles.list}>
-        {habits.map(h => (
+        {challenges.map(h => (
           <div key={h.id} className={styles.card}>
             <span className={styles.dot} style={{ background: h.color }} />
             <div className={styles.meta}>
@@ -38,7 +38,7 @@ export const ArchivedHabitList = ({ habits }: Props) => {
                 </span>
               )}
             </div>
-            <button className={styles.restore} onClick={() => unarchiveHabit(h.id)}>
+            <button className={styles.restore} onClick={() => unarchiveChallenge(h.id)}>
               Відновити
             </button>
             <button
