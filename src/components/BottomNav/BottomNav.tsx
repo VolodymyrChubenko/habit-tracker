@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import { useUIStore } from '../../store/uiStore';
 import styles from './BottomNav.module.scss';
 
 const IconToday = () => (
@@ -17,6 +18,12 @@ const IconStats = () => (
   </svg>
 );
 
+const IconAchievements = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
+  </svg>
+);
+
 const IconSettings = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="12" cy="12" r="3" />
@@ -27,23 +34,33 @@ const IconSettings = () => (
 const tabs = [
   { to: '/', label: 'Сьогодні', Icon: IconToday, end: true },
   { to: '/statistics', label: 'Статистика', Icon: IconStats, end: false },
+  { to: '/achievements', label: 'Досягнення', Icon: IconAchievements, end: false },
   { to: '/settings', label: 'Налаштування', Icon: IconSettings, end: false },
 ];
 
-export const BottomNav = () => (
-  <nav className={styles.nav}>
-    {tabs.map(({ to, label, Icon, end }) => (
-      <NavLink
-        key={to}
-        to={to}
-        end={end}
-        className={({ isActive }) =>
-          [styles.tab, isActive ? styles.active : ''].join(' ')
-        }
-      >
-        <Icon />
-        <span>{label}</span>
-      </NavLink>
-    ))}
-  </nav>
+const renderTab = ({ to, label, Icon, end }: (typeof tabs)[number]) => (
+  <NavLink
+    key={to}
+    to={to}
+    end={end}
+    className={({ isActive }) => [styles.tab, isActive ? styles.active : ''].join(' ')}
+  >
+    <Icon />
+    <span>{label}</span>
+  </NavLink>
 );
+
+export const BottomNav = () => {
+  const openAddSheet = useUIStore(s => s.openAddSheet);
+
+  return (
+    <nav className={styles.nav}>
+      {tabs.slice(0, 2).map(renderTab)}
+      <div className={styles.spacer} aria-hidden="true" />
+      {tabs.slice(2).map(renderTab)}
+      <button className={styles.centerAdd} onClick={openAddSheet} aria-label="Додати челендж">
+        +
+      </button>
+    </nav>
+  );
+};

@@ -1,9 +1,16 @@
 import { useSettingsStore } from '../../store/settingsStore';
 import { useToast } from '../../components/Toast/useToast';
 import { Toast } from '../../components/Toast/Toast';
+import {
+  isPushSupported,
+  subscribePush,
+  getPushSubscription,
+  deleteSubscription,
+  getOrCreateDeviceId,
+} from '../../utils/pushUtils';
 import type { Theme } from '../../types';
 import styles from './Settings.module.scss';
-import { SunIcon, MoonIcon, MonitorIcon, CheckIcon, BellIcon, ClockIcon } from './icons';
+import { SunIcon, MoonIcon, MonitorIcon, CheckIcon, BellIcon, InfoIcon } from './icons';
 
 const themeOptions: { value: Theme; label: string; sub?: string; iconBg: string; Icon: () => React.JSX.Element }[] = [
   { value: 'light', label: 'Світла', iconBg: '#FAF7F0', Icon: SunIcon },
@@ -11,13 +18,20 @@ const themeOptions: { value: Theme; label: string; sub?: string; iconBg: string;
   { value: 'system', label: 'Як у системі', sub: 'Автоматично', iconBg: 'linear-gradient(135deg, #FAF7F0 50%, #5c5c5f 50%)', Icon: MonitorIcon },
 ];
 
+const pushStatus = (pushEnabled: boolean): string => {
+  if (!isPushSupported()) return 'Не підтримується у цьому браузері';
+  if (Notification.permission === 'denied') return 'Заблоковано в браузері';
+  if (pushEnabled && Notification.permission === 'granted') return 'Дозвіл надано';
+  return 'Вимкнено';
+};
+
 export default function SettingsPage() {
-  const { theme, setTheme, reminderEnabled, reminderTime, setReminderEnabled, setReminderTime } = useSettingsStore();
+  const { theme, setTheme, pushEnabled, setPushEnabled } = useSettingsStore();
   const { toast, show } = useToast();
 
-  const handleReminderToggle = async () => {
-    if (!reminderEnabled) {
-      if (!('Notification' in window) || !('serviceWorker' in navigator)) {
+  const handlePushToggle = async () => {
+    if (!pushEnabled) {
+      if (!isPushSupported()) {
         show({ message: 'Сповіщення не підтримуються у цьому браузері' });
         return;
       }
@@ -32,8 +46,19 @@ export default function SettingsPage() {
           return;
         }
       }
+      try {
+        await subscribePush();
+      } catch {
+        show({ message: 'Не вдалося підписатися на сповіщення' });
+        return;
+      }
+      setPushEnabled(true); // usePushSync одразу відправить розклад на сервер
+    } else {
+      const subscription = await getPushSubscription();
+      if (subscription) await subscription.unsubscribe().catch(() => false);
+      await deleteSubscription(getOrCreateDeviceId());
+      setPushEnabled(false);
     }
-    setReminderEnabled(!reminderEnabled);
   };
 
   return (
@@ -46,43 +71,33 @@ export default function SettingsPage() {
         <div
           className={styles.row}
           role="switch"
-          aria-checked={reminderEnabled}
-          aria-label="Щоденне нагадування"
+          aria-checked={pushEnabled}
+          aria-label="Push-сповіщення"
           tabIndex={0}
-          onKeyDown={e => { if (e.key === ' ' || e.key === 'Enter') void handleReminderToggle(); }}
-          onClick={() => void handleReminderToggle()}
+          onKeyDown={e => {
+            if (e.key === ' ' || e.key === 'Enter') {
+              e.preventDefault();
+              void handlePushToggle();
+            }
+          }}
+          onClick={() => void handlePushToggle()}
         >
           <div className={styles.icon} style={{ background: '#F0EBF8', border: '1.5px solid #E8E4DC' }}>
             <BellIcon />
           </div>
-          <span className={styles.rowTitle}>Щоденне нагадування</span>
-          <div className={`${styles.toggle} ${reminderEnabled ? styles.toggleOn : ''}`}>
+          <div style={{ flex: 1 }}>
+            <div className={styles.rowTitle}>Push-сповіщення</div>
+            <div className={styles.rowSub}>{pushStatus(pushEnabled)}</div>
+          </div>
+          <div className={`${styles.toggle} ${pushEnabled ? styles.toggleOn : ''}`}>
             <div className={styles.toggleTrack} />
             <div className={styles.toggleThumb} />
           </div>
         </div>
 
-        <div
-          className={styles.row}
-          style={{
-            opacity: reminderEnabled ? 1 : 0.4,
-            pointerEvents: reminderEnabled ? 'auto' : 'none',
-            cursor: 'default',
-          }}
-        >
-          <div className={styles.icon} style={{ background: '#EBF5F2', border: '1.5px solid #E8E4DC' }}>
-            <ClockIcon />
-          </div>
-          <span className={styles.rowTitle}>Час нагадування</span>
-          <input
-            type="time"
-            className={styles.timeInput}
-            value={reminderTime}
-            onChange={e => setReminderTime(e.target.value)}
-            onClick={e => e.stopPropagation()}
-            disabled={!reminderEnabled}
-            aria-label="Час нагадування"
-          />
+        <div className={styles.hintRow}>
+          <InfoIcon />
+          <span>Час і дні тижня налаштовуються окремо в кожному челенджі — при створенні або редагуванні.</span>
         </div>
       </div>
 

@@ -88,16 +88,14 @@
 .toggleOn .toggleTrack { background: $color-accent; }
 .toggleOn .toggleThumb { transform: translateX(18px); }
 
-// Time input
-.timeInput {
-  color-scheme: light dark;
-  font-size: 15px;
-  font-weight: 500;
-  color: $color-text;
-  background: transparent;
-  border: none;
-  outline: none;
-  padding: 0;
-  cursor: pointer;
-  font-family: inherit;
+.hintRow {
+  display: flex;
+  gap: 10px;
+  padding: 12px 16px;
+  background: $color-bg;
+  font-size: 12px;
+  color: $color-text-secondary;
+  line-height: 1.5;
+
+  svg { flex-shrink: 0; margin-top: 1px; }
 }

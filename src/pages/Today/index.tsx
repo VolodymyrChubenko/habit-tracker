@@ -2,19 +2,17 @@ import { useState } from 'react';
 import { format } from 'date-fns';
 import { uk } from 'date-fns/locale';
 import { useTodayProgress } from '../../hooks/useTodayProgress';
-import { useChallengesStore } from '../../store/challengesStore';
+import { useUIStore } from '../../store/uiStore';
 import { ChallengeList } from './ChallengeList';
 import { DoneList } from './DoneList';
-import { AddChallengeSheet } from './AddChallengeSheet';
 import { EditChallengeSheet } from './EditChallengeSheet';
 import type { Challenge } from '../../types';
 import styles from './Today.module.scss';
 
 export default function TodayPage() {
-  const [showAdd, setShowAdd] = useState(false);
   const [editingChallenge, setEditingChallenge] = useState<Challenge | null>(null);
   const { todoChallenges, doneChallenges, total } = useTodayProgress();
-  const { addChallenge } = useChallengesStore();
+  const openAddSheet = useUIStore(s => s.openAddSheet);
 
   const completed = doneChallenges.length;
   const progressPct = total === 0 ? 0 : (completed / total) * 100;
@@ -28,7 +26,7 @@ export default function TodayPage() {
             {format(new Date(), 'EEEE, d MMMM', { locale: uk })}
           </p>
         </div>
-        <button className={styles.addBtn} onClick={() => setShowAdd(true)} aria-label="Додати челендж">
+        <button className={styles.addBtn} onClick={openAddSheet} aria-label="Додати челендж">
           +
         </button>
       </div>
@@ -52,7 +50,7 @@ export default function TodayPage() {
           <p className={styles.emptyText}>
             Створи свій перший челендж і почни відстежувати прогрес
           </p>
-          <button className={styles.emptyBtn} onClick={() => setShowAdd(true)}>
+          <button className={styles.emptyBtn} onClick={openAddSheet}>
             <span className={styles.emptyBtnPlus}>+</span> Додати челендж
           </button>
         </div>
@@ -64,13 +62,6 @@ export default function TodayPage() {
 
           <DoneList challenges={doneChallenges} onEdit={setEditingChallenge} />
         </>
-      )}
-
-      {showAdd && (
-        <AddChallengeSheet
-          onClose={() => setShowAdd(false)}
-          onAdd={(name, color, reminder) => { addChallenge(name, color, reminder); setShowAdd(false); }}
-        />
       )}
 
       {editingChallenge && (

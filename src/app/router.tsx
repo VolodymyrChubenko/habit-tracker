@@ -3,6 +3,7 @@ import App from './App';
 import TodayPage from '../pages/Today';
 import StatisticsPage from '../pages/Statistics';
 import ArchivePage from '../pages/Archive';
+import AchievementsPage from '../pages/Achievements';
 import SettingsPage from '../pages/Settings';
 
 export const router = createBrowserRouter([
@@ -13,6 +14,7 @@ export const router = createBrowserRouter([
       { index: true, element: <TodayPage /> },
       { path: 'statistics', element: <StatisticsPage /> },
       { path: 'statistics/archive', element: <ArchivePage /> },
+      { path: 'achievements', element: <AchievementsPage /> },
       { path: 'settings', element: <SettingsPage /> },
     ],
   },

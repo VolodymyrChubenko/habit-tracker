@@ -1,4 +1,5 @@
 import { useStreaks } from '../../hooks/useStreaks';
+import { dayWord } from '../../utils/pluralize';
 import type { Challenge, ChallengeId, StatScope } from '../../types';
 import styles from './StreakTiles.module.scss';
 
@@ -7,14 +8,6 @@ interface Props {
   challenges: Challenge[];
   filterIds: ChallengeId[] | null;
 }
-
-const dayWord = (n: number): string => {
-  const mod10 = n % 10;
-  const mod100 = n % 100;
-  if (mod10 === 1 && mod100 !== 11) return 'день';
-  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return 'дні';
-  return 'днів';
-};
 
 export const StreakTiles = ({ challenges, filterIds }: Props) => {
   const streaks = useStreaks(challenges, filterIds);

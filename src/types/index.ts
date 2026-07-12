@@ -10,6 +10,7 @@ export interface Challenge {
   order: number;
   reminderEnabled?: boolean;
   reminderTime?: string; // "HH:mm"
+  activeDays?: number[]; // Пн=0 … Нд=6; undefined/порожній = всі дні
 }
 
 export interface ChallengeLog {

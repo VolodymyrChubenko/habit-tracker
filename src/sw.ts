@@ -1,37 +1,43 @@
 /// <reference lib="WebWorker" />
 /// <reference types="vite-plugin-pwa/client" />
 import { precacheAndRoute } from 'workbox-precaching';
-import { calcMsUntilTime } from './utils/notificationUtils';
 
 declare const self: ServiceWorkerGlobalScope;
 
 precacheAndRoute(self.__WB_MANIFEST);
 
-let scheduledTimer: ReturnType<typeof setTimeout> | null = null;
+interface PushPayload {
+  title?: string;
+  body?: string;
+  challengeId?: string;
+}
 
-self.addEventListener('message', (event: ExtendableMessageEvent) => {
-  const data = event.data as { type: string; enabled: boolean; time: string };
-  if (data?.type !== 'SCHEDULE_REMINDER') return;
-
-  if (scheduledTimer !== null) {
-    clearTimeout(scheduledTimer);
-    scheduledTimer = null;
+self.addEventListener('push', event => {
+  let data: PushPayload = {};
+  try {
+    data = (event.data?.json() as PushPayload) ?? {};
+  } catch {
+    // не-JSON payload — покажемо дефолтний текст
   }
 
-  if (!data.enabled) return;
+  event.waitUntil(
+    self.registration.showNotification(data.title ?? 'Challenge Tracker', {
+      body: data.body ?? 'Час відмічати челенджі! 🌿',
+      icon: '/icon-192.png',
+      badge: '/icon-192.png',
+      tag: data.challengeId ? `reminder-${data.challengeId}` : 'reminder',
+      data: { url: '/' },
+    }),
+  );
+});
 
-  const schedule = () => {
-    const ms = calcMsUntilTime(data.time);
-    scheduledTimer = setTimeout(() => {
-      void self.registration.showNotification('Challenge Tracker', {
-        body: 'Час відмічати челенджі! 🌿',
-        icon: '/icon-192.png',
-        badge: '/icon-192.png',
-        tag: 'daily-reminder',
-      });
-      scheduledTimer = null;
-      schedule();
-    }, ms);
-  };
-  schedule();
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clients => {
+      const existing = clients.find(c => 'focus' in c);
+      if (existing) return existing.focus();
+      return self.clients.openWindow('/');
+    }),
+  );
 });

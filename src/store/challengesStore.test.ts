@@ -17,6 +17,30 @@ describe('addChallenge', () => {
   });
 });
 
+describe('addChallenge — activeDays', () => {
+  it('зберігає activeDays з переданого reminder', () => {
+    useChallengesStore.getState().addChallenge('Спорт', '#7CB9A8', { enabled: true, time: '08:00', activeDays: [0, 2, 4] });
+    const { challenges } = useChallengesStore.getState();
+    expect(challenges[0].activeDays).toEqual([0, 2, 4]);
+    expect(challenges[0].reminderEnabled).toBe(true);
+    expect(challenges[0].reminderTime).toBe('08:00');
+  });
+
+  it('без reminder → всі дні активні за замовчуванням', () => {
+    useChallengesStore.getState().addChallenge('Спорт', '#7CB9A8');
+    expect(useChallengesStore.getState().challenges[0].activeDays).toEqual([0, 1, 2, 3, 4, 5, 6]);
+  });
+});
+
+describe('updateChallenge — activeDays', () => {
+  it('оновлює activeDays через patch', () => {
+    useChallengesStore.getState().addChallenge('Спорт', '#7CB9A8');
+    const { challenges } = useChallengesStore.getState();
+    useChallengesStore.getState().updateChallenge(challenges[0].id, { activeDays: [5, 6] });
+    expect(useChallengesStore.getState().challenges[0].activeDays).toEqual([5, 6]);
+  });
+});
+
 describe('completeChallenge', () => {
   it('adds a log entry for the given date', () => {
     useChallengesStore.getState().addChallenge('Читання', '#E8A87C');

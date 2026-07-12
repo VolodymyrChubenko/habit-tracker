@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calcStreak } from './streakUtils';
+import { calcStreak, calcLongestStreak } from './streakUtils';
 import type { Challenge, DateString } from '../types';
 
 const challenge = (createdAt: DateString, archivedAt?: DateString): Challenge => ({
@@ -9,6 +9,14 @@ const challenge = (createdAt: DateString, archivedAt?: DateString): Challenge =>
   createdAt,
   archivedAt,
   order: 0,
+});
+
+/** Челендж з нагадуванням і активними днями (Пн=0 … Нд=6). */
+const weekdayChallenge = (createdAt: DateString, activeDays: number[]): Challenge => ({
+  ...challenge(createdAt),
+  reminderEnabled: true,
+  reminderTime: '09:00',
+  activeDays,
 });
 
 const dates = (...ds: DateString[]): Set<DateString> => new Set(ds);
@@ -88,5 +96,100 @@ describe('calcStreak — ретроактивне виправлення', () =>
 
     const after = dates('2026-06-06', '2026-06-07', '2026-06-08');
     expect(calcStreak(challenge('2026-06-01'), after, '2026-06-09')).toBe(3);
+  });
+});
+
+// Календар: 2026-06-01 = понеділок, 06=Сб, 07=Нд, 08=Пн, 09=Вт
+const MON_FRI = [0, 1, 2, 3, 4];
+
+describe('calcStreak — активні дні тижня', () => {
+  it('вимкнене нагадування → activeDays ігнорується, всі дні активні', () => {
+    const ch = { ...challenge('2026-06-01'), reminderEnabled: false, activeDays: MON_FRI };
+    // Сб+Нд не відмічені → для "всі дні активні" це розрив
+    const done = dates('2026-06-04', '2026-06-05', '2026-06-08', '2026-06-09');
+    expect(calcStreak(ch, done, '2026-06-09')).toBe(2);
+  });
+
+  it('невиконаний вікенд не рве стрік для Пн–Пт челенджу', () => {
+    // Чт 04, Пт 05 виконано; Сб 06, Нд 07 пропущено; Пн 08, Вт 09 виконано
+    const done = dates('2026-06-04', '2026-06-05', '2026-06-08', '2026-06-09');
+    expect(calcStreak(weekdayChallenge('2026-06-01', MON_FRI), done, '2026-06-09')).toBe(4);
+  });
+
+  it('виконання у неактивний день рахується як бонус (+1)', () => {
+    // Пт 05, Сб 06, Нд 07, Пн 08, Вт 09 — все виконано, включно з вікендом
+    const done = dates('2026-06-05', '2026-06-06', '2026-06-07', '2026-06-08', '2026-06-09');
+    expect(calcStreak(weekdayChallenge('2026-06-01', MON_FRI), done, '2026-06-09')).toBe(5);
+  });
+
+  it('пропущений активний день рве стрік', () => {
+    // Пт 05 пропущено (активний!) → стрік лише Пн 08 + Вт 09
+    const done = dates('2026-06-04', '2026-06-08', '2026-06-09');
+    expect(calcStreak(weekdayChallenge('2026-06-01', MON_FRI), done, '2026-06-09')).toBe(2);
+  });
+
+  it('сьогодні неактивний і не виконаний → пропускається, рахує з активних днів назад', () => {
+    // Сьогодні Сб 06 (неактивний, не виконаний); Чт 04 + Пт 05 виконані
+    const done = dates('2026-06-04', '2026-06-05');
+    expect(calcStreak(weekdayChallenge('2026-06-01', MON_FRI), done, '2026-06-06')).toBe(2);
+  });
+
+  it('сьогодні активний і не виконаний → пропускається без розриву (існуюче правило)', () => {
+    // Сьогодні Вт 09 не виконаний; Пн 08 виконаний
+    const done = dates('2026-06-08');
+    expect(calcStreak(weekdayChallenge('2026-06-01', MON_FRI), done, '2026-06-09')).toBe(1);
+  });
+
+  it('порожній activeDays → всі дні активні (захист)', () => {
+    const done = dates('2026-06-06', '2026-06-07', '2026-06-08', '2026-06-09');
+    expect(calcStreak(weekdayChallenge('2026-06-01', []), done, '2026-06-09')).toBe(4);
+  });
+
+  it('не зациклюється, коли до createdAt тягнеться хвіст неактивних днів', () => {
+    // Челендж лише по понеділках; створений 08, виконаний 08; сьогодні 09
+    const done = dates('2026-06-08');
+    expect(calcStreak(weekdayChallenge('2026-06-08', [0]), done, '2026-06-09')).toBe(1);
+  });
+});
+
+describe('calcLongestStreak', () => {
+  it('без активних днів — найдовша серія календарних днів', () => {
+    // 01-03 поспіль, 04 пропущено, 05-09 поспіль → 5
+    const done = dates('2026-06-01', '2026-06-02', '2026-06-03', '2026-06-05', '2026-06-06', '2026-06-07', '2026-06-08', '2026-06-09');
+    expect(calcLongestStreak(challenge('2026-06-01'), done, '2026-06-30')).toBe(5);
+  });
+
+  it('вікенд не розриває серію Пн–Пт челенджу', () => {
+    // Чт 04, Пт 05, [вікенд], Пн 08, Вт 09 → 4
+    const done = dates('2026-06-04', '2026-06-05', '2026-06-08', '2026-06-09');
+    expect(calcLongestStreak(weekdayChallenge('2026-06-01', MON_FRI), done, '2026-06-30')).toBe(4);
+  });
+
+  it('пропущений активний день розриває: повертає довшу з двох серій', () => {
+    // Серія 1: Пн 01 - Ср 03 (3); Чт 04 пропущено; Серія 2: Пт 05 + Пн 08 + Вт 09 + Ср 10 (4)
+    const done = dates('2026-06-01', '2026-06-02', '2026-06-03', '2026-06-05', '2026-06-08', '2026-06-09', '2026-06-10');
+    expect(calcLongestStreak(weekdayChallenge('2026-06-01', MON_FRI), done, '2026-06-30')).toBe(4);
+  });
+
+  it('поточна незавершена сьогоднішня дата не розриває серію', () => {
+    // Сьогодні 09, не виконано; 06-08 виконано → longest 3
+    const done = dates('2026-06-06', '2026-06-07', '2026-06-08');
+    expect(calcLongestStreak(challenge('2026-06-01'), done, '2026-06-09')).toBe(3);
+  });
+
+  it('повертає 0 без логів', () => {
+    expect(calcLongestStreak(challenge('2026-06-01'), dates(), '2026-06-09')).toBe(0);
+  });
+
+  it('рахує ретроактивні відмітки до createdAt', () => {
+    // createdAt 08, відмічено 05 (Пт), 08, 09 для Пн-Пт → серія 3
+    const done = dates('2026-06-05', '2026-06-08', '2026-06-09');
+    expect(calcLongestStreak(weekdayChallenge('2026-06-08', MON_FRI), done, '2026-06-30')).toBe(3);
+  });
+
+  it('дорівнює поточному стріку, коли історія — одна серія', () => {
+    const ch = weekdayChallenge('2026-06-01', MON_FRI);
+    const done = dates('2026-06-04', '2026-06-05', '2026-06-08', '2026-06-09');
+    expect(calcLongestStreak(ch, done, '2026-06-09')).toBe(calcStreak(ch, done, '2026-06-09'));
   });
 });

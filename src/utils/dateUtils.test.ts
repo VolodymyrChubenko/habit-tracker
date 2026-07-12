@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { toDateString, getDaysInMonth, getMonthStart, formatDisplayDate } from './dateUtils';
+import { toDateString, getDaysInMonth, getMonthStart, formatDisplayDate, weekdayMon0 } from './dateUtils';
 
 describe('toDateString', () => {
   it('formats date as yyyy-MM-dd', () => {
@@ -20,6 +20,22 @@ describe('getMonthStart', () => {
   it('returns day-of-week index (Mon=0) of first day of month', () => {
     // June 2026 starts on Monday
     expect(getMonthStart(2026, 5)).toBe(0);
+  });
+});
+
+describe('weekdayMon0', () => {
+  it('returns 0 for Monday', () => {
+    expect(weekdayMon0('2026-06-01')).toBe(0);
+    expect(weekdayMon0('2026-06-08')).toBe(0);
+  });
+  it('returns 6 for Sunday', () => {
+    expect(weekdayMon0('2026-06-07')).toBe(6);
+  });
+  it('returns 2 for Wednesday', () => {
+    expect(weekdayMon0('2026-06-10')).toBe(2);
+  });
+  it('returns 5 for Saturday', () => {
+    expect(weekdayMon0('2026-06-06')).toBe(5);
   });
 });
 

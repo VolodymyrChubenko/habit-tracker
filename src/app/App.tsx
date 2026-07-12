@@ -2,13 +2,20 @@ import { useCallback, useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { BottomNav } from '../components/BottomNav/BottomNav';
 import { SplashScreen } from '../components/SplashScreen/SplashScreen';
+import { AddChallengeSheet } from '../pages/Today/AddChallengeSheet';
 import { useSettingsStore } from '../store/settingsStore';
-import { useReminderScheduler } from '../hooks/useReminderScheduler';
+import { useChallengesStore } from '../store/challengesStore';
+import { useUIStore } from '../store/uiStore';
+import { usePushSync } from '../hooks/usePushSync';
 import styles from './App.module.scss';
 
 export default function App() {
   const theme = useSettingsStore(s => s.theme);
-  useReminderScheduler();
+  const addSheetOpen = useUIStore(s => s.addSheetOpen);
+  const closeAddSheet = useUIStore(s => s.closeAddSheet);
+  const addChallenge = useChallengesStore(s => s.addChallenge);
+
+  usePushSync();
 
   const [showSplash, setShowSplash] = useState(
     () => typeof sessionStorage !== 'undefined' && !sessionStorage.getItem('splashShown'),
@@ -45,6 +52,12 @@ export default function App() {
       </main>
       <BottomNav />
       {showSplash && <SplashScreen onDone={handleSplashDone} />}
+      {addSheetOpen && (
+        <AddChallengeSheet
+          onClose={closeAddSheet}
+          onAdd={(name, color, reminder) => { addChallenge(name, color, reminder); closeAddSheet(); }}
+        />
+      )}
     </div>
   );
 }

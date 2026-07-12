@@ -16,6 +16,9 @@ export const EditChallengeSheet = ({ challenge, onClose }: Props) => {
   const [color, setColor] = useState(challenge.color);
   const [reminderEnabled, setReminderEnabled] = useState(challenge.reminderEnabled ?? false);
   const [reminderTime, setReminderTime] = useState(challenge.reminderTime ?? '09:00');
+  const [activeDays, setActiveDays] = useState<number[]>(
+    challenge.activeDays && challenge.activeDays.length > 0 ? challenge.activeDays : [0, 1, 2, 3, 4, 5, 6],
+  );
   const [confirmDelete, setConfirmDelete] = useState(false);
   const { updateChallenge, archiveChallenge, deleteChallenge } = useChallengesStore();
 
@@ -26,6 +29,7 @@ export const EditChallengeSheet = ({ challenge, onClose }: Props) => {
       color,
       reminderEnabled,
       reminderTime,
+      activeDays,
     });
     onClose();
   };
@@ -72,8 +76,10 @@ export const EditChallengeSheet = ({ challenge, onClose }: Props) => {
       <ReminderField
         enabled={reminderEnabled}
         time={reminderTime}
+        activeDays={activeDays}
         onToggle={() => setReminderEnabled(v => !v)}
         onTimeChange={setReminderTime}
+        onActiveDaysChange={setActiveDays}
       />
 
       <button

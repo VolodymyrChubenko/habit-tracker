@@ -9,11 +9,17 @@ const renderNav = (initialPath = '/') =>
     </MemoryRouter>,
   );
 
-it('renders three nav items', () => {
+it('renders four nav items', () => {
   renderNav();
   expect(screen.getByText('Сьогодні')).toBeInTheDocument();
   expect(screen.getByText('Статистика')).toBeInTheDocument();
+  expect(screen.getByText('Досягнення')).toBeInTheDocument();
   expect(screen.getByText('Налаштування')).toBeInTheDocument();
+});
+
+it('renders the central add button', () => {
+  renderNav();
+  expect(screen.getByLabelText('Додати челендж')).toBeInTheDocument();
 });
 
 it('marks Today as active on /', () => {
@@ -24,4 +30,9 @@ it('marks Today as active on /', () => {
 it('marks Statistics as active on /statistics', () => {
   renderNav('/statistics');
   expect(screen.getByText('Статистика').closest('a')).toHaveClass('active');
+});
+
+it('marks Achievements as active on /achievements', () => {
+  renderNav('/achievements');
+  expect(screen.getByText('Досягнення').closest('a')).toHaveClass('active');
 });

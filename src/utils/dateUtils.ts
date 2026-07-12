@@ -15,6 +15,12 @@ export const getMonthStart = (year: number, month: number): number => {
   return dow === 0 ? 6 : dow - 1;
 };
 
+/** День тижня для дати: 0=Пн … 6=Нд (конвенція застосунку). */
+export const weekdayMon0 = (date: DateString): number => {
+  const dow = getDay(parseISO(date)); // 0=Sun
+  return dow === 0 ? 6 : dow - 1;
+};
+
 export const formatDisplayDate = (date: DateString): string =>
   format(parseISO(date), 'EEEE, d MMMM', { locale: uk });
 

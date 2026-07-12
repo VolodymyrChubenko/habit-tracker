@@ -70,3 +70,35 @@ describe('challengesStore rehydration from legacy "habit" data', () => {
     expect(store.getState().logs).toEqual([]);
   });
 });
+
+describe('міграція v2 → v3 (activeDays)', () => {
+  it('додає activeDays = всі дні челенджам без цього поля', async () => {
+    localStorage.setItem(CURRENT_KEY, JSON.stringify({
+      state: {
+        challenges: [
+          { id: 'a', name: 'Медитація', color: '#7CB9A8', createdAt: '2026-01-01', order: 0, reminderEnabled: true, reminderTime: '09:00' },
+        ],
+        logs: [],
+      },
+      version: 2,
+    }));
+
+    const store = await freshStore();
+    expect(store.getState().challenges[0].activeDays).toEqual([0, 1, 2, 3, 4, 5, 6]);
+  });
+
+  it('не перезаписує наявний activeDays', async () => {
+    localStorage.setItem(CURRENT_KEY, JSON.stringify({
+      state: {
+        challenges: [
+          { id: 'a', name: 'Біг', color: '#7CB9A8', createdAt: '2026-01-01', order: 0, activeDays: [0, 4] },
+        ],
+        logs: [],
+      },
+      version: 2,
+    }));
+
+    const store = await freshStore();
+    expect(store.getState().challenges[0].activeDays).toEqual([0, 4]);
+  });
+});

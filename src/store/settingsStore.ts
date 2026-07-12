@@ -7,11 +7,10 @@ const STORAGE_KEY = 'challenge-tracker-settings';
 
 interface SettingsState {
   theme: Theme;
+  /** Master-тогл push-нагадувань (дозвіл браузера запитується окремо). */
+  pushEnabled: boolean;
   setTheme: (theme: Theme) => void;
-  reminderEnabled: boolean;
-  reminderTime: string;
-  setReminderEnabled: (v: boolean) => void;
-  setReminderTime: (t: string) => void;
+  setPushEnabled: (enabled: boolean) => void;
 }
 
 adoptLegacyStorageKey('habit-tracker-settings', STORAGE_KEY);
@@ -20,23 +19,24 @@ export const useSettingsStore = create<SettingsState>()(
   persist(
     set => ({
       theme: 'system',
+      pushEnabled: false,
       setTheme: theme => set({ theme }),
-      reminderEnabled: false,
-      reminderTime: '08:00',
-      setReminderEnabled: v => set({ reminderEnabled: v }),
-      setReminderTime: t => set({ reminderTime: t }),
+      setPushEnabled: pushEnabled => set({ pushEnabled }),
     }),
     {
       name: STORAGE_KEY,
-      version: 1,
+      version: 2,
       migrate: (persisted: unknown, version: number) => {
         const state = persisted as Partial<SettingsState>;
         if (version < 1) {
           return {
             theme: state.theme ?? 'system',
-            reminderEnabled: state.reminderEnabled ?? false,
-            reminderTime: state.reminderTime ?? '08:00',
+            pushEnabled: false,
           } as SettingsState;
+        }
+        // v2 додала pushEnabled.
+        if (version < 2) {
+          state.pushEnabled = state.pushEnabled ?? false;
         }
         return state as SettingsState;
       },

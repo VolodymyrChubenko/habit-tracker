@@ -1,0 +1,372 @@
+<title>Мокапи: Досягнення + Нагадування</title>
+<style>
+  :root {
+    --bg: #FAF7F0; --surface: #FFFFFF; --text: #333333; --text-2: #888888;
+    --muted: #BBBBBB; --border: #F0EDE6; --border-l: #F5F2EC; --accent-bg: #EBF5F2;
+    --accent: #7CB9A8; --warm: #E8A87C; --purple: #9B89D4;
+    --page-bg: #F1EEE6; --page-text: #333333; --frame-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    --gold: #E8C55C; --silver: #C9CDD4; --bronze: #D9A06B;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a1a; --surface: #2a2a2a; --text: #f0f0f0; --text-2: #aaaaaa;
+      --muted: #666666; --border: #3a3a3a; --border-l: #333333; --accent-bg: #1e3330;
+      --page-bg: #121212; --page-text: #f0f0f0; --frame-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1a1a1a; --surface: #2a2a2a; --text: #f0f0f0; --text-2: #aaaaaa;
+    --muted: #666666; --border: #3a3a3a; --border-l: #333333; --accent-bg: #1e3330;
+    --page-bg: #121212; --page-text: #f0f0f0; --frame-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  }
+  :root[data-theme="light"] {
+    --bg: #FAF7F0; --surface: #FFFFFF; --text: #333333; --text-2: #888888;
+    --muted: #BBBBBB; --border: #F0EDE6; --border-l: #F5F2EC; --accent-bg: #EBF5F2;
+    --page-bg: #F1EEE6; --page-text: #333333; --frame-shadow: 0 8px 30px rgba(0,0,0,0.08);
+  }
+
+  body {
+    background: var(--page-bg); color: var(--page-text);
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    padding: 36px 20px 60px;
+  }
+  .wrap { max-width: 1280px; margin: 0 auto; }
+  h1 { font-size: 26px; font-weight: 600; margin-bottom: 8px; text-wrap: balance; }
+  .lead { font-size: 14px; color: var(--text-2); max-width: 62ch; line-height: 1.55; margin-bottom: 36px; }
+  .lead b { color: var(--page-text); font-weight: 600; }
+
+  .frames { display: flex; flex-wrap: wrap; gap: 36px; align-items: flex-start; justify-content: center; }
+  .mock { width: 372px; max-width: 100%; }
+  .mockLabel {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.6px; text-transform: uppercase;
+    color: var(--text-2); margin-bottom: 10px;
+  }
+  .notes { margin-top: 14px; font-size: 12.5px; color: var(--text-2); line-height: 1.55; }
+  .notes li { margin: 0 0 6px 16px; }
+
+  .phone {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 28px;
+    box-shadow: var(--frame-shadow); overflow: hidden; position: relative;
+    height: 700px; display: flex; flex-direction: column;
+  }
+  .screen { flex: 1; padding: 22px 18px 0; overflow: hidden; }
+  .pageTitle { font-size: 24px; font-weight: 600; color: var(--text); margin-bottom: 20px; }
+
+  /* ===== Achievements list ===== */
+  .aList { display: flex; flex-direction: column; gap: 8px; }
+  .aRow {
+    display: flex; align-items: center; gap: 11px;
+    background: var(--surface); border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    padding: 12px 14px;
+  }
+  .rank {
+    width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; color: var(--text-2);
+    background: var(--bg); border: 1.5px solid var(--border);
+    font-variant-numeric: tabular-nums;
+  }
+  .rank.m1 { background: color-mix(in srgb, var(--gold) 22%, var(--surface)); border-color: var(--gold); font-size: 16px; }
+  .rank.m2 { background: color-mix(in srgb, var(--silver) 22%, var(--surface)); border-color: var(--silver); font-size: 16px; }
+  .rank.m3 { background: color-mix(in srgb, var(--bronze) 22%, var(--surface)); border-color: var(--bronze); font-size: 16px; }
+  .aMain { flex: 1; min-width: 0; }
+  .aName {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 14px; font-weight: 600; color: var(--text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .aSub { font-size: 11.5px; color: var(--text-2); margin-top: 3px; }
+  .aStreak {
+    display: flex; align-items: center; gap: 5px; flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .aStreak .num { font-size: 20px; font-weight: 700; line-height: 1; }
+  .aStreak .word { font-size: 11px; color: var(--text-2); }
+  .sectionHead {
+    font-size: 11px; font-weight: 600; color: var(--text-2); text-transform: uppercase;
+    letter-spacing: 0.5px; margin: 18px 0 10px;
+  }
+  .archived .aRow { opacity: 0.55; }
+
+  /* ===== Bottom nav ===== */
+  .nav {
+    background: var(--surface); border-top: 1px solid var(--border-l);
+    box-shadow: 0 -1px 10px rgba(0,0,0,0.07);
+    display: flex; align-items: flex-end; justify-content: space-around;
+    padding: 8px 6px 12px; position: relative;
+  }
+  .navItem { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 10px; color: var(--muted); width: 62px; }
+  .navItem.on { color: var(--accent); font-weight: 600; }
+  .navPlus {
+    width: 46px; height: 46px; border-radius: 50%; background: var(--accent); color: #fff;
+    font-size: 26px; font-weight: 300; display: flex; align-items: center; justify-content: center;
+    margin-bottom: 6px; box-shadow: 0 2px 8px rgba(124,185,168,0.35);
+  }
+
+  /* ===== Detail sheet ===== */
+  .backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.35); display: flex; align-items: flex-end; }
+  .sheet {
+    background: var(--surface); border-radius: 20px 20px 0 0; padding: 20px; width: 100%;
+  }
+  .handle { width: 36px; height: 4px; background: var(--border); border-radius: 4px; margin: 0 auto 18px; }
+  .shName { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .shSub { font-size: 12px; color: var(--text-2); margin-bottom: 18px; }
+  .shHead {
+    font-size: 11px; font-weight: 600; color: var(--text-2); text-transform: uppercase;
+    letter-spacing: 0.5px; margin-bottom: 10px;
+  }
+  .statGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 22px; }
+  .flameCard {
+    grid-row: span 2; background: var(--bg); border-radius: 12px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 16px 10px; position: relative;
+  }
+  .flameWrap { position: relative; width: 128px; height: 138px; }
+  .flameWrap svg { position: absolute; inset: 0; }
+  .flameNum {
+    position: absolute; left: 50%; top: 58%; transform: translate(-50%, -34%);
+    width: 64px; height: 64px; border-radius: 50%;
+    background: var(--surface); box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .flameNum .n { font-size: 24px; font-weight: 700; color: var(--text); line-height: 1.05; }
+  .flameNum .w { font-size: 10.5px; color: var(--text-2); }
+  .flameCap { margin-top: 8px; font-size: 11.5px; color: var(--text-2); }
+  .statTile {
+    background: var(--bg); border-radius: 12px; padding: 14px;
+    display: flex; flex-direction: column; justify-content: center; gap: 2px;
+  }
+  .statTile .v { font-size: 21px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .statTile .l { font-size: 11.5px; color: var(--text-2); }
+
+  /* ===== Settings ===== */
+  .sSection {
+    background: var(--surface); border-radius: 16px; overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06); margin-bottom: 16px;
+  }
+  .sLabel {
+    padding: 14px 16px; font-size: 12px; font-weight: 600; color: var(--text-2);
+    text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 1px solid var(--border-l);
+  }
+  .sRow { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--border-l); }
+  .sRow:last-child { border-bottom: none; }
+  .sIcon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .sTitle { flex: 1; font-size: 15px; color: var(--text); font-weight: 500; }
+  .sSub { font-size: 12px; color: var(--text-2); margin-top: 1px; }
+  .toggle { position: relative; width: 44px; height: 26px; flex-shrink: 0; }
+  .tTrack { position: absolute; inset: 0; border-radius: 13px; background: var(--border); }
+  .tThumb {
+    position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%;
+    background: var(--surface); box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .toggle.on .tTrack { background: var(--accent); }
+  .toggle.on .tThumb { left: 21px; }
+  .hintRow { display: flex; gap: 10px; padding: 12px 16px; background: var(--bg); font-size: 12px; color: var(--text-2); line-height: 1.5; }
+  .dimmed { opacity: 0.45; }
+
+  footer { margin-top: 40px; font-size: 12px; color: var(--muted); text-align: center; }
+</style>
+
+<div class="wrap">
+  <h1>Мокапи нових фіч</h1>
+  <p class="lead">Три нові екрани у поточній візуальній мові застосунку (токени, картки, шити — 1:1 з кодом; тут системний шрифт, у застосунку буде <b>Montserrat</b>). Перемикач теми артефакту показує світлу/темну версію. Під кожним екраном — рішення, які прошу підтвердити або скоригувати.</p>
+
+  <div class="frames">
+
+    <!-- ============ 1. ACHIEVEMENTS PAGE ============ -->
+    <section class="mock">
+      <div class="mockLabel">1 · Сторінка «Досягнення»</div>
+      <div class="phone">
+        <div class="screen">
+          <div class="pageTitle">Досягнення</div>
+
+          <div class="aList">
+            <div class="aRow">
+              <div class="rank m1">🥇</div>
+              <div class="aMain">
+                <div class="aName"><span class="dot" style="background:#7CB9A8"></span>Медитація</div>
+                <div class="aSub">рекорд 15 · всього 34</div>
+              </div>
+              <div class="aStreak" style="color:#7CB9A8">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7CB9A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+                <span class="num">12</span><span class="word">днів</span>
+              </div>
+            </div>
+
+            <div class="aRow">
+              <div class="rank m2">🥈</div>
+              <div class="aMain">
+                <div class="aName"><span class="dot" style="background:#9B89D4"></span>Читання 30 хв</div>
+                <div class="aSub">рекорд 9 · всього 27</div>
+              </div>
+              <div class="aStreak" style="color:#9B89D4">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9B89D4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+                <span class="num">7</span><span class="word">днів</span>
+              </div>
+            </div>
+
+            <div class="aRow">
+              <div class="rank m3">🥉</div>
+              <div class="aMain">
+                <div class="aName"><span class="dot" style="background:#E8A87C"></span>Ранкова зарядка</div>
+                <div class="aSub">рекорд 11 · всього 42</div>
+              </div>
+              <div class="aStreak" style="color:#E8A87C">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E8A87C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+                <span class="num">5</span><span class="word">днів</span>
+              </div>
+            </div>
+
+            <div class="aRow">
+              <div class="rank">4</div>
+              <div class="aMain">
+                <div class="aName"><span class="dot" style="background:#6FA8DC"></span>Англійська</div>
+                <div class="aSub">рекорд 6 · всього 18</div>
+              </div>
+              <div class="aStreak" style="color:#6FA8DC">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6FA8DC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+                <span class="num">0</span><span class="word">днів</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="archived">
+            <div class="sectionHead">Архів</div>
+            <div class="aList">
+              <div class="aRow">
+                <div class="rank">5</div>
+                <div class="aMain">
+                  <div class="aName"><span class="dot" style="background:#E8829A"></span>Без цукру</div>
+                  <div class="aSub">рекорд 21 · всього 58</div>
+                </div>
+                <div class="aStreak" style="color:#E8829A">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E8829A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+                  <span class="num">0</span><span class="word">днів</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav">
+          <div class="navItem"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Сьогодні</div>
+          <div class="navItem"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3v18h18"/><path d="M7 15l4-6 4 3 4-7"/></svg>Статистика</div>
+          <div class="navPlus">+</div>
+          <div class="navItem on"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>Досягнення</div>
+          <div class="navItem"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Налаштування</div>
+        </div>
+      </div>
+      <ul class="notes">
+        <li>Ранжування: поточний стрік ↓ → рекорд ↓ → всього виконань ↓. Активні завжди вище архівних.</li>
+        <li>Топ-3 — медалі, решта — номер позиції.</li>
+        <li>Рядок «рекорд N · всього N» — короткий підсумок; повна статистика по тапу (екран 2).</li>
+      </ul>
+    </section>
+
+    <!-- ============ 2. DETAIL SHEET ============ -->
+    <section class="mock">
+      <div class="mockLabel">2 · Статистика челенджу (тап по рядку)</div>
+      <div class="phone">
+        <div class="screen" style="filter: blur(1px); opacity: 0.9;">
+          <div class="pageTitle">Досягнення</div>
+          <div class="aList">
+            <div class="aRow"><div class="rank m1">🥇</div><div class="aMain"><div class="aName"><span class="dot" style="background:#7CB9A8"></span>Медитація</div><div class="aSub">рекорд 15 · всього 34</div></div></div>
+            <div class="aRow"><div class="rank m2">🥈</div><div class="aMain"><div class="aName"><span class="dot" style="background:#9B89D4"></span>Читання 30 хв</div><div class="aSub">рекорд 9 · всього 27</div></div></div>
+          </div>
+        </div>
+        <div class="backdrop">
+          <div class="sheet">
+            <div class="handle"></div>
+            <div class="shName"><span class="dot" style="background:#7CB9A8; width:10px; height:10px;"></span>Медитація</div>
+            <div class="shSub">розпочато 12 травня 2026 · 🥇 1-ше місце</div>
+
+            <div class="shHead">Статистика</div>
+            <div class="statGrid">
+              <div class="flameCard">
+                <div class="flameWrap">
+                  <svg width="128" height="138" viewBox="0 0 24 26" fill="none" stroke="#7CB9A8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8.5 16.5A2.5 2.5 0 0 0 11 14c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" fill="#7CB9A8" fill-opacity="0.15"/>
+                  </svg>
+                  <div class="flameNum"><span class="n">7</span><span class="w">днів</span></div>
+                </div>
+                <div class="flameCap">поточна серія</div>
+              </div>
+              <div class="statTile">
+                <span class="v" style="color:#7CB9A8">15 днів</span>
+                <span class="l">Найбільше поспіль</span>
+              </div>
+              <div class="statTile">
+                <span class="v" style="color:#7CB9A8">34 дні</span>
+                <span class="l">Всі виконання</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ul class="notes">
+        <li>Композиція як на референсі: великий вогник з поточною серією + два тайли праворуч.</li>
+        <li>Вогник і числа — у кольорі челенджу.</li>
+        <li>Підзаголовок: дата старту й місце в рейтингу.</li>
+      </ul>
+    </section>
+
+    <!-- ============ 3. SETTINGS ============ -->
+    <section class="mock">
+      <div class="mockLabel">3 · Налаштування — секція «Нагадування»</div>
+      <div class="phone">
+        <div class="screen">
+          <div class="pageTitle">Налаштування</div>
+
+          <div class="sSection">
+            <div class="sLabel">Нагадування</div>
+            <div class="sRow">
+              <div class="sIcon" style="background:#F0EBF8">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#9B89D4" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              </div>
+              <div style="flex:1">
+                <div class="sTitle">Push-сповіщення</div>
+                <div class="sSub">Дозвіл надано</div>
+              </div>
+              <div class="toggle on"><div class="tTrack"></div><div class="tThumb"></div></div>
+            </div>
+            <div class="hintRow">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="flex-shrink:0; margin-top:1px"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+              <span>Час і дні тижня налаштовуються окремо в кожному челенджі — при створенні або редагуванні.</span>
+            </div>
+          </div>
+
+          <div class="sSection dimmed">
+            <div class="sLabel">Зовнішній вигляд</div>
+            <div class="sRow">
+              <div class="sIcon" style="background:#FAF7F0; border:1.5px solid #E8E4DC">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E8A87C" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+              </div>
+              <div class="sTitle">Світла</div>
+              <div style="width:20px; height:20px; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center;">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+              </div>
+            </div>
+            <div class="sRow"><div class="sIcon" style="background:#5c5c5f"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f0f0f0" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div><div class="sTitle">Темна</div><div style="width:20px; height:20px; border-radius:50%; border:2px solid #E0DDD8"></div></div>
+          </div>
+        </div>
+
+        <div class="nav">
+          <div class="navItem"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Сьогодні</div>
+          <div class="navItem"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3v18h18"/><path d="M7 15l4-6 4 3 4-7"/></svg>Статистика</div>
+          <div class="navPlus">+</div>
+          <div class="navItem"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>Досягнення</div>
+          <div class="navItem on"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Налаштування</div>
+        </div>
+      </div>
+      <ul class="notes">
+        <li>Один master-тогл вмикає push для всього застосунку (запитує дозвіл браузера при першому вмиканні).</li>
+        <li>Підрядок показує стан: «Дозвіл надано» / «Заблоковано в браузері» / «Не підтримується».</li>
+        <li>Час і дні лишаються в самих челенджах (як на вже готовому UI) — тут лише вмикач і підказка.</li>
+      </ul>
+    </section>
+
+  </div>
+
+  <footer>Мокап · Challenge Tracker · липень 2026</footer>
+</div>
