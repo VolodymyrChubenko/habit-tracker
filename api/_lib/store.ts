@@ -6,7 +6,7 @@
  *   sent:{deviceId}:{challengeId}:{date}:{HH:mm} — маркер надісланого нагадування, TTL 6 год
  */
 import { Redis } from '@upstash/redis';
-import type { Reminder } from './schedule';
+import type { Reminder } from './schedule.js';
 
 export interface PushSubscriptionRecord {
   endpoint: string;

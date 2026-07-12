@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { putDevice, deleteDevice, type DeviceRecord } from './_lib/store';
-import type { Reminder } from './_lib/schedule';
+import { putDevice, deleteDevice, type DeviceRecord } from './_lib/store.js';
+import type { Reminder } from './_lib/schedule.js';
 
 const TIME_RE = /^\d{2}:\d{2}$/;
 

@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import webpush from 'web-push';
-import { dueReminders } from './_lib/schedule';
-import { getDeviceIds, getDevice, deleteDevice, tryMarkSent } from './_lib/store';
+import { dueReminders } from './_lib/schedule.js';
+import { getDeviceIds, getDevice, deleteDevice, tryMarkSent } from './_lib/store.js';
 
 /**
  * Викликається зовнішнім кроном щохвилини (cron-job.org).
