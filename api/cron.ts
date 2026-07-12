@@ -29,14 +29,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   );
 
   const now = new Date();
-
-  // Тимчасова діагностика E2E: ?debug=1 повертає сирі записи без надсилання
-  if (req.query.debug === '1') {
-    const ids = await getDeviceIds();
-    const records = await Promise.all(ids.map(async id => ({ id, record: await getDevice(id) })));
-    return res.status(200).json({ nowUtc: now.toISOString(), records });
-  }
-
   let due = 0;
   let sent = 0;
   let deduped = 0;
