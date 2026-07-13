@@ -2,9 +2,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { clearReminders, syncBadge } from './badgeUtils';
 import type { ReminderNotification } from './badgeUtils';
 
-const notif = (tag: string): ReminderNotification & { close: ReturnType<typeof vi.fn> } => ({
+const notif = (tag: string): ReminderNotification => ({
   tag,
-  close: vi.fn(),
+  close: vi.fn<() => void>(),
 });
 
 const regWith = (notifications: ReminderNotification[]) => ({
