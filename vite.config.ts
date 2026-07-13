@@ -26,6 +26,9 @@ export default defineConfig({
       },
       injectManifest: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        // es-збірка SW у плагіні хардкодить deprecated inlineDynamicImports
+        // (шумить WARN у rolldown-vite); iife-гілка чиста, а SW і так один файл
+        rollupFormat: 'iife',
       },
     }),
   ],
