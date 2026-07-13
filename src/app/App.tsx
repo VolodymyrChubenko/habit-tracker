@@ -7,6 +7,7 @@ import { useSettingsStore } from '../store/settingsStore';
 import { useChallengesStore } from '../store/challengesStore';
 import { useUIStore } from '../store/uiStore';
 import { usePushSync } from '../hooks/usePushSync';
+import { useAppBadge } from '../hooks/useAppBadge';
 import styles from './App.module.scss';
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
   const addChallenge = useChallengesStore(s => s.addChallenge);
 
   usePushSync();
+  useAppBadge();
 
   const [showSplash, setShowSplash] = useState(
     () => typeof sessionStorage !== 'undefined' && !sessionStorage.getItem('splashShown'),
