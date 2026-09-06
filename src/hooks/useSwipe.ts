@@ -27,7 +27,8 @@ export const useSwipe = ({ onSwipeLeft, onSwipeRight, threshold = 50 }: Options)
     // ігноруємо вертикальні свайпи (скрол), реагуємо лише на горизонтальні
     if (Math.abs(dx) < threshold || Math.abs(dx) < Math.abs(dy)) return;
 
-    dx < 0 ? onSwipeLeft() : onSwipeRight();
+    if (dx < 0) onSwipeLeft();
+    else onSwipeRight();
   };
 
   return { onTouchStart, onTouchEnd };

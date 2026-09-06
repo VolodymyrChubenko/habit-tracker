@@ -7,6 +7,10 @@ interface Props {
   done: boolean;
   onToggle: () => void;
   onEdit: () => void;
+  /** attributes + listeners з useSortable. Без них хендл не рендериться — і рядок не тягається. */
+  dragHandleProps?: React.HTMLAttributes<HTMLElement>;
+  /** прийшло push-нагадування, яке ще не відпрацювали */
+  reminding?: boolean;
 }
 
 const COMPLETE_MS = 700;
@@ -16,7 +20,14 @@ const prefersReducedMotion = () =>
   typeof window !== 'undefined' &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-export const ChallengeItem = ({ challenge, done, onToggle, onEdit }: Props) => {
+export const ChallengeItem = ({
+  challenge,
+  done,
+  onToggle,
+  onEdit,
+  dragHandleProps,
+  reminding,
+}: Props) => {
   const [animating, setAnimating] = useState(false);
   const timer = useRef<number | undefined>(undefined);
   const firing = useRef(false);
@@ -39,12 +50,31 @@ export const ChallengeItem = ({ challenge, done, onToggle, onEdit }: Props) => {
   const className = [
     styles.card,
     done ? styles.done : '',
+    reminding ? styles.reminding : '',
     animating ? (done ? styles.fading : styles.completing) : '',
   ].join(' ');
 
   return (
-    <div className={className} onClick={onEdit}>
+    <div id={`challenge-${challenge.id}`} className={className} onClick={onEdit}>
       {!done && <span className={styles.sweep} style={{ background: challenge.color }} />}
+      {dragHandleProps && (
+        <span
+          className={styles.handle}
+          aria-label="Перетягнути"
+          {...dragHandleProps}
+          // тап по хендлу ніколи не відкриває шіт редагування
+          onClick={e => e.stopPropagation()}
+        >
+          <svg viewBox="0 0 10 16" aria-hidden="true">
+            <circle cx="2" cy="2" r="1.5" />
+            <circle cx="8" cy="2" r="1.5" />
+            <circle cx="2" cy="8" r="1.5" />
+            <circle cx="8" cy="8" r="1.5" />
+            <circle cx="2" cy="14" r="1.5" />
+            <circle cx="8" cy="14" r="1.5" />
+          </svg>
+        </span>
+      )}
       <div className={styles.dot} style={{ background: challenge.color }} />
       <span
         className={styles.name}
@@ -52,6 +82,11 @@ export const ChallengeItem = ({ challenge, done, onToggle, onEdit }: Props) => {
       >
         {challenge.name}
       </span>
+      {reminding && (
+        <span className={styles.bell} role="img" aria-label="нагадування">
+          🔔
+        </span>
+      )}
       <button
         className={styles.circle}
         aria-label={done ? 'скасувати виконання' : 'виконати'}

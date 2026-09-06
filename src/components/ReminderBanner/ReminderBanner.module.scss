@@ -1,0 +1,52 @@
+@use '../../styles/tokens' as *;
+
+.banner {
+  background: $color-accent-bg;
+  border: 1.5px solid $color-accent;
+  border-radius: $radius-card;
+  padding: 11px 12px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+}
+
+.icon {
+  font-size: 15px;
+  line-height: 1.2;
+  flex-shrink: 0;
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  font-size: 13px;
+  font-weight: 600;
+  color: $color-text;
+}
+
+.names {
+  font-size: 13px;
+  color: $color-text-secondary;
+  margin-top: 3px;
+  line-height: 1.45;
+}
+
+.name {
+  font-size: 13px;
+  font-weight: 500;
+  color: $color-accent;
+  border-bottom: 1px dashed $color-accent;
+  padding: 0;
+}
+
+.close {
+  font-size: 17px;
+  line-height: 1;
+  color: $color-text-muted;
+  padding: 1px 2px;
+  flex-shrink: 0;
+}

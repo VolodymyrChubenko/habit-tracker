@@ -1,0 +1,43 @@
+@use '../../styles/tokens' as *;
+
+.row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.pill {
+  border-radius: 20px;
+  padding: 5px 13px;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  border: 1.5px solid $color-border;
+  background: $color-surface;
+  color: $color-text-secondary;
+
+  &.active {
+    background: $color-accent-bg;
+    border-color: $color-accent;
+    color: $color-text;
+  }
+}
+
+// «Всі» в активному стані — суцільна заливка. #fff тут статичний і коректний
+// в обох темах, бо $color-accent однаковий у light і dark.
+.pillAll.active {
+  background: $color-accent;
+  border-color: $color-accent;
+  color: #fff;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}

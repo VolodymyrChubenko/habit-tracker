@@ -1,8 +1,13 @@
+import type { ChallengeId } from '../types';
+
 /** Мінімальний зріз Notification — достатній і для тестів, і для DOM-типу. */
 export interface ReminderNotification {
   tag: string;
+  data?: { challengeId?: string };
   close(): void;
 }
+
+const REMINDER_PREFIX = 'reminder';
 
 /** Структурно сумісний із ServiceWorkerRegistration (вікно і SW). */
 export interface NotificationSource {
@@ -39,12 +44,28 @@ export const syncBadge = async (
   }
 };
 
-/** Відкриття застосунку = «прочитано»: закрити reminder-сповіщення, скинути бейдж. */
-export const clearReminders = async (reg: NotificationSource): Promise<void> => {
+/**
+ * challengeId зі сповіщення. Пріоритет — data; розбір тега лишається запасним
+ * шляхом для сповіщень, доставлених до того, як SW почав класти id у data.
+ */
+const reminderChallengeId = (n: ReminderNotification): ChallengeId | undefined =>
+  n.data?.challengeId ??
+  (n.tag.startsWith(`${REMINDER_PREFIX}-`) ? n.tag.slice(REMINDER_PREFIX.length + 1) : undefined);
+
+/**
+ * Відкриття застосунку = «прочитано»: закрити reminder-сповіщення, скинути бейдж.
+ * Повертає id челенджів із цих сповіщень — інакше інформація «за чим нагадали»
+ * гине разом із закритими сповіщеннями.
+ */
+export const clearReminders = async (reg: NotificationSource): Promise<ChallengeId[]> => {
+  const ids: ChallengeId[] = [];
   try {
     const notifications = await reg.getNotifications();
     for (const n of notifications) {
-      if (n.tag.startsWith('reminder')) n.close();
+      if (!n.tag.startsWith(REMINDER_PREFIX)) continue;
+      const id = reminderChallengeId(n);
+      if (id) ids.push(id);
+      n.close();
     }
   } catch {
     // без сповіщень все одно чистимо бейдж нижче
@@ -54,4 +75,5 @@ export const clearReminders = async (reg: NotificationSource): Promise<void> => 
   } catch {
     // мовчазний no-op
   }
+  return [...new Set(ids)];
 };

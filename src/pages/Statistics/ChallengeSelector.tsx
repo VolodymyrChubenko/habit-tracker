@@ -1,4 +1,5 @@
 import type { Challenge, ChallengeId } from '../../types';
+import styles from './ChallengeSelector.module.scss';
 
 interface Props {
   challenges: Challenge[];
@@ -7,24 +8,23 @@ interface Props {
 }
 
 export const ChallengeSelector = ({ challenges, selected, onChange }: Props) => {
+  const pillClass = (active: boolean, extra?: string) =>
+    [styles.pill, extra ?? '', active ? styles.active : ''].join(' ');
+
   return (
-    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 14, overflowX: 'auto' }}>
+    <div className={styles.row}>
       <button
+        className={pillClass(selected === null, styles.pillAll)}
         onClick={() => onChange(null)}
-        style={{
-          borderRadius: 20, padding: '5px 13px', fontSize: 13, fontWeight: 500, border: 'none', cursor: 'pointer',
-          background: selected === null ? '#7CB9A8' : '#fff',
-          color: selected === null ? '#fff' : '#555',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
-        }}
       >
         Всі
       </button>
       {challenges.map(h => {
-        const isActive = selected?.includes(h.id);
+        const isActive = selected?.includes(h.id) ?? false;
         return (
           <button
             key={h.id}
+            className={pillClass(isActive)}
             onClick={() => {
               if (isActive) {
                 const next = selected!.filter(id => id !== h.id);
@@ -33,13 +33,9 @@ export const ChallengeSelector = ({ challenges, selected, onChange }: Props) => 
                 onChange([...(selected ?? []), h.id]);
               }
             }}
-            style={{
-              borderRadius: 20, padding: '5px 13px', fontSize: 13, fontWeight: 500, cursor: 'pointer',
-              display: 'flex', alignItems: 'center', gap: 5, border: '1.5px solid #E8E4DC',
-              background: isActive ? '#EBF5F2' : '#fff', color: '#555',
-            }}
           >
-            <span style={{ width: 8, height: 8, borderRadius: '50%', background: h.color, flexShrink: 0 }} />
+            {/* колір челенджа — це дані, а не тема, тому лишається inline */}
+            <span className={styles.dot} style={{ background: h.color }} />
             {h.name}
           </button>
         );

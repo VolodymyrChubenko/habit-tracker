@@ -2,8 +2,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { clearReminders, syncBadge } from './badgeUtils';
 import type { ReminderNotification } from './badgeUtils';
 
-const notif = (tag: string): ReminderNotification => ({
+const notif = (tag: string, data?: { challengeId?: string }): ReminderNotification => ({
   tag,
+  data,
   close: vi.fn<() => void>(),
 });
 
@@ -72,14 +73,42 @@ describe('clearReminders', () => {
   it('чистить бейдж навіть якщо getNotifications впав', async () => {
     const { clearAppBadge } = stubBadgeApi();
     const reg = { getNotifications: vi.fn().mockRejectedValue(new Error('nope')) };
-    await expect(clearReminders(reg)).resolves.toBeUndefined();
+    await expect(clearReminders(reg)).resolves.toEqual([]);
     expect(clearAppBadge).toHaveBeenCalled();
   });
 
   it('без Badging API лише закриває сповіщення', async () => {
     vi.stubGlobal('navigator', {});
     const a = notif('reminder-a');
-    await expect(clearReminders(regWith([a]))).resolves.toBeUndefined();
+    await expect(clearReminders(regWith([a]))).resolves.toEqual(['a']);
     expect(a.close).toHaveBeenCalled();
+  });
+
+  it('повертає challengeId із data', async () => {
+    stubBadgeApi();
+    const ids = await clearReminders(
+      regWith([notif('reminder-abc', { challengeId: 'abc' })]),
+    );
+    expect(ids).toEqual(['abc']);
+  });
+
+  it('розбирає тег, коли data порожня (сповіщення зі старого SW)', async () => {
+    stubBadgeApi();
+    expect(await clearReminders(regWith([notif('reminder-legacy-id')]))).toEqual(['legacy-id']);
+  });
+
+  it('тег без id не дає challengeId', async () => {
+    stubBadgeApi();
+    expect(await clearReminders(regWith([notif('reminder')]))).toEqual([]);
+  });
+
+  it('дедуплікує id і ігнорує не-reminder сповіщення', async () => {
+    stubBadgeApi();
+    const other = notif('achievement-x');
+    const ids = await clearReminders(
+      regWith([notif('reminder-a'), notif('reminder-a', { challengeId: 'a' }), other]),
+    );
+    expect(ids).toEqual(['a']);
+    expect(other.close).not.toHaveBeenCalled();
   });
 });

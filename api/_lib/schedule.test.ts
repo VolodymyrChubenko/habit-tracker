@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { dueReminders, type Reminder } from './schedule';
+import { dueReminders, secondsUntilLocalMidnight, type Reminder } from './schedule';
 
 // 2026-07-06 — понеділок. Влітку Київ = UTC+3 (EEST), Нью-Йорк = UTC-4 (EDT).
 const rem = (over: Partial<Reminder> = {}): Reminder => ({
@@ -94,5 +94,53 @@ describe('dueReminders — перехід на літній час (Київ, 20
   it('у день переходу (29.03, UTC+3): 09:00 = 06:00 UTC', () => {
     expect(dueReminders([rem()], 'Europe/Kyiv', new Date('2026-03-29T06:00:00Z'))).toHaveLength(1);
     expect(dueReminders([rem()], 'Europe/Kyiv', new Date('2026-03-29T07:00:00Z'))).toHaveLength(0);
+  });
+});
+
+describe('dueReminders — lateSeconds', () => {
+  it('точний збіг хвилини — нуль', () => {
+    const hits = dueReminders([rem()], 'Europe/Kyiv', new Date('2026-07-06T06:00:00Z'));
+    expect(hits[0].lateSeconds).toBe(0);
+  });
+
+  it('рахує секунди всередині поточної хвилини', () => {
+    const hits = dueReminders([rem()], 'Europe/Kyiv', new Date('2026-07-06T06:00:42Z'));
+    expect(hits[0].lateSeconds).toBe(42);
+  });
+
+  it('наздогін на 3 хвилини = 180 с плюс секунди', () => {
+    const hits = dueReminders([rem()], 'Europe/Kyiv', new Date('2026-07-06T06:03:07Z'));
+    expect(hits[0].lateSeconds).toBe(187);
+  });
+});
+
+describe('secondsUntilLocalMidnight', () => {
+  it('опівдні за UTC лишається пів доби', () => {
+    expect(secondsUntilLocalMidnight('UTC', new Date('2026-07-06T12:00:00Z'))).toBe(12 * 3600);
+  });
+
+  it('рахує в локальній таймзоні, не в UTC', () => {
+    // 06:00 UTC = 09:00 у Києві влітку → лишається 15 годин
+    expect(secondsUntilLocalMidnight('Europe/Kyiv', new Date('2026-07-06T06:00:00Z'))).toBe(15 * 3600);
+  });
+
+  it('враховує хвилини й секунди', () => {
+    // 20:30:15 у Києві
+    expect(secondsUntilLocalMidnight('Europe/Kyiv', new Date('2026-07-06T17:30:15Z')))
+      .toBe(3 * 3600 + 29 * 60 + 45);
+  });
+
+  it('о 23:59 не опускається нижче хвилини', () => {
+    expect(secondsUntilLocalMidnight('Europe/Kyiv', new Date('2026-07-06T20:59:30Z'))).toBe(60);
+  });
+
+  it('одразу після локальної півночі — майже повна доба', () => {
+    // 21:00 UTC = 00:00 наступного дня у Києві
+    expect(secondsUntilLocalMidnight('Europe/Kyiv', new Date('2026-07-06T21:00:00Z'))).toBe(24 * 3600);
+  });
+
+  it('зимовий Київ (UTC+2) рахується по зсуву того дня', () => {
+    // 10:00 UTC = 12:00 у Києві взимку → лишається 12 годин
+    expect(secondsUntilLocalMidnight('Europe/Kyiv', new Date('2026-01-15T10:00:00Z'))).toBe(12 * 3600);
   });
 });

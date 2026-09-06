@@ -16,6 +16,7 @@ export interface Reminder {
 
 export interface DueHit extends Reminder {
   localDate: string; // "yyyy-MM-dd" у таймзоні пристрою
+  lateSeconds: number; // наскільки крон спізнився відносно запланованої хвилини
 }
 
 const WEEKDAY_MON0: Record<string, number> = {
@@ -30,6 +31,7 @@ const localParts = (utc: Date, timeZone: string) => {
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
+    second: '2-digit',
     weekday: 'short',
     hourCycle: 'h23',
   });
@@ -40,7 +42,21 @@ const localParts = (utc: Date, timeZone: string) => {
     date: `${parts.year}-${parts.month}-${parts.day}`,
     time: `${hour}:${parts.minute}`,
     weekday: WEEKDAY_MON0[parts.weekday],
+    secondsIntoDay: Number(hour) * 3600 + Number(parts.minute) * 60 + Number(parts.second),
   };
+};
+
+const DAY_SECONDS = 24 * 60 * 60;
+const MIN_TTL_SECONDS = 60;
+
+/**
+ * TTL для push-повідомлення: нагадування живе до опівночі за локальним часом
+ * пристрою. Прострочене «зроби зарядку о 8:00» не має прилітати наступного
+ * ранку; дефолтний TTL у web-push — 4 тижні, тому його треба задавати явно.
+ */
+export const secondsUntilLocalMidnight = (timezone: string, nowUtc: Date): number => {
+  const { secondsIntoDay } = localParts(nowUtc, timezone);
+  return Math.max(MIN_TTL_SECONDS, DAY_SECONDS - secondsIntoDay);
 };
 
 /**
@@ -64,7 +80,8 @@ export const dueReminders = (
       const key = `${r.challengeId}:${date}:${r.time}`;
       if (seen.has(key)) continue;
       seen.add(key);
-      hits.push({ ...r, localDate: date });
+      // k хвилин наздогону + секунди, що вже минули в поточній хвилині
+      hits.push({ ...r, localDate: date, lateSeconds: k * 60 + nowUtc.getUTCSeconds() });
     }
   }
 

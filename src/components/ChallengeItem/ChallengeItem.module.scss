@@ -15,6 +15,39 @@
     opacity: 0.65;
     animation: fadeIn 0.3s ease;
   }
+
+  // Кільце замість border — не зсуває layout сусідніх карток.
+  &.reminding {
+    box-shadow: $shadow-card, 0 0 0 1.5px $color-accent;
+  }
+}
+
+/* drag handle — єдине місце з touch-action: none, тому решта картки скролить сторінку */
+.handle {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  color: $color-text-muted;
+  touch-action: none;
+  cursor: grab;
+  // невидиме розширення тач-таргета до ~26×40 без зсуву сусідів
+  padding: 12px 8px;
+  margin: -12px -10px -12px -14px;
+
+  &:active { cursor: grabbing; }
+
+  svg {
+    width: 10px;
+    height: 16px;
+    display: block;
+    fill: currentColor;
+  }
+}
+
+.bell {
+  font-size: 13px;
+  line-height: 1;
+  flex-shrink: 0;
 }
 
 /* color sweep overlay (complete direction only) */

@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import webpush from 'web-push';
-import { dueReminders } from './_lib/schedule.js';
+import { dueReminders, secondsUntilLocalMidnight } from './_lib/schedule.js';
 import { getDeviceIds, getDevice, deleteDevice, tryMarkSent } from './_lib/store.js';
 
 /**
@@ -33,6 +33,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   let sent = 0;
   let deduped = 0;
   let removed = 0;
+  let lateSeconds = 0; // діагностика: відрізняє затримку крону від затримки FCM
 
   const deviceIds = await getDeviceIds();
 
@@ -62,8 +63,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             body: 'Час виконати челендж! 🌿',
             challengeId: hit.challengeId,
           }),
+          {
+            // Urgency: high → FCM ставить high priority і будить Android із Doze
+            // одразу. Без цього нагадування чекає найближчого maintenance
+            // window — звідси затримки на +15 хв…+2 год.
+            urgency: 'high',
+            // Прострочене нагадування вмирає наприкінці локального дня,
+            // а не прилітає наступного ранку (дефолт web-push — 4 тижні).
+            TTL: secondsUntilLocalMidnight(device.timezone, now),
+          },
         );
         sent++;
+        lateSeconds = Math.max(lateSeconds, hit.lateSeconds);
       } catch (err) {
         const status = (err as { statusCode?: number }).statusCode;
         if (status === 404 || status === 410) {
@@ -77,5 +88,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
   }
 
-  return res.status(200).json({ ok: true, devices: deviceIds.length, due, sent, deduped, removed });
+  return res
+    .status(200)
+    .json({ ok: true, devices: deviceIds.length, due, sent, deduped, removed, lateSeconds });
 }

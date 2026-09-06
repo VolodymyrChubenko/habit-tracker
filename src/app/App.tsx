@@ -30,18 +30,18 @@ export default function App() {
 
   useEffect(() => {
     const root = document.documentElement;
+    const applyDark = (dark: boolean) =>
+      dark ? root.setAttribute('data-theme', 'dark') : root.removeAttribute('data-theme');
+
     if (theme === 'dark') {
-      root.setAttribute('data-theme', 'dark');
+      applyDark(true);
     } else if (theme === 'light') {
-      root.removeAttribute('data-theme');
+      applyDark(false);
     } else {
       const mq = window.matchMedia('(prefers-color-scheme: dark)');
-      mq.matches
-        ? root.setAttribute('data-theme', 'dark')
-        : root.removeAttribute('data-theme');
+      applyDark(mq.matches);
 
-      const handler = (e: MediaQueryListEvent) =>
-        e.matches ? root.setAttribute('data-theme', 'dark') : root.removeAttribute('data-theme');
+      const handler = (e: MediaQueryListEvent) => applyDark(e.matches);
       mq.addEventListener('change', handler);
       return () => mq.removeEventListener('change', handler);
     }

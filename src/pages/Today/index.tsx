@@ -3,6 +3,8 @@ import { format } from 'date-fns';
 import { uk } from 'date-fns/locale';
 import { useTodayProgress } from '../../hooks/useTodayProgress';
 import { useUIStore } from '../../store/uiStore';
+import { useRemindersStore } from '../../store/remindersStore';
+import { ReminderBanner } from '../../components/ReminderBanner/ReminderBanner';
 import { ChallengeList } from './ChallengeList';
 import { DoneList } from './DoneList';
 import { EditChallengeSheet } from './EditChallengeSheet';
@@ -13,6 +15,7 @@ export default function TodayPage() {
   const [editingChallenge, setEditingChallenge] = useState<Challenge | null>(null);
   const { todoChallenges, doneChallenges, total } = useTodayProgress();
   const openAddSheet = useUIStore(s => s.openAddSheet);
+  const pendingIds = useRemindersStore(s => s.pendingIds);
 
   const completed = doneChallenges.length;
   const progressPct = total === 0 ? 0 : (completed / total) * 100;
@@ -42,7 +45,9 @@ export default function TodayPage() {
           </div>
         </div>
       )}
-      
+
+      <ReminderBanner />
+
       {total === 0 ? (
         <div className={styles.empty}>
           <div className={styles.emptyIcon}>🎯</div>
@@ -57,7 +62,11 @@ export default function TodayPage() {
       ) : (
         <>
           <div className={styles.list}>
-            <ChallengeList challenges={todoChallenges} onEdit={setEditingChallenge} />
+            <ChallengeList
+              challenges={todoChallenges}
+              remindingIds={pendingIds}
+              onEdit={setEditingChallenge}
+            />
           </div>
 
           <DoneList challenges={doneChallenges} onEdit={setEditingChallenge} />

@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import {
   DndContext,
   PointerSensor,
@@ -20,20 +21,25 @@ import { useChallengesStore } from '../../store/challengesStore';
 import { useChallenges } from '../../hooks/useChallenges';
 import { ChallengeItem } from '../../components/ChallengeItem/ChallengeItem';
 import { today } from '../../utils/dateUtils';
-import type { Challenge } from '../../types';
+import type { Challenge, ChallengeId } from '../../types';
 
 interface Props {
   challenges: Challenge[];
+  remindingIds: ChallengeId[];
   onEdit: (challenge: Challenge) => void;
 }
 
 interface RowProps {
   challenge: Challenge;
+  reminding: boolean;
   onToggle: () => void;
   onEdit: () => void;
 }
 
-const SortableRow = ({ challenge, onToggle, onEdit }: RowProps) => {
+// Синтетичний click після дропу спливає в onClick картки — гасимо його на це вікно.
+const CLICK_SUPPRESS_MS = 250;
+
+const SortableRow = ({ challenge, reminding, onToggle, onEdit }: RowProps) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: challenge.id });
 
@@ -41,28 +47,55 @@ const SortableRow = ({ challenge, onToggle, onEdit }: RowProps) => {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
-    touchAction: 'none',
   };
 
+  // listeners типізовані як Record<string, Function> — звужуємо до пропсів елемента
+  const dragHandleProps = { ...attributes, ...listeners } as React.HTMLAttributes<HTMLElement>;
+
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <ChallengeItem challenge={challenge} done={false} onToggle={onToggle} onEdit={onEdit} />
+    <div ref={setNodeRef} style={style}>
+      <ChallengeItem
+        challenge={challenge}
+        done={false}
+        reminding={reminding}
+        onToggle={onToggle}
+        onEdit={onEdit}
+        dragHandleProps={dragHandleProps}
+      />
     </div>
   );
 };
 
-export const ChallengeList = ({ challenges, onEdit }: Props) => {
+export const ChallengeList = ({ challenges, remindingIds, onEdit }: Props) => {
   const { completeChallenge, reorderChallenges } = useChallengesStore();
   const { activeChallenges } = useChallenges();
   const date = today();
+  const justDragged = useRef(false);
+  const resetTimer = useRef<number | undefined>(undefined);
+
+  useEffect(() => () => clearTimeout(resetTimer.current), []);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 8 } }),
+    useSensor(TouchSensor, { activationConstraint: { distance: 8 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
 
+  const markDragged = () => {
+    justDragged.current = true;
+    clearTimeout(resetTimer.current);
+    resetTimer.current = window.setTimeout(() => {
+      justDragged.current = false;
+    }, CLICK_SUPPRESS_MS);
+  };
+
+  const guardedEdit = (challenge: Challenge) => {
+    if (justDragged.current) return;
+    onEdit(challenge);
+  };
+
   const handleDragEnd = (event: DragEndEvent) => {
+    markDragged();
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
@@ -77,14 +110,20 @@ export const ChallengeList = ({ challenges, onEdit }: Props) => {
   };
 
   return (
-    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+      onDragCancel={markDragged}
+    >
       <SortableContext items={challenges.map(h => h.id)} strategy={verticalListSortingStrategy}>
         {challenges.map(challenge => (
           <SortableRow
             key={challenge.id}
             challenge={challenge}
+            reminding={remindingIds.includes(challenge.id)}
             onToggle={() => completeChallenge(challenge.id, date)}
-            onEdit={() => onEdit(challenge)}
+            onEdit={() => guardedEdit(challenge)}
           />
         ))}
       </SortableContext>
