@@ -12,6 +12,9 @@ export interface Reminder {
   name: string;
   time: string; // "HH:mm"
   days: number[]; // Пн=0 … Нд=6
+  // "yyyy-MM-dd" у таймзоні пристрою, коли челендж уже виконано —
+  // у ці дні нагадування не надсилається. Відсутнє в старих клієнтів.
+  completedDates?: string[];
 }
 
 export interface DueHit extends Reminder {
@@ -63,6 +66,7 @@ export const secondsUntilLocalMidnight = (timezone: string, nowUtc: Date): numbe
  * Які нагадування настали протягом останніх `windowMinutes` хвилин
  * (вікно терпить джитер крону; дедуплікація «не надіслати двічі»
  * живе окремо в Redis — тут лише унікальність у межах виклику).
+ * Нагадування на день, у який челендж уже виконано, пропускаються.
  */
 export const dueReminders = (
   reminders: Reminder[],
@@ -77,6 +81,8 @@ export const dueReminders = (
     const { date, time, weekday } = localParts(new Date(nowUtc.getTime() - k * 60_000), timezone);
     for (const r of reminders) {
       if (r.time !== time || !r.days.includes(weekday)) continue;
+      // челендж уже виконано сьогодні (раніше за час нагадування) — не турбуємо
+      if (r.completedDates?.includes(date)) continue;
       const key = `${r.challengeId}:${date}:${r.time}`;
       if (seen.has(key)) continue;
       seen.add(key);

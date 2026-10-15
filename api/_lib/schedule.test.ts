@@ -97,6 +97,50 @@ describe('dueReminders — перехід на літній час (Київ, 20
   });
 });
 
+describe('dueReminders — челендж уже виконано', () => {
+  it('не спрацьовує, якщо челендж виконано сьогодні раніше за час нагадування', () => {
+    const hits = dueReminders(
+      [rem({ completedDates: ['2026-07-06'] })],
+      'Europe/Kyiv',
+      new Date('2026-07-06T06:00:00Z'),
+    );
+    expect(hits).toHaveLength(0);
+  });
+
+  it('спрацьовує, якщо виконано лише в інший день', () => {
+    const hits = dueReminders(
+      [rem({ completedDates: ['2026-07-05', '2026-07-07'] })],
+      'Europe/Kyiv',
+      new Date('2026-07-06T06:00:00Z'),
+    );
+    expect(hits).toHaveLength(1);
+  });
+
+  it('«сьогодні» — у локальній таймзоні, не в UTC', () => {
+    // 21:30 UTC понеділка = 00:30 вівторка у Києві; виконано у вівторок
+    const hits = dueReminders(
+      [rem({ time: '00:30', completedDates: ['2026-07-07'] })],
+      'Europe/Kyiv',
+      new Date('2026-07-06T21:30:00Z'),
+    );
+    expect(hits).toHaveLength(0);
+  });
+
+  it('виконання одного челенджу не глушить інший', () => {
+    const hits = dueReminders(
+      [rem({ completedDates: ['2026-07-06'] }), rem({ challengeId: 'c2', name: 'Спорт' })],
+      'Europe/Kyiv',
+      new Date('2026-07-06T06:00:00Z'),
+    );
+    expect(hits.map(h => h.challengeId)).toEqual(['c2']);
+  });
+
+  it('без completedDates (старий клієнт) — працює як раніше', () => {
+    const hits = dueReminders([rem()], 'Europe/Kyiv', new Date('2026-07-06T06:00:00Z'));
+    expect(hits).toHaveLength(1);
+  });
+});
+
 describe('dueReminders — lateSeconds', () => {
   it('точний збіг хвилини — нуль', () => {
     const hits = dueReminders([rem()], 'Europe/Kyiv', new Date('2026-07-06T06:00:00Z'));

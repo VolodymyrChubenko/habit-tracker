@@ -3,6 +3,14 @@ import { putDevice, deleteDevice, type DeviceRecord } from './_lib/store.js';
 import type { Reminder } from './_lib/schedule.js';
 
 const TIME_RE = /^\d{2}:\d{2}$/;
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+const MAX_COMPLETED_DATES = 31;
+
+const isCompletedDates = (v: unknown): boolean =>
+  v === undefined ||
+  (Array.isArray(v) &&
+    v.length <= MAX_COMPLETED_DATES &&
+    v.every(d => typeof d === 'string' && DATE_RE.test(d)));
 
 const isReminder = (r: unknown): r is Reminder => {
   if (typeof r !== 'object' || r === null) return false;
@@ -11,7 +19,8 @@ const isReminder = (r: unknown): r is Reminder => {
     typeof x.challengeId === 'string' &&
     typeof x.name === 'string' &&
     typeof x.time === 'string' && TIME_RE.test(x.time) &&
-    Array.isArray(x.days) && x.days.every(d => Number.isInteger(d) && (d as number) >= 0 && (d as number) <= 6)
+    Array.isArray(x.days) && x.days.every(d => Number.isInteger(d) && (d as number) >= 0 && (d as number) <= 6) &&
+    isCompletedDates(x.completedDates)
   );
 };
 

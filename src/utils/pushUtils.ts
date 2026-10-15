@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import type { Challenge } from '../types';
+import type { Challenge, ChallengeLog, DateString } from '../types';
 
 const DEVICE_ID_KEY = 'challenge-tracker-device-id';
 const ALL_DAYS = [0, 1, 2, 3, 4, 5, 6];
@@ -10,6 +10,7 @@ export interface ReminderPayload {
   name: string;
   time: string; // "HH:mm"
   days: number[]; // Пн=0 … Нд=6
+  completedDates: DateString[]; // дні (від сьогодні), коли челендж уже виконано — сервер їх пропускає
 }
 
 export interface SubscriptionPayload {
@@ -34,8 +35,16 @@ export const getOrCreateDeviceId = (): string => {
   return id;
 };
 
-/** Розклад нагадувань для сервера: активні челенджі з увімкненим нагадуванням. */
-export const buildReminders = (challenges: Challenge[]): ReminderPayload[] =>
+/**
+ * Розклад нагадувань для сервера: активні челенджі з увімкненим нагадуванням.
+ * completedDates — лише дати від `today`: минулі серверу не потрібні,
+ * він звіряє їх із поточною локальною датою пристрою.
+ */
+export const buildReminders = (
+  challenges: Challenge[],
+  logs: ChallengeLog[],
+  today: DateString,
+): ReminderPayload[] =>
   challenges
     .filter(c => !c.archivedAt && c.reminderEnabled)
     .map(c => ({
@@ -43,6 +52,9 @@ export const buildReminders = (challenges: Challenge[]): ReminderPayload[] =>
       name: c.name,
       time: c.reminderTime ?? '09:00',
       days: c.activeDays && c.activeDays.length > 0 ? c.activeDays : ALL_DAYS,
+      completedDates: logs
+        .filter(l => l.challengeId === c.id && l.date >= today)
+        .map(l => l.date),
     }));
 
 export const urlBase64ToUint8Array = (base64: string): Uint8Array<ArrayBuffer> => {
