@@ -11,6 +11,19 @@
   --color-border:         #{$color-border-raw};
   --color-border-light:   #{$color-border-light-raw};
   --color-accent-bg:      #{$color-accent-bg-raw};
+
+  // Bottom sheet / DateEditSheet
+  --color-sheet-row:       #FAF7F0;
+  --color-sheet-title:     #333333;
+  --color-sheet-subtitle:  #aaaaaa;
+  --color-checkbox-border: #E0DDD8;
+  --color-sheet-handle:    #F0EDE6;
+
+  // Calendar day ring
+  --color-ring-track-past:   #e6e2d9;
+  --color-ring-track-future: #efebe3;
+  --color-day-text-past:     #666666;
+  --color-day-text-future:   #bbbbbb;
 }
 
 [data-theme="dark"] {
@@ -22,6 +35,17 @@
   --color-border:         #{$color-border-dark};
   --color-border-light:   #333333;
   --color-accent-bg:      #1e3330;
+
+  --color-sheet-row:       #1f1f1f;
+  --color-sheet-title:     #f2f2f2;
+  --color-sheet-subtitle:  #9a9a9a;
+  --color-checkbox-border: #4a4a4a;
+  --color-sheet-handle:    #4a4a4a;
+
+  --color-ring-track-past:   #444444;
+  --color-ring-track-future: #383838;
+  --color-day-text-past:     #bdbdbd;
+  --color-day-text-future:   #6f6f6f;
 }
 
 *, *::before, *::after {

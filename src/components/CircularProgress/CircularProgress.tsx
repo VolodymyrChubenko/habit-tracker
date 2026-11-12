@@ -20,11 +20,14 @@ export const CircularProgress = ({
   isFuture = false,
 }: Props) => {
   const offset = calcOffset(progress);
-  const textColor = isToday ? color : isFuture ? '#cccccc' : '#919191';
+  const textColor = isToday
+    ? color
+    : isFuture ? 'var(--color-day-text-future)' : 'var(--color-day-text-past)';
+  const trackColor = isFuture ? 'var(--color-ring-track-future)' : 'var(--color-ring-track-past)';
 
   return (
     <svg width={size} height={size} viewBox="0 0 34 34">
-      <circle cx="17" cy="17" r={RADIUS} fill="none" stroke="#F0EDE6" strokeWidth="2.5" />
+      <circle cx="17" cy="17" r={RADIUS} fill="none" style={{ stroke: trackColor }} strokeWidth="2.5" />
       {progress > 0 && (
         <circle
           cx="17" cy="17" r={RADIUS}
@@ -43,7 +46,7 @@ export const CircularProgress = ({
         textAnchor="middle"
         fontSize="10"
         fontWeight={isToday ? 700 : 500}
-        fill={textColor}
+        style={{ fill: textColor }}
         fontFamily="inherit"
       >
         {day}

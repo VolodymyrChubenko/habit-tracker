@@ -37,10 +37,10 @@ export const DateEditSheet = ({ date, onClose }: Props) => {
 
   return (
     <BottomSheet onClose={onClose}>
-      <div style={{ fontSize: 16, fontWeight: 700, color: '#222', marginBottom: 4 }}>
+      <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--color-sheet-title)', marginBottom: 4 }}>
         {formatDisplayDate(date)}
       </div>
-      <div style={{ fontSize: 12, color: '#aaa', marginBottom: 18 }}>
+      <div style={{ fontSize: 12, color: 'var(--color-sheet-subtitle)', marginBottom: 18 }}>
         Відмітити виконані челенджі
       </div>
 
@@ -49,14 +49,14 @@ export const DateEditSheet = ({ date, onClose }: Props) => {
           <div
             key={h.id}
             onClick={() => toggle(h.id)}
-            style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 12, background: '#FAF7F0', borderRadius: 10, cursor: 'pointer' }}
+            style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 12, background: 'var(--color-sheet-row)', borderRadius: 10, cursor: 'pointer' }}
           >
             <div style={{ width: 10, height: 10, borderRadius: '50%', background: h.color, flexShrink: 0 }} />
-            <span style={{ flex: 1, fontSize: 14, color: '#333' }}>{h.name}</span>
+            <span style={{ flex: 1, fontSize: 14, color: 'var(--color-text)' }}>{h.name}</span>
             <div style={{
               width: 22, height: 22, borderRadius: 6, flexShrink: 0,
-              background: checked.has(h.id) ? h.color : '#fff',
-              border: checked.has(h.id) ? 'none' : '2px solid #E0DDD8',
+              background: checked.has(h.id) ? h.color : 'var(--color-surface)',
+              border: checked.has(h.id) ? 'none' : '2px solid var(--color-checkbox-border)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               color: '#fff', fontSize: 13,
             }}>
