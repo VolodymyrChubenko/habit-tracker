@@ -16,6 +16,10 @@ npm test           # watch mode tests
 npm run test:run   # single test run
 ```
 
+## Code review
+
+When the user says «переглянути мій код», «переглянь мій код», «запустити рецензент» / «запусти рецензента», or runs `/code-reviewer`, spawn the project subagent `code-reviewer` (`.claude/agents/code-reviewer.md`) and show its Markdown report in full. It only reports — do not apply fixes unless the user asks separately.
+
 ## Architecture
 
 ### Data model
