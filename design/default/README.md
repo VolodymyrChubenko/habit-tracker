@@ -46,10 +46,10 @@
 | --color-text-muted | #707070 | #9A9A9A |
 | --color-border | #F0EDE6 | #3A3632 |
 | --color-border-light | #F5F2EC | #33302B |
-| --color-accent | #367565 | #7CB9A8 |
-| --color-on-accent | #FFFFFF | #1A1A1A |
+| --color-accent | #48B194 | #48B194 |
+| --color-on-accent | #FFFFFF | #FFFFFF |
 | --color-on-danger | #FFFFFF | #1A1A1A |
-| --color-accent-bg | #EBF5F2 | #1E3330 |
+| --color-accent-bg | #EEF6F2 | #1E3330 |
 | --color-accent-warm | #E8A87C | #E8A87C |
 | --color-accent-purple / -bg | #9B89D4 / #F0EBF8 | #9B89D4 / #2E2A3D |
 | --color-danger | #C23B3B | #F07A7A |

@@ -26,8 +26,18 @@ const themeOptions: {
   iconBg: string;
   Icon: () => React.JSX.Element;
 }[] = [
-  { value: "light", label: "Світла", iconBg: "var(--color-theme-preview-light)", Icon: SunIcon },
-  { value: "dark", label: "Темна", iconBg: "var(--color-theme-preview-dark)", Icon: MoonIcon },
+  {
+    value: "light",
+    label: "Світла",
+    iconBg: "var(--color-theme-preview-light)",
+    Icon: SunIcon,
+  },
+  {
+    value: "dark",
+    label: "Темна",
+    iconBg: "var(--color-theme-preview-dark)",
+    Icon: MoonIcon,
+  },
   {
     value: "system",
     label: "Як у системі",
@@ -46,12 +56,42 @@ const paletteOptions: {
   bg: { light: string; dark: string };
   dots: [string, string, string];
 }[] = [
-  { value: "default", label: "М'ята", bg: { light: "#FAF7F0", dark: "#1C1A17" }, dots: ["#367565", "#7CB9A8", "#E8A87C"] },
-  { value: "matcha", label: "Матча", bg: { light: "#F5F3EA", dark: "#261815" }, dots: ["#261815", "#B3CC10", "#774023"] },
-  { value: "crimson", label: "Кармін", bg: { light: "#F2F5F0", dark: "#1A171D" }, dots: ["#A6B8A0", "#8B729C", "#E20942"] },
-  { value: "gallery", label: "Галерея", bg: { light: "#F4F1EE", dark: "#121521" }, dots: ["#C34811", "#0B369A", "#D9D1CA"] },
-  { value: "frost", label: "Іній", bg: { light: "#EEF2F2", dark: "#151B1F" }, dots: ["#D3DCDB", "#4D6474", "#A3B4BC"] },
-  { value: "dune", label: "Дюна", bg: { light: "#FFF7EC", dark: "#240F22" }, dots: ["#240F22", "#AE1203", "#FFDFB6"] },
+  {
+    value: "default",
+    label: "М'ята",
+    bg: { light: "#FAF7F0", dark: "#1C1A17" },
+    dots: ["#48B194", "#E8A87C", "#9B89D4"],
+  },
+  {
+    value: "matcha",
+    label: "Матча",
+    bg: { light: "#F5F3EA", dark: "#261815" },
+    dots: ["#261815", "#B3CC10", "#774023"],
+  },
+  {
+    value: "crimson",
+    label: "Кармін",
+    bg: { light: "#F2F5F0", dark: "#1A171D" },
+    dots: ["#A6B8A0", "#8B729C", "#E20942"],
+  },
+  {
+    value: "gallery",
+    label: "Галерея",
+    bg: { light: "#F4F1EE", dark: "#121521" },
+    dots: ["#C34811", "#0B369A", "#D9D1CA"],
+  },
+  {
+    value: "frost",
+    label: "Іній",
+    bg: { light: "#EEF2F2", dark: "#151B1F" },
+    dots: ["#D3DCDB", "#4D6474", "#A3B4BC"],
+  },
+  {
+    value: "dune",
+    label: "Дюна",
+    bg: { light: "#FFF7EC", dark: "#240F22" },
+    dots: ["#240F22", "#AE1203", "#FFDFB6"],
+  },
 ];
 
 const pushStatus = (pushEnabled: boolean): string => {
@@ -63,7 +103,8 @@ const pushStatus = (pushEnabled: boolean): string => {
 };
 
 export default function SettingsPage() {
-  const { theme, setTheme, palette, setPalette, pushEnabled, setPushEnabled } = useSettingsStore();
+  const { theme, setTheme, palette, setPalette, pushEnabled, setPushEnabled } =
+    useSettingsStore();
   const { toast, show } = useToast();
 
   const handlePushToggle = async () => {
@@ -121,7 +162,10 @@ export default function SettingsPage() {
         >
           <div
             className={styles.icon}
-            style={{ background: "var(--color-accent-purple-bg)", border: "1.5px solid var(--color-icon-border)" }}
+            style={{
+              background: "var(--color-accent-purple-bg)",
+              border: "1.5px solid var(--color-icon-border)",
+            }}
           >
             <BellIcon />
           </div>
@@ -163,10 +207,19 @@ export default function SettingsPage() {
               >
                 <span
                   className={styles.palettePreview}
-                  style={{ "--pv-light": bg.light, "--pv-dark": bg.dark } as React.CSSProperties}
+                  style={
+                    {
+                      "--pv-light": bg.light,
+                      "--pv-dark": bg.dark,
+                    } as React.CSSProperties
+                  }
                 >
-                  {dots.map(c => (
-                    <span key={c} className={styles.paletteDot} style={{ background: c }} />
+                  {dots.map((c) => (
+                    <span
+                      key={c}
+                      className={styles.paletteDot}
+                      style={{ background: c }}
+                    />
                   ))}
                 </span>
                 <span className={styles.paletteName}>{label}</span>
@@ -186,7 +239,10 @@ export default function SettingsPage() {
           >
             <div
               className={styles.icon}
-              style={{ background: iconBg, border: "1.5px solid var(--color-icon-border)" }}
+              style={{
+                background: iconBg,
+                border: "1.5px solid var(--color-icon-border)",
+              }}
             >
               <Icon />
             </div>
@@ -197,8 +253,12 @@ export default function SettingsPage() {
             <div
               className={styles.check}
               style={{
-                background: theme === value ? "var(--color-accent)" : "transparent",
-                border: theme === value ? "none" : "2px solid var(--color-checkbox-border)",
+                background:
+                  theme === value ? "var(--color-accent)" : "transparent",
+                border:
+                  theme === value
+                    ? "none"
+                    : "2px solid var(--color-checkbox-border)",
               }}
             >
               {theme === value && <CheckIcon />}
@@ -209,8 +269,16 @@ export default function SettingsPage() {
 
       <div className={styles.section}>
         <div className={styles.row} style={{ cursor: "default" }}>
-          <span style={{ flex: 1, fontSize: 15, color: "var(--color-text-secondary)" }}>Версія</span>
-          <span className={styles.version}>2.5.0</span>
+          <span
+            style={{
+              flex: 1,
+              fontSize: 15,
+              color: "var(--color-text-secondary)",
+            }}
+          >
+            Версія
+          </span>
+          <span className={styles.version}>2.6.0</span>
         </div>
       </div>
 
