@@ -17,6 +17,8 @@ export default defineConfig({
         description: 'Відслідковуй щоденні челенджі',
         display: 'standalone',
         orientation: 'portrait',
+        // Маніфест читається на етапі збірки — CSS-теми сюди не доходять.
+        // Синхронізуй вручну з --color-bg / --color-accent у src/styles/themes/_light.scss
         background_color: '#FAF7F0',
         theme_color: '#7CB9A8',
         icons: [

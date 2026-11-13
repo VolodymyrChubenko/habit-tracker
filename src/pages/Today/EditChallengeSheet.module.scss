@@ -30,7 +30,7 @@
 .btnSave {
   width: 100%;
   background: $color-accent;
-  color: #fff;
+  color: $color-on-accent;
   border-radius: $radius-card;
   padding: 14px;
   font-size: 15px;
@@ -73,8 +73,8 @@
 .btnDelete {
   width: 100%;
   background: none;
-  color: #e05c5c;
-  border: 1.5px solid #e05c5c;
+  color: $color-danger;
+  border: 1.5px solid $color-danger;
   border-radius: $radius-card;
   padding: 13px;
   font-size: 14px;
@@ -84,8 +84,8 @@
 
 .btnDeleteConfirm {
   width: 100%;
-  background: #e05c5c;
-  color: #fff;
+  background: $color-danger;
+  color: $color-on-danger;
   border: none;
   border-radius: $radius-card;
   padding: 13px;

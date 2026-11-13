@@ -20,6 +20,12 @@ npm run test:run   # single test run
 
 When the user says «переглянути мій код», «переглянь мій код», «запустити рецензент» / «запусти рецензента», or runs `/code-reviewer`, spawn the project subagent `code-reviewer` (`.claude/agents/code-reviewer.md`) and show its Markdown report in full. It only reports — do not apply fixes unless the user asks separately.
 
+## Design
+
+UI reference lives in `design/` (snapshot from Claude Design). Read `design/README.md` before any UI work:
+screen list with states, light/dark theme tokens, and known prod bugs already fixed in the design.
+`design/screens/*.dc.html` are specs (markup + `THEMES` object), not runnable pages. Match their tokens; do not import them.
+
 ## Architecture
 
 ### Data model

@@ -1,0 +1,46 @@
+// Палітра «Дюна» — світла тема
+// Референс: Dune Shadow #240F22 · Desert Flame #AE1203 · Sand Light #FFDFB6
+// Вмикається атрибутом data-palette="dune" на <html>
+// Контраст тексту, підписів, кнопок і акценту ≥ 4.5:1 (WCAG AA).
+
+[data-palette="dune"] {
+  --color-bg: #FFF7EC;
+  --color-surface: #FFFFFF;
+  --color-text: #240F22;
+  --color-text-secondary: #6A4A55;
+  --color-text-muted: #785A64;
+  --color-border: #F0DFC6;
+  --color-border-light: #F7EBDA;
+  --color-accent: #AE1203;
+  --color-accent-bg: #FBE3D8;
+  --color-accent-warm: #D9963F;
+  --color-accent-purple: #6B3A63;
+  --color-accent-purple-bg: #F3E6EE;
+  --color-on-accent: #FFFFFF;
+  --color-danger: #7E1230;
+  --color-on-danger: #FFFFFF;
+  --color-overlay: rgba(0, 0, 0, 0.35);
+  --color-sheet-row: #FFF7EC;
+  --color-sheet-title: #240F22;
+  --color-sheet-subtitle: #6A4A55;
+  --color-checkbox-border: #E3CDB0;
+  --color-sheet-handle: #F0DFC6;
+  --color-ring-track-past: #EEDAC0;
+  --color-ring-track-future: #F6E9D6;
+  --color-day-text-past: #5A3D48;
+  --color-day-text-future: #8E737B;
+  --color-toast-bg: #240F22;
+  --color-toast-text: #FFF7EC;
+  --color-toast-action: #FF7A57;
+  --color-splash-bg: #FFF7EC;
+  --color-splash-text: #240F22;
+  --color-medal-gold: #E8C55C;
+  --color-medal-silver: #C9CDD4;
+  --color-medal-bronze: #D9A06B;
+  --color-icon-border: #F0DFC6;
+  --color-theme-preview-light: #FFF7EC;
+  --color-theme-preview-dark: #33192F;
+  --shadow-card: 0 1px 4px rgba(0,0,0,0.06);
+  --shadow-nav: 0 -1px 10px rgba(0,0,0,0.07);
+  --shadow-knob: 0 1px 3px rgba(0, 0, 0, 0.2);
+}

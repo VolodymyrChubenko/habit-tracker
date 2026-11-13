@@ -1,0 +1,46 @@
+// Палітра «Матча» — світла тема
+// Референс: Dark Roast #261815 · Matcha Leaf #B3CC10 · Cocoa Soil #774023
+// Вмикається атрибутом data-palette="matcha" на <html>
+// Контраст тексту, підписів, кнопок і акценту ≥ 4.5:1 (WCAG AA).
+
+[data-palette="matcha"] {
+  --color-bg: #F5F3EA;
+  --color-surface: #FFFFFF;
+  --color-text: #261815;
+  --color-text-secondary: #6E5A50;
+  --color-text-muted: #7A6A62;
+  --color-border: #E7E2D4;
+  --color-border-light: #EFEBE0;
+  --color-accent: #5E6C08;
+  --color-accent-bg: #EEF3CC;
+  --color-accent-warm: #774023;
+  --color-accent-purple: #8A5233;
+  --color-accent-purple-bg: #F3E8E0;
+  --color-on-accent: #FFFFFF;
+  --color-danger: #B3261E;
+  --color-on-danger: #FFFFFF;
+  --color-overlay: rgba(0, 0, 0, 0.35);
+  --color-sheet-row: #F5F3EA;
+  --color-sheet-title: #261815;
+  --color-sheet-subtitle: #6E5A50;
+  --color-checkbox-border: #D6CFC2;
+  --color-sheet-handle: #E7E2D4;
+  --color-ring-track-past: #E3DDCF;
+  --color-ring-track-future: #EEEADF;
+  --color-day-text-past: #5A4A42;
+  --color-day-text-future: #8C7E76;
+  --color-toast-bg: #261815;
+  --color-toast-text: #F5F3EA;
+  --color-toast-action: #B3CC10;
+  --color-splash-bg: #F5F3EA;
+  --color-splash-text: #261815;
+  --color-medal-gold: #E8C55C;
+  --color-medal-silver: #C9CDD4;
+  --color-medal-bronze: #D9A06B;
+  --color-icon-border: #E7E2D4;
+  --color-theme-preview-light: #F5F3EA;
+  --color-theme-preview-dark: #362622;
+  --shadow-card: 0 1px 4px rgba(0,0,0,0.06);
+  --shadow-nav: 0 -1px 10px rgba(0,0,0,0.07);
+  --shadow-knob: 0 1px 3px rgba(0, 0, 0, 0.2);
+}

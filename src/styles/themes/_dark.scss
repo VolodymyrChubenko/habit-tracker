@@ -1,0 +1,70 @@
+// Оновлена «М'ята» з виправленим контрастом (WCAG AA ≥ 4.5:1). Замінює src/styles/themes/_dark.scss
+// ─────────────────────────────────────────────────────────────
+// Темна тема — вмикається атрибутом data-theme="dark" на <html>
+// (див. src/app/App.tsx; режим «Як у системі» обирає light/dark).
+//
+// ЄДИНЕ місце, де задаються кольори темної теми.
+// Щоб змінити вигляд: скопіюй блок, зміни значення, старий закоментуй.
+// Змінна, яку тут не перевизначено, береться зі світлої теми.
+// ─────────────────────────────────────────────────────────────
+
+[data-theme="dark"] {
+  // Основа
+  --color-bg:             #1C1A17;
+  --color-surface:        #2A2723;
+  --color-text:           #F0F0F0;
+  --color-text-secondary: #AAAAAA;
+  --color-text-muted:     #9A9A9A;
+  --color-border:         #3A3632;
+  --color-border-light:   #33302B;
+
+  // Акценти
+  --color-accent:           #7CB9A8;
+  --color-accent-bg:        #1E3330;
+  --color-accent-warm:      #E8A87C;
+  --color-accent-purple:    #9B89D4;
+  --color-accent-purple-bg: #2E2A3D;
+  --color-on-accent:        #1A1A1A;
+
+  // Небезпечні дії
+  --color-danger:    #F07A7A;
+  --color-on-danger: #1A1A1A;
+
+  // Bottom sheet / DateEditSheet
+  --color-overlay:         rgba(0, 0, 0, 0.35);
+  --color-sheet-row:       #211F1B;
+  --color-sheet-title:     #F2F2F2;
+  --color-sheet-subtitle:  #9A9A9A;
+  --color-checkbox-border: #4D4943;
+  --color-sheet-handle:    #4D4943;
+
+  // Calendar day ring
+  --color-ring-track-past:   #47433D;
+  --color-ring-track-future: #393530;
+  --color-day-text-past:     #BDBDBD;
+  --color-day-text-future:   #858585;
+
+  // Toast
+  --color-toast-bg:   #333333;
+  --color-toast-text: #FFFFFF;
+  --color-toast-action: #8FD1BF; // кнопка дії в тості (новий токен)
+
+  // Splash screen — темна, як решта теми
+  --color-splash-bg:   #1C1A17;
+  --color-splash-text: #F0F0F0;
+
+  // Медалі
+  --color-medal-gold:   #E8C55C;
+  --color-medal-silver: #C9CDD4;
+  --color-medal-bronze: #D9A06B;
+
+  // Налаштування: рамка іконок і прев'ю тем
+  --color-icon-border:         #3A3632;
+  --color-theme-preview-light: #FAF7F0;
+  --color-theme-preview-dark:  #5C5C5F;
+
+  // Тіні
+  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.25);
+  --shadow-nav:  0 -1px 10px rgba(0, 0, 0, 0.3);
+  --shadow-knob: 0 1px 3px rgba(0, 0, 0, 0.2);
+}

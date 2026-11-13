@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<title>Заставка</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#7CB9A8}a:hover{color:#5e9c8b}
+</style>
+</helmet>
+<a href="{{next}}" aria-label="Пропустити заставку" style="width: 390px; height: 844px; box-sizing: border-box; background: {{s.bg}}; font-family: Montserrat, -apple-system, sans-serif; color: {{s.text}}; display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none">
+<svg width="130" height="130" viewBox="0 0 200 200" aria-hidden="true">
+<circle cx="100" cy="100" r="74" pathLength="100" transform="rotate(-90 100 100)" fill="none" stroke="{{s.warm}}" stroke-width="13" stroke-linecap="round" stroke-dasharray="25 100"></circle>
+<circle cx="100" cy="100" r="74" pathLength="100" transform="rotate(-90 100 100)" fill="none" stroke="{{s.accent}}" stroke-width="13" stroke-linecap="round" stroke-dasharray="75 100" stroke-dashoffset="-25"></circle>
+<path d="M64 104 L88 130 L140 74" fill="none" stroke="{{s.accent}}" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<p style="margin: 28px 0 0; font-size: 18px; font-weight: 400; letter-spacing: 0.1em; color: {{s.text}}">IMPROVE YOURSELF</p>
+</a>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"palette":{"editor":"enum","options":["default","matcha","crimson","gallery","frost","dune"],"default":"default"},"$preview":{"width":390,"height":844}}'>
+// Заставка однакова в обох темах (--color-splash-* = значення світлої теми палітри)
+const SPLASH = {
+  default: { bg: '#FAF7F0', text: '#333333', accent: '#367565', warm: '#E8A87C' },
+  matcha: { bg: '#F5F3EA', text: '#261815', accent: '#5E6C08', warm: '#774023' },
+  crimson: { bg: '#F2F5F0', text: '#2A2230', accent: '#C80A3C', warm: '#8B729C' },
+  gallery: { bg: '#F4F1EE', text: '#1E2230', accent: '#0B369A', warm: '#C34811' },
+  frost: { bg: '#EEF2F2', text: '#1F2A31', accent: '#4D6474', warm: '#7F98A6' },
+  dune: { bg: '#FFF7EC', text: '#240F22', accent: '#AE1203', warm: '#D9963F' }
+};
+// Темна тема — темна заставка (--color-splash-* перевизначені в _dark-файлах кожної палітри)
+const SPLASH_DARK = {
+  default: { bg: '#1C1A17', text: '#F0F0F0', accent: '#7CB9A8', warm: '#E8A87C' },
+  matcha: { bg: '#261815', text: '#F4F0E6', accent: '#B3CC10', warm: '#C97B4E' },
+  crimson: { bg: '#1A171D', text: '#F2EEF4', accent: '#FF5C7F', warm: '#A6B8A0' },
+  gallery: { bg: '#121521', text: '#EEF0F6', accent: '#93ABFF', warm: '#E8733A' },
+  frost: { bg: '#151B1F', text: '#ECF1F2', accent: '#A3B4BC', warm: '#D3DCDB' },
+  dune: { bg: '#240F22', text: '#FFEFD9', accent: '#FF7A57', warm: '#FFDFB6' }
+};
+class Component extends DCLogic {
+  renderVals() {
+    const dark = this.props.theme === 'dark';
+    const key = SPLASH[this.props.palette] ? this.props.palette : 'default';
+    return {
+      s: (dark && SPLASH_DARK[key]) || SPLASH[key],
+      next: this.props.theme === 'dark' ? 'TodayDark.dc.html' : 'Today.dc.html'
+    };
+  }
+}
+</script>
+</body>
+</html>

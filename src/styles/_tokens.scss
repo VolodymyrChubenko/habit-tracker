@@ -1,34 +1,8 @@
-// Raw source values — used in global.scss to define CSS custom properties
-$color-bg-raw:             #FAF7F0;
-$color-surface-raw:        #FFFFFF;
-$color-text-raw:           #333333;
-$color-text-secondary-raw: #888888;
-$color-text-muted-raw:     #BBBBBB;
-$color-border-raw:         #F0EDE6;
-$color-border-light-raw:   #F5F2EC;
-$color-accent-bg-raw:      #EBF5F2;
+// Кольори тут НЕ задаються — лише SCSS-аліаси на CSS-змінні тем.
+// Значення живуть у src/styles/themes/_light.scss і _dark.scss.
+// Компоненти @use цей файл; кольори перемикаються разом з data-theme.
 
-// Dark theme raw values
-$color-bg-dark:        #1a1a1a;
-$color-surface-dark:   #2a2a2a;
-$color-text-dark:      #f0f0f0;
-$color-border-dark:    #3a3a3a;
-
-// Static colors (same in both themes)
-$color-accent:         #7CB9A8;
-$color-accent-warm:    #E8A87C;
-$color-accent-purple:  #9B89D4;
-$color-dark-ui:        #5c5c5f;
-
-// Spacing / shape
-$radius-card:   12px;
-$radius-sheet:  20px;
-$radius-pill:   14px;
-$shadow-card:   0 1px 4px rgba(0, 0, 0, 0.06);
-$shadow-nav:    0 -1px 10px rgba(0, 0, 0, 0.07);
-
-// Themeable SCSS vars — resolve to CSS custom properties at runtime
-// Components @use these; they switch automatically when data-theme changes
+// Основа
 $color-bg:             var(--color-bg);
 $color-surface:        var(--color-surface);
 $color-text:           var(--color-text);
@@ -36,5 +10,46 @@ $color-text-secondary: var(--color-text-secondary);
 $color-text-muted:     var(--color-text-muted);
 $color-border:         var(--color-border);
 $color-border-light:   var(--color-border-light);
-$color-accent-bg:      var(--color-accent-bg);
-$color-sheet-handle:   var(--color-sheet-handle);
+
+// Акценти
+$color-accent:           var(--color-accent);
+$color-accent-bg:        var(--color-accent-bg);
+$color-accent-warm:      var(--color-accent-warm);
+$color-accent-purple:    var(--color-accent-purple);
+$color-accent-purple-bg: var(--color-accent-purple-bg);
+$color-on-accent:        var(--color-on-accent);
+
+// Небезпечні дії
+$color-danger:    var(--color-danger);
+$color-on-danger: var(--color-on-danger);
+
+// Sheet
+$color-overlay:      var(--color-overlay);
+$color-sheet-handle: var(--color-sheet-handle);
+
+// Toast / Splash
+$color-toast-bg:     var(--color-toast-bg);
+$color-toast-text:   var(--color-toast-text);
+$color-toast-action: var(--color-toast-action);
+$color-splash-bg:    var(--color-splash-bg);
+$color-splash-text:  var(--color-splash-text);
+
+// Медалі
+$color-medal-gold:   var(--color-medal-gold);
+$color-medal-silver: var(--color-medal-silver);
+$color-medal-bronze: var(--color-medal-bronze);
+
+// Тіні
+$shadow-card: var(--shadow-card);
+$shadow-nav:  var(--shadow-nav);
+$shadow-knob: var(--shadow-knob);
+
+// Напівпрозорий варіант кольору теми: tint($color-accent, 12%)
+@function tint($color, $amount) {
+  @return color-mix(in srgb, #{$color} #{$amount}, transparent);
+}
+
+// Форма (не кольори)
+$radius-card:   12px;
+$radius-sheet:  20px;
+$radius-pill:   14px;

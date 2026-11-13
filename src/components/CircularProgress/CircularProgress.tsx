@@ -14,7 +14,7 @@ const RADIUS = 13;
 export const CircularProgress = ({
   progress,
   size = 34,
-  color = '#7CB9A8',
+  color = 'var(--color-accent)',
   day,
   isToday = false,
   isFuture = false,
@@ -32,7 +32,7 @@ export const CircularProgress = ({
         <circle
           cx="17" cy="17" r={RADIUS}
           fill="none"
-          stroke={color}
+          style={{ stroke: color }}
           strokeWidth="2.5"
           strokeDasharray={CIRCUMFERENCE}
           strokeDashoffset={offset}

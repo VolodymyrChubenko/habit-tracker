@@ -24,7 +24,7 @@
 .closeBtn {
   font-size: 20px;
   line-height: 1;
-  color: #e05c5c;
+  color: $color-danger;
   background: none;
   border: none;
   cursor: pointer;
@@ -96,6 +96,6 @@
   cursor: pointer;
   border-radius: 8px;
 
-  &.today { background: rgba(124, 185, 168, 0.12); }
+  &.today { background: tint($color-accent, 12%); }
   &.future { cursor: default; }
 }

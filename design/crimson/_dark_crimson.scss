@@ -1,0 +1,46 @@
+// Палітра «Кармін» — темна тема
+// Референс: Leaf Skin #A6B8A0 · Muted Violet #8B729C · Electric Crimson #E20942
+// Вмикається атрибутом data-palette="crimson" на <html> разом з data-theme="dark"
+// Контраст тексту, підписів, кнопок і акценту ≥ 4.5:1 (WCAG AA).
+
+[data-palette="crimson"][data-theme="dark"] {
+  --color-bg: #1A171D;
+  --color-surface: #27222C;
+  --color-text: #F2EEF4;
+  --color-text-secondary: #C3BACB;
+  --color-text-muted: #A79DB1;
+  --color-border: #3B3541;
+  --color-border-light: #322C38;
+  --color-accent: #FF5C7F;
+  --color-accent-bg: #43202B;
+  --color-accent-warm: #A6B8A0;
+  --color-accent-purple: #B9A3C9;
+  --color-accent-purple-bg: #3A3044;
+  --color-on-accent: #1A171D;
+  --color-danger: #FF9B8F;
+  --color-on-danger: #1A171D;
+  --color-overlay: rgba(0, 0, 0, 0.35);
+  --color-sheet-row: #201C24;
+  --color-sheet-title: #F2EEF4;
+  --color-sheet-subtitle: #C3BACB;
+  --color-checkbox-border: #4E4656;
+  --color-sheet-handle: #4E4656;
+  --color-ring-track-past: #463F4D;
+  --color-ring-track-future: #36303C;
+  --color-day-text-past: #D3CBDA;
+  --color-day-text-future: #8D8497;
+  --color-toast-bg: #F2EEF4;
+  --color-toast-text: #1A171D;
+  --color-toast-action: #C80A3C;
+  --color-splash-bg: #1A171D;
+  --color-splash-text: #F2EEF4;
+  --color-medal-gold: #E8C55C;
+  --color-medal-silver: #C9CDD4;
+  --color-medal-bronze: #D9A06B;
+  --color-icon-border: #3B3541;
+  --color-theme-preview-light: #F2F5F0;
+  --color-theme-preview-dark: #27222C;
+  --shadow-card: 0 1px 4px rgba(0,0,0,0.25);
+  --shadow-nav: 0 -1px 10px rgba(0,0,0,0.3);
+  --shadow-knob: 0 1px 3px rgba(0, 0, 0, 0.2);
+}

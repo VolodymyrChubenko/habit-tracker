@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<title>Статистика</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#7CB9A8}a:hover{color:#5e9c8b}
+</style>
+</helmet>
+<div style="width: 390px; height: {{rootH}}; box-sizing: border-box; background: {{t.bg}}; font-family: Montserrat, -apple-system, sans-serif; color: {{t.text}}; position: relative; overflow: hidden; padding: 16px 16px 24px">
+<header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px">
+<h1 style="margin: 0; font-size: 24px; font-weight: 600; color: {{t.text}}">{{heading}}</h1>
+<sc-if value="{{isStats}}" hint-placeholder-val="{{true}}">
+<a href="{{l.archive}}" style="font-size: 14px; font-weight: 600; color: {{t.accent}}; text-decoration: none; padding: 4px 10px; border-radius: 14px; background: {{t.accentBg}}">Архів</a>
+</sc-if>
+<sc-if value="{{isArchive}}" hint-placeholder-val="{{false}}">
+<a href="{{l.stats}}" aria-label="Закрити архів" style="font-size: 20px; line-height: 1; color: {{t.danger}}; padding: 4px 8px; text-decoration: none">✕</a>
+</sc-if>
+</header>
+<div role="group" aria-label="Фільтр челенджів" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px">
+<button type="button" aria-pressed="{{allPressed}}" style="border-radius: 20px; padding: 5px 13px; font-family: inherit; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 5px; cursor: pointer; border: 1.5px solid {{allBorder}}; background: {{allBg}}; color: {{allColor}}">Всі</button>
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="10">
+<button type="button" aria-pressed="{{c.pressed}}" style="border-radius: 20px; padding: 5px 13px; font-family: inherit; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 5px; cursor: pointer; border: 1.5px solid {{c.border}}; background: {{c.bg}}; color: {{c.text}}"><span style="width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: {{c.color}}"></span>{{c.name}}</button>
+</sc-for>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px">
+<button type="button" aria-label="Попередній місяць" style="font-size: 18px; color: {{t.text2}}; padding: 4px 10px; cursor: pointer; background: none; border: 0; font-family: inherit">‹</button>
+<span style="font-size: 15px; font-weight: 600; color: {{t.text}}">листопад 2026</span>
+<button type="button" aria-label="Наступний місяць" style="font-size: 18px; color: {{t.text2}}; padding: 4px 10px; cursor: pointer; background: none; border: 0; font-family: inherit">›</button>
+</div>
+<section aria-label="Календар" style="background: {{t.surface}}; border-radius: 16px; padding: 12px; box-shadow: {{t.shadowCard}}">
+<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); margin-bottom: 6px">
+<span style="text-align: center; font-size: 11px; font-weight: 600; color: {{t.text2}}; padding: 2px 0">Пн</span><span style="text-align: center; font-size: 11px; font-weight: 600; color: {{t.text2}}; padding: 2px 0">Вт</span><span style="text-align: center; font-size: 11px; font-weight: 600; color: {{t.text2}}; padding: 2px 0">Ср</span><span style="text-align: center; font-size: 11px; font-weight: 600; color: {{t.text2}}; padding: 2px 0">Чт</span><span style="text-align: center; font-size: 11px; font-weight: 600; color: {{t.text2}}; padding: 2px 0">Пт</span><span style="text-align: center; font-size: 11px; font-weight: 600; color: {{t.text2}}; padding: 2px 0">Сб</span><span style="text-align: center; font-size: 11px; font-weight: 600; color: {{t.text2}}; padding: 2px 0">Нд</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px">
+<sc-for list="{{days}}" as="d" hint-placeholder-count="36">
+<a href="{{d.href}}" tabindex="{{d.tab}}" aria-label="{{d.aria}}" style="aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: {{d.cellBg}}; visibility: {{d.vis}}; cursor: {{d.cursor}}; text-decoration: none">
+<svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="13" fill="none" stroke="{{d.track}}" stroke-width="2.5"></circle><circle cx="17" cy="17" r="13" fill="none" stroke="{{t.accent}}" stroke-width="2.5" stroke-dasharray="{{d.dash}}" stroke-linecap="round" transform="rotate(-90 17 17)" opacity="{{d.arcOpacity}}"></circle><text x="17" y="17" dominant-baseline="middle" text-anchor="middle" font-size="10" font-weight="{{d.weight}}" fill="{{d.textColor}}" font-family="Montserrat, sans-serif">{{d.label}}</text></svg>
+</a>
+</sc-for>
+</div>
+</section>
+<sc-if value="{{hasStatus}}" hint-placeholder-val="{{true}}">
+<section style="margin-top: 18px">
+<p style="margin: 0 0 10px; font-size: 11px; font-weight: 600; color: {{t.text2}}; text-transform: uppercase; letter-spacing: 0.5px">Статус</p>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<sc-for list="{{status}}" as="s" hint-placeholder-count="4">
+<div style="background: {{t.surface}}; border-radius: 12px; box-shadow: {{t.shadowCard}}; border-left: 3px solid {{s.color}}; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px; min-width: 0">
+<span style="font-size: 13px; font-weight: 500; color: {{t.text}}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{s.name}}</span>
+<span style="font-size: 26px; font-weight: 600; line-height: 1.1; color: {{s.color}}">{{s.streak}}</span>
+<span style="font-size: 12px; color: {{t.text2}}">{{s.unit}} поспіль</span>
+</div>
+</sc-for>
+</div>
+</section>
+</sc-if>
+<sc-if value="{{hasArchived}}" hint-placeholder-val="{{false}}">
+<section style="margin: 20px 0">
+<p style="margin: 0 0 10px; font-size: 11px; font-weight: 600; color: {{t.text2}}; text-transform: uppercase; letter-spacing: 0.5px">Заархівовані челенджі</p>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{archived}}" as="a" hint-placeholder-count="1">
+<div style="background: {{t.surface}}; border-radius: 12px; box-shadow: {{t.shadowCard}}; padding: 12px 14px; display: flex; align-items: center; gap: 10px">
+<span style="width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; background: {{a.color}}"></span>
+<div style="flex: 1; display: flex; flex-direction: column; gap: 1px; min-width: 0">
+<span style="font-size: 14px; font-weight: 500; color: {{t.text}}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{a.name}}</span>
+<span style="font-size: 11px; color: {{t.muted}}">Архівовано {{a.date}}</span>
+</div>
+<button type="button" style="font-family: inherit; font-size: 13px; font-weight: 600; color: {{t.accent}}; background: {{t.accentBg}}; border: 0; border-radius: 14px; padding: 6px 12px; cursor: pointer; flex-shrink: 0">Відновити</button>
+<button type="button" style="font-family: inherit; font-size: 13px; font-weight: 600; color: {{deleteColor}}; background: {{deleteBg}}; border: {{deleteBorder}}; border-radius: 14px; padding: {{deletePad}}; cursor: pointer; flex-shrink: 0">{{deleteLabel}}</button>
+</div>
+</sc-for>
+</div>
+</section>
+</sc-if>
+<nav aria-label="Навігація" style="position: absolute; left: 12px; right: 12px; bottom: 12px; background: {{t.surface}}; border-radius: 18px; padding: 6px; display: flex; justify-content: space-between; box-shadow: {{t.shadowNav}}">
+<sc-for list="{{tabsLeft}}" as="tab" hint-placeholder-count="2">
+<a href="{{tab.href}}" aria-current="{{tab.current}}" style="flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 4px; border-radius: 12px; text-decoration: none; background: {{tab.bg}}; color: {{tab.color}}">
+<sc-if value="{{tab.isToday}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="3" rx="1.5"></rect><rect x="3" y="11" width="18" height="3" rx="1.5"></rect><rect x="3" y="17" width="18" height="3" rx="1.5"></rect></svg></sc-if>
+<sc-if value="{{tab.isStats}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="14" width="4" height="7" rx="1"></rect><rect x="10" y="9" width="4" height="12" rx="1"></rect><rect x="17" y="4" width="4" height="17" rx="1"></rect></svg></sc-if>
+<span style="font-size: 10px; font-weight: {{tab.weight}}">{{tab.label}}</span></a>
+</sc-for>
+<div aria-hidden="true" style="flex: 0 0 58px"></div>
+<sc-for list="{{tabsRight}}" as="tab" hint-placeholder-count="2">
+<a href="{{tab.href}}" aria-current="{{tab.current}}" style="flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 4px; border-radius: 12px; text-decoration: none; background: {{tab.bg}}; color: {{tab.color}}">
+<sc-if value="{{tab.isAch}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg></sc-if>
+<sc-if value="{{tab.isSettings}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></sc-if>
+<span style="font-size: 10px; font-weight: {{tab.weight}}">{{tab.label}}</span></a>
+</sc-for>
+<a href="{{l.add}}" aria-label="Додати челендж" style="position: absolute; left: 50%; top: -20px; transform: translateX(-50%); width: 52px; height: 52px; box-sizing: border-box; border-radius: 50%; background: {{t.accent}}; color: {{t.onAccent}}; font-size: 28px; font-weight: 400; display: flex; align-items: center; justify-content: center; border: 4px solid {{t.bg}}; box-shadow: 0 5px 16px {{t.accentShadow}}; padding-bottom: 3px; text-decoration: none">+</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"palette":{"editor":"enum","options":["default","matcha","crimson","gallery","frost","dune"],"default":"default"},"view":{"editor":"enum","options":["stats","archive","archiveEmpty"],"default":"stats"},"filter":{"editor":"enum","options":["all","meditation"],"default":"all"},"confirmDelete":{"editor":"boolean","default":false},"$preview":{"width":390,"height":960}}'>
+// Токени з src/styles/themes; розміри з Statistics / ChallengeSelector / StreakTiles / ArchivedChallengeList
+const PALETTES = {"default":{"light":{"bg":"#FAF7F0","surface":"#FFFFFF","text":"#333333","text2":"#6B6B6B","muted":"#707070","border":"#F0EDE6","borderLight":"#F5F2EC","accent":"#367565","accentBg":"#EBF5F2","onAccent":"#FFFFFF","warm":"#E8A87C","purple":"#9B89D4","purpleBg":"#F0EBF8","danger":"#C23B3B","onDanger":"#FFFFFF","sheetRow":"#FAF7F0","checkboxBorder":"#E0DDD8","handle":"#F0EDE6","ringPast":"#E6E2D9","ringFuture":"#EFEBE3","dayPast":"#666666","dayFuture":"#949494","previewDark":"#5C5C5F","sheetTitle":"#333333","sheetSub":"#707070","iconBorder":"#E8E4DC","previewLight":"#FAF7F0","todayTint":"rgba(54,117,101,0.12)","accentShadow":"rgba(54,117,101,0.4)","shadowCard":"0 1px 4px rgba(0,0,0,0.06)","shadowNav":"0 -1px 10px rgba(0,0,0,0.07)"},"dark":{"bg":"#1C1A17","surface":"#2A2723","text":"#F0F0F0","text2":"#AAAAAA","muted":"#9A9A9A","border":"#3A3632","borderLight":"#33302B","accent":"#7CB9A8","accentBg":"#1E3330","onAccent":"#1A1A1A","warm":"#E8A87C","purple":"#9B89D4","purpleBg":"#2E2A3D","danger":"#F07A7A","onDanger":"#1A1A1A","sheetRow":"#211F1B","checkboxBorder":"#4D4943","handle":"#4D4943","ringPast":"#47433D","ringFuture":"#393530","dayPast":"#BDBDBD","dayFuture":"#858585","previewDark":"#5C5C5F","sheetTitle":"#F2F2F2","sheetSub":"#9A9A9A","iconBorder":"#3A3632","previewLight":"#FAF7F0","todayTint":"rgba(124,185,168,0.12)","accentShadow":"rgba(124,185,168,0.4)","shadowCard":"0 1px 4px rgba(0,0,0,0.25)","shadowNav":"0 -1px 10px rgba(0,0,0,0.3)"}},"matcha":{"light":{"bg":"#F5F3EA","surface":"#FFFFFF","text":"#261815","text2":"#6E5A50","muted":"#7A6A62","border":"#E7E2D4","borderLight":"#EFEBE0","accent":"#5E6C08","accentBg":"#EEF3CC","onAccent":"#FFFFFF","warm":"#774023","purple":"#8A5233","purpleBg":"#F3E8E0","danger":"#B3261E","onDanger":"#FFFFFF","sheetRow":"#F5F3EA","checkboxBorder":"#D6CFC2","handle":"#E7E2D4","ringPast":"#E3DDCF","ringFuture":"#EEEADF","dayPast":"#5A4A42","dayFuture":"#8C7E76","previewDark":"#362622","sheetTitle":"#261815","sheetSub":"#6E5A50","iconBorder":"#E7E2D4","previewLight":"#F5F3EA","todayTint":"rgba(94,108,8,0.12)","accentShadow":"rgba(94,108,8,0.4)","shadowCard":"0 1px 4px rgba(0,0,0,0.06)","shadowNav":"0 -1px 10px rgba(0,0,0,0.07)"},"dark":{"bg":"#261815","surface":"#362622","text":"#F4F0E6","text2":"#C9BDB2","muted":"#AE9E93","border":"#4A3832","borderLight":"#3F2F2A","accent":"#B3CC10","accentBg":"#3A3A16","onAccent":"#261815","warm":"#C97B4E","purple":"#D08C63","purpleBg":"#4A3026","danger":"#FF7B6E","onDanger":"#261815","sheetRow":"#2C1E1A","checkboxBorder":"#5E4A42","handle":"#5E4A42","ringPast":"#523F38","ringFuture":"#42322C","dayPast":"#DDD2C8","dayFuture":"#A08F84","previewDark":"#362622","sheetTitle":"#F4F0E6","sheetSub":"#C9BDB2","iconBorder":"#4A3832","previewLight":"#F5F3EA","todayTint":"rgba(179,204,16,0.12)","accentShadow":"rgba(179,204,16,0.4)","shadowCard":"0 1px 4px rgba(0,0,0,0.25)","shadowNav":"0 -1px 10px rgba(0,0,0,0.3)"}},"crimson":{"light":{"bg":"#F2F5F0","surface":"#FFFFFF","text":"#2A2230","text2":"#5E5468","muted":"#6E6578","border":"#DEE5DA","borderLight":"#E9EEE6","accent":"#C80A3C","accentBg":"#FCE4EA","onAccent":"#FFFFFF","warm":"#8B729C","purple":"#8B729C","purpleBg":"#EEE8F2","danger":"#9E1B32","onDanger":"#FFFFFF","sheetRow":"#F2F5F0","checkboxBorder":"#CBD3C7","handle":"#DEE5DA","ringPast":"#D9E0D5","ringFuture":"#E7ECE4","dayPast":"#4F4659","dayFuture":"#7F778A","previewDark":"#26222B","sheetTitle":"#2A2230","sheetSub":"#5E5468","iconBorder":"#DEE5DA","previewLight":"#F2F5F0","todayTint":"rgba(200,10,60,0.12)","accentShadow":"rgba(200,10,60,0.4)","shadowCard":"0 1px 4px rgba(0,0,0,0.06)","shadowNav":"0 -1px 10px rgba(0,0,0,0.07)"},"dark":{"bg":"#1A171D","surface":"#27222C","text":"#F2EEF4","text2":"#C3BACB","muted":"#A79DB1","border":"#3B3541","borderLight":"#322C38","accent":"#FF5C7F","accentBg":"#43202B","onAccent":"#1A171D","warm":"#A6B8A0","purple":"#B9A3C9","purpleBg":"#3A3044","danger":"#FF9B8F","onDanger":"#1A171D","sheetRow":"#201C24","checkboxBorder":"#4E4656","handle":"#4E4656","ringPast":"#463F4D","ringFuture":"#36303C","dayPast":"#D3CBDA","dayFuture":"#8D8497","previewDark":"#27222C","sheetTitle":"#F2EEF4","sheetSub":"#C3BACB","iconBorder":"#3B3541","previewLight":"#F2F5F0","todayTint":"rgba(255,92,127,0.12)","accentShadow":"rgba(255,92,127,0.4)","shadowCard":"0 1px 4px rgba(0,0,0,0.25)","shadowNav":"0 -1px 10px rgba(0,0,0,0.3)"}},"gallery":{"light":{"bg":"#F4F1EE","surface":"#FFFFFF","text":"#1E2230","text2":"#5B5650","muted":"#6B655F","border":"#E2DBD4","borderLight":"#ECE6E0","accent":"#0B369A","accentBg":"#E3E9F7","onAccent":"#FFFFFF","warm":"#C34811","purple":"#C34811","purpleBg":"#F8E6DC","danger":"#B3261E","onDanger":"#FFFFFF","sheetRow":"#F4F1EE","checkboxBorder":"#D2CAC2","handle":"#E2DBD4","ringPast":"#DDD5CD","ringFuture":"#EAE4DE","dayPast":"#4E4943","dayFuture":"#7F7973","previewDark":"#1E2232","sheetTitle":"#1E2230","sheetSub":"#5B5650","iconBorder":"#E2DBD4","previewLight":"#F4F1EE","todayTint":"rgba(11,54,154,0.12)","accentShadow":"rgba(11,54,154,0.4)","shadowCard":"0 1px 4px rgba(0,0,0,0.06)","shadowNav":"0 -1px 10px rgba(0,0,0,0.07)"},"dark":{"bg":"#121521","surface":"#1E2232","text":"#EEF0F6","text2":"#B8BDCD","muted":"#9EA4B7","border":"#32374B","borderLight":"#2A2F42","accent":"#93ABFF","accentBg":"#1F2B52","onAccent":"#121521","warm":"#E8733A","purple":"#EE8A57","purpleBg":"#3A2418","danger":"#FF8E7E","onDanger":"#121521","sheetRow":"#171B29","checkboxBorder":"#454B61","handle":"#454B61","ringPast":"#3B4157","ringFuture":"#2C3144","dayPast":"#C9CEDC","dayFuture":"#878DA1","previewDark":"#1E2232","sheetTitle":"#EEF0F6","sheetSub":"#B8BDCD","iconBorder":"#32374B","previewLight":"#F4F1EE","todayTint":"rgba(147,171,255,0.12)","accentShadow":"rgba(147,171,255,0.4)","shadowCard":"0 1px 4px rgba(0,0,0,0.25)","shadowNav":"0 -1px 10px rgba(0,0,0,0.3)"}},"frost":{"light":{"bg":"#EEF2F2","surface":"#FFFFFF","text":"#1F2A31","text2":"#4D6474","muted":"#586D7A","border":"#D3DCDB","borderLight":"#E2E8E8","accent":"#4D6474","accentBg":"#E1E8EC","onAccent":"#FFFFFF","warm":"#7F98A6","purple":"#4D6474","purpleBg":"#E1E8EC","danger":"#B3261E","onDanger":"#FFFFFF","sheetRow":"#EEF2F2","checkboxBorder":"#C3CDCF","handle":"#D3DCDB","ringPast":"#CCD6D6","ringFuture":"#DFE6E6","dayPast":"#3F525F","dayFuture":"#71848F","previewDark":"#212A30","sheetTitle":"#1F2A31","sheetSub":"#4D6474","iconBorder":"#D3DCDB","previewLight":"#EEF2F2","todayTint":"rgba(77,100,116,0.12)","accentShadow":"rgba(77,100,116,0.4)","shadowCard":"0 1px 4px rgba(0,0,0,0.06)","shadowNav":"0 -1px 10px rgba(0,0,0,0.07)"},"dark":{"bg":"#151B1F","surface":"#212A30","text":"#ECF1F2","text2":"#B7C4CA","muted":"#9BAAB2","border":"#35424B","borderLight":"#2C3840","accent":"#A3B4BC","accentBg":"#2E3C45","onAccent":"#151B1F","warm":"#D3DCDB","purple":"#A3B4BC","purpleBg":"#2E3C45","danger":"#FF8E84","onDanger":"#151B1F","sheetRow":"#1A2226","checkboxBorder":"#46545D","handle":"#46545D","ringPast":"#3C4A53","ringFuture":"#2E3940","dayPast":"#C8D3D8","dayFuture":"#83939B","previewDark":"#212A30","sheetTitle":"#ECF1F2","sheetSub":"#B7C4CA","iconBorder":"#35424B","previewLight":"#EEF2F2","todayTint":"rgba(163,180,188,0.12)","accentShadow":"rgba(163,180,188,0.4)","shadowCard":"0 1px 4px rgba(0,0,0,0.25)","shadowNav":"0 -1px 10px rgba(0,0,0,0.3)"}},"dune":{"light":{"bg":"#FFF7EC","surface":"#FFFFFF","text":"#240F22","text2":"#6A4A55","muted":"#785A64","border":"#F0DFC6","borderLight":"#F7EBDA","accent":"#AE1203","accentBg":"#FBE3D8","onAccent":"#FFFFFF","warm":"#D9963F","purple":"#6B3A63","purpleBg":"#F3E6EE","danger":"#7E1230","onDanger":"#FFFFFF","sheetRow":"#FFF7EC","checkboxBorder":"#E3CDB0","handle":"#F0DFC6","ringPast":"#EEDAC0","ringFuture":"#F6E9D6","dayPast":"#5A3D48","dayFuture":"#8E737B","previewDark":"#33192F","sheetTitle":"#240F22","sheetSub":"#6A4A55","iconBorder":"#F0DFC6","previewLight":"#FFF7EC","todayTint":"rgba(174,18,3,0.12)","accentShadow":"rgba(174,18,3,0.4)","shadowCard":"0 1px 4px rgba(0,0,0,0.06)","shadowNav":"0 -1px 10px rgba(0,0,0,0.07)"},"dark":{"bg":"#240F22","surface":"#341A31","text":"#FFEFD9","text2":"#E3CBB9","muted":"#C7AC9C","border":"#4C2B47","borderLight":"#41233C","accent":"#FF7A57","accentBg":"#4C1E26","onAccent":"#240F22","warm":"#FFDFB6","purple":"#E2A9D2","purpleBg":"#4C2B47","danger":"#FFB2A6","onDanger":"#240F22","sheetRow":"#2B1428","checkboxBorder":"#5E3A58","handle":"#5E3A58","ringPast":"#563351","ringFuture":"#432640","dayPast":"#F0DCCB","dayFuture":"#A88E85","previewDark":"#341A31","sheetTitle":"#FFEFD9","sheetSub":"#E3CBB9","iconBorder":"#4C2B47","previewLight":"#FFF7EC","todayTint":"rgba(255,122,87,0.12)","accentShadow":"rgba(255,122,87,0.4)","shadowCard":"0 1px 4px rgba(0,0,0,0.25)","shadowNav":"0 -1px 10px rgba(0,0,0,0.3)"}}};
+function tokens(props) {
+  const p = PALETTES[props.palette] ?? PALETTES.default;
+  return p[props.theme === 'dark' ? 'dark' : 'light'];
+}
+const C = { blue: '#5BA4CF', mint: '#7CB9A8', purple: '#9B89D4', red: '#F06B7E' };
+const CHALLENGES = [
+  { id: 'meditation', name: '🧘meditation', color: C.blue },
+  { id: 'programing', name: '💻programing', color: C.blue },
+  { id: 'research', name: '🔍research session', color: C.blue },
+  { id: 'training', name: '💪training', color: C.mint },
+  { id: 'running', name: '🏃training', color: C.mint },
+  { id: 'vision', name: '👁️vision session', color: C.purple },
+  { id: 'facial', name: '🤦🏻‍♂️facial care', color: C.purple },
+  { id: 'gaming', name: '🚫🎮 gaming [detox]', color: C.red },
+  { id: 'video', name: '🚫▶️video [detox]', color: C.red },
+  { id: 'alcohol', name: '🚫🥃alcohol [detox]', color: C.red }
+];
+// useStreaks показує лише серії від 2 днів
+const STATUS_ALL = [
+  { name: '🧘meditation', color: C.blue, streak: 2 },
+  { name: '💪training', color: C.mint, streak: 2 },
+  { name: '🤦🏻‍♂️facial care', color: C.purple, streak: 64 },
+  { name: '🚫🥃alcohol [detox]', color: C.red, streak: 83 }
+];
+const DAY_PROGRESS = [0.3, 0.5, 0.4, 0.6, 0.5, 0.45, 0.4, 0.4, 0.5, 0.2, 0.4, 0.3];
+const MEDITATION_DONE = [2, 4, 5, 6, 8, 9, 11, 12];
+const CIRC = 2 * Math.PI * 13;
+const TODAY = 12;
+// Листопад 2026 починається з неділі: 6 порожніх клітинок (Пн=0)
+const START_OFFSET = 6;
+function dayWord(n) {
+  const m10 = n % 10, m100 = n % 100;
+  if (m10 === 1 && m100 !== 11) return 'день';
+  if (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) return 'дні';
+  return 'днів';
+}
+function navTabs(active, t, l) {
+  const all = [
+    { key: 'today', label: 'Сьогодні', href: l.today, isToday: true },
+    { key: 'stats', label: 'Статистика', href: l.stats, isStats: true },
+    { key: 'ach', label: 'Досягнення', href: l.ach, isAch: true },
+    { key: 'settings', label: 'Налаштування', href: l.settings, isSettings: true }
+  ].map((tab) => {
+    const on = tab.key === active;
+    return { isToday: false, isStats: false, isAch: false, isSettings: false, ...tab, current: on ? 'page' : 'false', bg: on ? t.accentBg : 'transparent', color: on ? t.accent : t.muted, weight: on ? 600 : 500 };
+  });
+  return { tabsLeft: all.slice(0, 2), tabsRight: all.slice(2) };
+}
+function links(dark) {
+  const s = dark ? 'Dark' : '';
+  return { today: `Today${s}.dc.html`, stats: `Statistics${s}.dc.html`, ach: `Achievements${s}.dc.html`, settings: `Settings${s}.dc.html`, add: `NewChallenge${s}.dc.html`, archive: `Archive${s}.dc.html`, dayEdit: `DayEdit${s}.dc.html` };
+}
+function buildDays(t, progressOf, interactive, l) {
+  const blank = { label: '', aria: '', href: '#', tab: '-1', cursor: 'default', vis: 'hidden', cellBg: 'transparent', track: 'transparent', dash: `0 ${CIRC}`, arcOpacity: 0, textColor: t.text, weight: 500 };
+  const days = Array.from({ length: 30 }, (_, i) => {
+    const n = i + 1;
+    const isToday = n === TODAY;
+    const future = n > TODAY;
+    const p = future ? 0 : progressOf(n);
+    const clickable = interactive && !future;
+    return {
+      label: n,
+      aria: future ? `${n} листопада` : `${n} листопада: ${Math.round(p * 100)}%`,
+      href: clickable ? l.dayEdit : '#',
+      tab: clickable ? '0' : '-1',
+      cursor: clickable ? 'pointer' : 'default',
+      vis: 'visible',
+      cellBg: isToday ? t.todayTint : 'transparent',
+      track: future ? t.ringFuture : t.ringPast,
+      dash: `${(p * CIRC).toFixed(2)} ${CIRC.toFixed(2)}`,
+      arcOpacity: p > 0 ? 1 : 0,
+      textColor: isToday ? t.accent : future ? t.dayFuture : t.dayPast,
+      weight: isToday ? 700 : 500
+    };
+  });
+  return Array.from({ length: START_OFFSET }, () => blank).concat(days);
+}
+function chip(c, on, t) {
+  return { ...c, pressed: on ? 'true' : 'false', border: on ? t.accent : t.border, bg: on ? t.accentBg : t.surface, text: on ? t.text : t.text2 };
+}
+class Component extends DCLogic {
+  renderVals() {
+    const dark = this.props.theme === 'dark';
+    const t = tokens(this.props);
+    const l = links(dark);
+    const view = this.props.view ?? 'stats';
+    const filter = view === 'stats' ? (this.props.filter ?? 'all') : 'all';
+    const confirm = !!this.props.confirmDelete;
+    let chips, progressOf, status, archived, rootH;
+    if (view === 'archive') {
+      const facial = CHALLENGES.find((c) => c.id === 'facial');
+      chips = [chip(facial, false, t)];
+      progressOf = (n) => (n < TODAY ? 1 : 0);
+      status = [{ name: facial.name, color: facial.color, streak: 64 }];
+      archived = [{ name: facial.name, color: facial.color, date: 'четвер, 12 листопада' }];
+      rootH = '844px';
+    } else if (view === 'archiveEmpty') {
+      chips = []; progressOf = () => 0; status = []; archived = []; rootH = '844px';
+    } else if (filter === 'meditation') {
+      chips = CHALLENGES.map((c) => chip(c, c.id === 'meditation', t));
+      progressOf = (n) => (MEDITATION_DONE.includes(n) ? 1 : 0);
+      status = STATUS_ALL.slice(0, 1); archived = []; rootH = '860px';
+    } else {
+      chips = CHALLENGES.map((c) => chip(c, false, t));
+      progressOf = (n) => DAY_PROGRESS[n - 1];
+      status = STATUS_ALL; archived = []; rootH = '960px';
+    }
+    const allOn = filter === 'all';
+    return {
+      t, l, rootH,
+      isStats: view === 'stats',
+      isArchive: view !== 'stats',
+      heading: view === 'stats' ? 'Статистика' : 'Архів навичок',
+      allPressed: allOn ? 'true' : 'false',
+      allBg: allOn ? t.accent : t.surface,
+      allBorder: allOn ? t.accent : t.border,
+      allColor: allOn ? t.onAccent : t.text2,
+      chips,
+      days: buildDays(t, progressOf, view === 'stats', l),
+      hasStatus: status.length > 0,
+      status: status.map((s) => ({ ...s, unit: dayWord(s.streak) })),
+      hasArchived: archived.length > 0,
+      archived,
+      deleteLabel: confirm ? 'Точно?' : 'Видалити',
+      deleteColor: confirm ? t.onDanger : t.danger,
+      deleteBg: confirm ? t.danger : 'transparent',
+      deleteBorder: confirm ? '0' : `1.5px solid ${t.danger}`,
+      deletePad: confirm ? '6px 12px' : '5px 12px',
+      ...navTabs('stats', t, l)
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -53,9 +53,9 @@
 .delete {
   font-size: 13px;
   font-weight: 600;
-  color: #e05c5c;
+  color: $color-danger;
   background: none;
-  border: 1.5px solid #e05c5c;
+  border: 1.5px solid $color-danger;
   border-radius: $radius-pill;
   padding: 5px 12px;
   cursor: pointer;
@@ -65,8 +65,8 @@
 .deleteConfirm {
   font-size: 13px;
   font-weight: 600;
-  color: #fff;
-  background: #e05c5c;
+  color: $color-on-danger;
+  background: $color-danger;
   border: none;
   border-radius: $radius-pill;
   padding: 6px 12px;

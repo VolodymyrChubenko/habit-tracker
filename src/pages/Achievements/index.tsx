@@ -47,7 +47,7 @@ export default function AchievementsPage() {
       {entries.length === 0 ? (
         <div className={styles.empty}>
           <div className={styles.emptyIcon}>
-            <FlameIcon size={40} color="#7CB9A8" />
+            <FlameIcon size={40} color="var(--color-accent)" />
           </div>
           <h2 className={styles.emptyTitle}>Скоро тут будуть досягнення</h2>
           <p className={styles.emptyText}>

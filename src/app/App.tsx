@@ -12,6 +12,7 @@ import styles from './App.module.scss';
 
 export default function App() {
   const theme = useSettingsStore(s => s.theme);
+  const palette = useSettingsStore(s => s.palette);
   const addSheetOpen = useUIStore(s => s.addSheetOpen);
   const closeAddSheet = useUIStore(s => s.closeAddSheet);
   const addChallenge = useChallengesStore(s => s.addChallenge);
@@ -46,6 +47,13 @@ export default function App() {
       return () => mq.removeEventListener('change', handler);
     }
   }, [theme]);
+
+  // Палітра незалежна від теми: data-palette + data-theme на <html>.
+  useEffect(() => {
+    const root = document.documentElement;
+    if (palette === 'default') delete root.dataset.palette;
+    else root.dataset.palette = palette;
+  }, [palette]);
 
   return (
     <div className={styles.app}>

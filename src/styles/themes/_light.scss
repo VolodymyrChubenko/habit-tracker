@@ -1,0 +1,70 @@
+// Оновлена «М'ята» з виправленим контрастом (WCAG AA ≥ 4.5:1). Замінює src/styles/themes/_light.scss
+// ─────────────────────────────────────────────────────────────
+// Світла тема (за замовчуванням)
+//
+// ЄДИНЕ місце, де задаються кольори світлої теми.
+// Щоб змінити вигляд: скопіюй блок :root, зміни значення,
+// а старий блок закоментуй. Компоненти чіпати не треба.
+// Кольори челенджів (ColorPicker) — це дані користувача, тема їх не задає.
+// ─────────────────────────────────────────────────────────────
+
+:root {
+  // Основа
+  --color-bg:             #FAF7F0;
+  --color-surface:        #FFFFFF;
+  --color-text:           #333333;
+  --color-text-secondary: #6B6B6B;
+  --color-text-muted:     #707070;
+  --color-border:         #F0EDE6;
+  --color-border-light:   #F5F2EC;
+
+  // Акценти
+  --color-accent:           #367565;
+  --color-accent-bg:        #EBF5F2;
+  --color-accent-warm:      #E8A87C;
+  --color-accent-purple:    #9B89D4;
+  --color-accent-purple-bg: #F0EBF8;
+  --color-on-accent:        #FFFFFF; // текст/іконки на акцентній заливці
+
+  // Небезпечні дії (видалення, закриття)
+  --color-danger:    #C23B3B;
+  --color-on-danger: #FFFFFF;
+
+  // Bottom sheet / DateEditSheet
+  --color-overlay:         rgba(0, 0, 0, 0.35);
+  --color-sheet-row:       #FAF7F0;
+  --color-sheet-title:     #333333;
+  --color-sheet-subtitle:  #707070;
+  --color-checkbox-border: #E0DDD8;
+  --color-sheet-handle:    #F0EDE6;
+
+  // Calendar day ring
+  --color-ring-track-past:   #E6E2D9;
+  --color-ring-track-future: #EFEBE3;
+  --color-day-text-past:     #666666;
+  --color-day-text-future:   #949494;
+
+  // Toast
+  --color-toast-bg:   #333333;
+  --color-toast-text: #FFFFFF;
+  --color-toast-action: #8FD1BF; // кнопка дії в тості (новий токен; --color-accent на #333 не читається)
+
+  // Splash screen
+  --color-splash-bg:   #FAF7F0;
+  --color-splash-text: #333333;
+
+  // Медалі (Досягнення)
+  --color-medal-gold:   #E8C55C;
+  --color-medal-silver: #C9CDD4;
+  --color-medal-bronze: #D9A06B;
+
+  // Налаштування: рамка іконок і прев'ю тем
+  --color-icon-border:         #E8E4DC;
+  --color-theme-preview-light: #FAF7F0;
+  --color-theme-preview-dark:  #5C5C5F;
+
+  // Тіні
+  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.06);
+  --shadow-nav:  0 -1px 10px rgba(0, 0, 0, 0.07);
+  --shadow-knob: 0 1px 3px rgba(0, 0, 0, 0.2);
+}

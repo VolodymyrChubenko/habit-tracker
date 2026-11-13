@@ -10,9 +10,8 @@ export const FlameIcon = ({ size = 16, color, filled = false }: Props) => (
     width={size}
     height={size}
     viewBox="0 0 24 24"
-    fill={filled ? color : 'none'}
+    style={{ stroke: color, fill: filled ? color : 'none' }}
     fillOpacity={filled ? 0.15 : undefined}
-    stroke={color}
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"

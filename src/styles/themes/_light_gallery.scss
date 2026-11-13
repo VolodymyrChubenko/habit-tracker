@@ -1,0 +1,46 @@
+// Палітра «Галерея» — світла тема
+// Референс: Burnt Terracotta #C34811 · Gallery Blue #0B369A · Stone Linen #D9D1CA
+// Вмикається атрибутом data-palette="gallery" на <html>
+// Контраст тексту, підписів, кнопок і акценту ≥ 4.5:1 (WCAG AA).
+
+[data-palette="gallery"] {
+  --color-bg: #F4F1EE;
+  --color-surface: #FFFFFF;
+  --color-text: #1E2230;
+  --color-text-secondary: #5B5650;
+  --color-text-muted: #6B655F;
+  --color-border: #E2DBD4;
+  --color-border-light: #ECE6E0;
+  --color-accent: #0B369A;
+  --color-accent-bg: #E3E9F7;
+  --color-accent-warm: #C34811;
+  --color-accent-purple: #C34811;
+  --color-accent-purple-bg: #F8E6DC;
+  --color-on-accent: #FFFFFF;
+  --color-danger: #B3261E;
+  --color-on-danger: #FFFFFF;
+  --color-overlay: rgba(0, 0, 0, 0.35);
+  --color-sheet-row: #F4F1EE;
+  --color-sheet-title: #1E2230;
+  --color-sheet-subtitle: #5B5650;
+  --color-checkbox-border: #D2CAC2;
+  --color-sheet-handle: #E2DBD4;
+  --color-ring-track-past: #DDD5CD;
+  --color-ring-track-future: #EAE4DE;
+  --color-day-text-past: #4E4943;
+  --color-day-text-future: #7F7973;
+  --color-toast-bg: #1E2230;
+  --color-toast-text: #F4F1EE;
+  --color-toast-action: #93ABFF;
+  --color-splash-bg: #F4F1EE;
+  --color-splash-text: #1E2230;
+  --color-medal-gold: #E8C55C;
+  --color-medal-silver: #C9CDD4;
+  --color-medal-bronze: #D9A06B;
+  --color-icon-border: #E2DBD4;
+  --color-theme-preview-light: #F4F1EE;
+  --color-theme-preview-dark: #1E2232;
+  --shadow-card: 0 1px 4px rgba(0,0,0,0.06);
+  --shadow-nav: 0 -1px 10px rgba(0,0,0,0.07);
+  --shadow-knob: 0 1px 3px rgba(0, 0, 0, 0.2);
+}

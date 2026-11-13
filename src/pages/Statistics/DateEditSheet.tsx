@@ -58,7 +58,7 @@ export const DateEditSheet = ({ date, onClose }: Props) => {
               background: checked.has(h.id) ? h.color : 'var(--color-surface)',
               border: checked.has(h.id) ? 'none' : '2px solid var(--color-checkbox-border)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: '#fff', fontSize: 13,
+              color: '#FFF', fontSize: 13, // галочка на кольорі челенджу
             }}>
               {checked.has(h.id) ? '✓' : ''}
             </div>
@@ -68,7 +68,7 @@ export const DateEditSheet = ({ date, onClose }: Props) => {
 
       <button
         onClick={handleSave}
-        style={{ width: '100%', background: '#7CB9A8', color: '#fff', borderRadius: 12, padding: 13, fontSize: 14, fontWeight: 600, marginTop: 18, border: 'none', cursor: 'pointer' }}
+        style={{ width: '100%', background: 'var(--color-accent)', color: 'var(--color-on-accent)', borderRadius: 12, padding: 13, fontSize: 14, fontWeight: 600, marginTop: 18, border: 'none', cursor: 'pointer' }}
       >
         Зберегти
       </button>

@@ -23,11 +23,11 @@ export const DoneList = ({ challenges, onEdit }: Props) => {
         onClick={() => setOpen(o => !o)}
         style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 4px 8px', background: 'none', border: 'none', cursor: 'pointer', width: '100%' }}
       >
-        <span style={{ width: 18, height: 18, borderRadius: '50%', background: '#7CB9A8', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 10, fontWeight: 600, flexShrink: 0 }}>
+        <span style={{ width: 18, height: 18, borderRadius: '50%', background: 'var(--color-accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-on-accent)', fontSize: 10, fontWeight: 600, flexShrink: 0 }}>
           {challenges.length}
         </span>
-        <span style={{ fontSize: 14, color: '#888', fontWeight: 500 }}>Виконано</span>
-        <span style={{ marginLeft: 'auto', color: '#bbb', fontSize: 11 }}>{open ? '▴' : '▾'}</span>
+        <span style={{ fontSize: 14, color: 'var(--color-text-secondary)', fontWeight: 500 }}>Виконано</span>
+        <span style={{ marginLeft: 'auto', color: 'var(--color-text-muted)', fontSize: 11 }}>{open ? '▴' : '▾'}</span>
       </button>
 
       {open && (

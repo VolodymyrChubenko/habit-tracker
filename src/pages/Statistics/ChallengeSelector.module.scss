@@ -27,12 +27,11 @@
   }
 }
 
-// «Всі» в активному стані — суцільна заливка. #fff тут статичний і коректний
-// в обох темах, бо $color-accent однаковий у light і dark.
+// «Всі» в активному стані — суцільна акцентна заливка.
 .pillAll.active {
   background: $color-accent;
   border-color: $color-accent;
-  color: #fff;
+  color: $color-on-accent;
 }
 
 .dot {

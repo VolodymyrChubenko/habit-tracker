@@ -20,5 +20,6 @@ export interface ChallengeLog {
 }
 
 export type Theme = 'light' | 'dark' | 'system';
+export type Palette = 'default' | 'matcha' | 'crimson' | 'gallery' | 'frost' | 'dune';
 export type StatScope = 'active' | 'archived';
 export type ActiveTab = 'today' | 'statistics' | 'settings';

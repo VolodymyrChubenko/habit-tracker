@@ -38,9 +38,9 @@
   font-variant-numeric: tabular-nums;
 }
 
-.m1 { background: rgba(232, 197, 92, 0.2); border-color: #E8C55C; font-size: 15px; }
-.m2 { background: rgba(201, 205, 212, 0.2); border-color: #C9CDD4; font-size: 15px; }
-.m3 { background: rgba(217, 160, 107, 0.2); border-color: #D9A06B; font-size: 15px; }
+.m1 { background: tint($color-medal-gold, 20%); border-color: $color-medal-gold; font-size: 15px; }
+.m2 { background: tint($color-medal-silver, 20%); border-color: $color-medal-silver; font-size: 15px; }
+.m3 { background: tint($color-medal-bronze, 20%); border-color: $color-medal-bronze; font-size: 15px; }
 
 .rowMain {
   flex: 1;

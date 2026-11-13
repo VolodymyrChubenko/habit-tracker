@@ -1,0 +1,46 @@
+// Палітра «Іній» — темна тема
+// Референс: Frost Glass #D3DCDB · Deep Ice #4D6474 · Cold Mist #A3B4BC
+// Вмикається атрибутом data-palette="frost" на <html> разом з data-theme="dark"
+// Контраст тексту, підписів, кнопок і акценту ≥ 4.5:1 (WCAG AA).
+
+[data-palette="frost"][data-theme="dark"] {
+  --color-bg: #151B1F;
+  --color-surface: #212A30;
+  --color-text: #ECF1F2;
+  --color-text-secondary: #B7C4CA;
+  --color-text-muted: #9BAAB2;
+  --color-border: #35424B;
+  --color-border-light: #2C3840;
+  --color-accent: #A3B4BC;
+  --color-accent-bg: #2E3C45;
+  --color-accent-warm: #D3DCDB;
+  --color-accent-purple: #A3B4BC;
+  --color-accent-purple-bg: #2E3C45;
+  --color-on-accent: #151B1F;
+  --color-danger: #FF8E84;
+  --color-on-danger: #151B1F;
+  --color-overlay: rgba(0, 0, 0, 0.35);
+  --color-sheet-row: #1A2226;
+  --color-sheet-title: #ECF1F2;
+  --color-sheet-subtitle: #B7C4CA;
+  --color-checkbox-border: #46545D;
+  --color-sheet-handle: #46545D;
+  --color-ring-track-past: #3C4A53;
+  --color-ring-track-future: #2E3940;
+  --color-day-text-past: #C8D3D8;
+  --color-day-text-future: #83939B;
+  --color-toast-bg: #ECF1F2;
+  --color-toast-text: #151B1F;
+  --color-toast-action: #4D6474;
+  --color-splash-bg: #151B1F;
+  --color-splash-text: #ECF1F2;
+  --color-medal-gold: #E8C55C;
+  --color-medal-silver: #C9CDD4;
+  --color-medal-bronze: #D9A06B;
+  --color-icon-border: #35424B;
+  --color-theme-preview-light: #EEF2F2;
+  --color-theme-preview-dark: #212A30;
+  --shadow-card: 0 1px 4px rgba(0,0,0,0.25);
+  --shadow-nav: 0 -1px 10px rgba(0,0,0,0.3);
+  --shadow-knob: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
